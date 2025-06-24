@@ -4,9 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/generate-static-files.js && vite",
+    "prebuild": "node scripts/generate-static-files.js",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate-static": "node scripts/generate-static-files.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.832.0",

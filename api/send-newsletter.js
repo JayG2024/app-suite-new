@@ -99,7 +99,7 @@ export default async function handler(req, res) {
     // Send welcome email to subscriber
     try {
       const welcomeEmail = await resend.emails.send({
-        from: 'App Suite <newsletter@app-suite.io>',
+        from: `App Suite <newsletter@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
         to: email,
         subject: '🚀 Welcome to App Suite Insider - Your Custom Software Journey Starts Here!',
         html: generateWelcomeEmailHTML(email, source),
@@ -144,7 +144,7 @@ export default async function handler(req, res) {
     // Notify team of new subscriber
     try {
       const teamEmail = await resend.emails.send({
-        from: 'App Suite <notifications@app-suite.io>',
+        from: `App Suite <notifications@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
         to: 'jason@jaydus.ai',
         subject: `📧 New Newsletter Subscriber: ${email}`,
         html: generateSubscriberNotificationHTML(email, source)
@@ -250,10 +250,10 @@ function generateWelcomeEmailHTML(email, source) {
           <p>Here are some resources our subscribers love:</p>
           
           <div style="text-align: center;">
-            <a href="https://app-suite.io/whitepapers/geo-blocking-ai-search" class="button">
+            <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/whitepapers/geo-blocking-ai-search" class="button">
               📄 Download: AI Search Visibility Guide
             </a>
-            <a href="https://app-suite.io/financing-calculator" class="button">
+            <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/financing-calculator" class="button">
               💰 Calculate Your Project Cost
             </a>
           </div>
@@ -273,8 +273,8 @@ function generateWelcomeEmailHTML(email, source) {
         <div class="footer">
           <p style="color: #6b7280; font-size: 14px;">
             App Suite - Custom Business Software at Flat Rates<br>
-            <a href="https://app-suite.io" style="color: #667eea;">app-suite.io</a> | 
-            <a href="https://app-suite.io/unsubscribe?email=${encodeURIComponent(email)}" style="color: #667eea;">Unsubscribe</a>
+            <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}" style="color: #667eea;">${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'app-suite.io'}</a> | 
+            <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/unsubscribe?email=${encodeURIComponent(email)}" style="color: #667eea;">Unsubscribe</a>
           </p>
         </div>
       </div>
@@ -315,7 +315,7 @@ function generateSubscriberNotificationHTML(email, source) {
           <li>Consider personal outreach if B2B email domain</li>
         </ul>
         
-        <p>View all subscribers in the <a href="https://app-suite.io/admin">Admin Dashboard</a></p>
+        <p>View all subscribers in the <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/admin">Admin Dashboard</a></p>
       </div>
     </body>
     </html>

@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { ProposalData } from '@/components/ProposalGenerator';
+import { APP_CONFIG } from '@/config/app';
 
 // Function to generate PDF from form data
 export const generateProposalPDF = async (formData: ProposalData): Promise<Blob> => {
@@ -544,7 +545,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
       <div class="highlight-box">
         <h4>✨ What Makes This Different</h4>
         <p>
-          Unlike subscription-based software that you rent monthly, this application becomes your property. You own the source code, control the data, and can modify it anytime. <a href="https://app-suite.io/solutions-weve-built">See examples of applications we've built</a>
+          Unlike subscription-based software that you rent monthly, this application becomes your property. You own the source code, control the data, and can modify it anytime. <a href="${APP_CONFIG.url}/solutions-weve-built">See examples of applications we've built</a>
         </p>
       </div>
     </div>
@@ -564,7 +565,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
     
     <h3>Technical Architecture</h3>
     <p>
-      Your application will be built using modern, scalable technology designed for performance and security. <a href="https://app-suite.io/documentation/security">View our security standards</a>
+      Your application will be built using modern, scalable technology designed for performance and security. <a href="${APP_CONFIG.url}/documentation/security">View our security standards</a>
     </p>
     <ul>
       <li><strong>Frontend:</strong> React/Next.js with responsive design for all devices</li>
@@ -588,7 +589,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
     </ul>
 
     <h2>Development Timeline & Process</h2>
-    <p>Your application will be delivered using our proven 5-phase methodology that delivers exceptional results in 6-8 weeks. <a href="https://app-suite.io/documentation/process">View complete process documentation</a></p>
+    <p>Your application will be delivered using our proven 5-phase methodology that delivers exceptional results in 6-8 weeks. <a href="${APP_CONFIG.url}/documentation/process">View complete process documentation</a></p>
     
     <div class="timeline">
       <div class="timeline-item">
@@ -666,7 +667,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
     </div>
 
     <h2>AI Technology Integration</h2>
-    <p>Your application will integrate the most advanced AI capabilities available today, customized for your specific industry and workflow. <a href="https://app-suite.io/documentation/ai-capabilities">Explore our complete AI capabilities</a></p>
+    <p>Your application will integrate the most advanced AI capabilities available today, customized for your specific industry and workflow. <a href="${APP_CONFIG.url}/documentation/ai-capabilities">Explore our complete AI capabilities</a></p>
     
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
       <div>
@@ -743,7 +744,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
         </div>
       </div>
       <p style="font-size: 12px; color: #666; margin-top: 15px; text-align: center;">
-        <strong>Note:</strong> Support plans are optional. Your application runs independently and you can host it anywhere. <a href="https://app-suite.io/documentation/delivery">Learn about deployment options</a>
+        <strong>Note:</strong> Support plans are optional. Your application runs independently and you can host it anywhere. <a href="${APP_CONFIG.url}/documentation/delivery">Learn about deployment options</a>
       </p>
     </div>
 
@@ -776,14 +777,14 @@ export const generateProposalHTML = (formData: ProposalData): string => {
           📧 <strong>Email:</strong> jason@jaydus.ai | 📱 <strong>Phone:</strong> (833) APP-SUIT
         </div>
         <div style="font-size: 14px; color: #ccc;">
-          🌐 <strong>Website:</strong> <a href="https://app-suite.io" style="color: #ccc;">app-suite.io</a> | 
-          📅 <strong>Book Call:</strong> <a href="https://app-suite.io/contact" style="color: #ccc;">app-suite.io/contact</a>
+          🌐 <strong>Website:</strong> <a href="${APP_CONFIG.url}" style="color: #ccc;">${APP_CONFIG.domain}</a> | 
+          📅 <strong>Book Call:</strong> <a href="${APP_CONFIG.url}/contact" style="color: #ccc;">${APP_CONFIG.domain}/contact</a>
         </div>
       </div>
       <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px;">
         <p style="font-size: 14px; margin: 0; color: #ccc;">
           🏆 <strong>Why choose App Suite?</strong> We've delivered 100+ custom applications with 98% client satisfaction. 
-          <a href="https://app-suite.io/solutions-weve-built" style="color: #ccc;">View our portfolio</a>
+          <a href="${APP_CONFIG.url}/solutions-weve-built" style="color: #ccc;">View our portfolio</a>
         </p>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getSEOData, updatePageSEO, generateGEOOptimizedSchemas } from '@/utils/seo';
+import { APP_CONFIG } from '@/config/app';
 
 // Helper function to determine page type for GEO optimization
 function getPageType(pathname: string): string {
@@ -45,7 +46,7 @@ export const SEO: React.FC<SEOProps> = ({
       description: description || defaultSEOData.description,
       keywords: keywords || defaultSEOData.keywords,
       ogImage: image || defaultSEOData.ogImage,
-      canonical: canonical || `https://app-suite.io${location.pathname}`,
+      canonical: canonical || `${APP_CONFIG.url}${location.pathname}`,
       structuredData: structuredData || defaultSEOData.structuredData,
       ...defaultSEOData
     };

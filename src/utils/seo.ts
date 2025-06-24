@@ -1,3 +1,5 @@
+import { APP_CONFIG } from '@/config/app';
+
 export interface SEOData {
   title: string;
   description: string;
@@ -18,14 +20,15 @@ export interface PageSEO {
   [key: string]: SEOData;
 }
 
-export const pageSEOData: PageSEO = {
+// Function to get SEO data with dynamic URLs
+const getPageSEOData = (): PageSEO => ({
   '/': {
     title: 'App Suite - Custom AI-Powered Business Applications | $5,000 Flat Rate',
     description: 'Stop paying monthly SaaS fees. Get custom business applications built from scratch for $5,000 flat rate. ChatGPT/Claude integration, 30-day delivery, you own the code. No subscriptions, no hidden costs.',
     keywords: 'custom business applications, AI software development, flat rate pricing, business automation, custom CRM, finance apps, operations tools, 14 day delivery, ChatGPT integration, Claude integration, own your software',
     ogTitle: 'App Suite - Custom Business Applications at Flat Rate Pricing',
     ogDescription: 'Custom AI-powered business applications delivered in 30 days. Finance, CRM, Operations & Marketing solutions. $5,000 flat rate, no hidden costs.',
-    ogImage: 'https://www.app-suite.io/images/og-image.jpg',
+    ogImage: '${APP_CONFIG.url}/images/og-image.jpg',
     ogType: 'website',
     twitterCard: 'summary_large_image',
     structuredData: {
@@ -33,7 +36,7 @@ export const pageSEOData: PageSEO = {
       "@type": "SoftwareApplication",
       "name": "App Suite",
       "description": "Custom AI-powered business applications at flat-rate pricing",
-      "url": "https://www.app-suite.io",
+      "url": "${APP_CONFIG.url}",
       "provider": {
         "@type": "Organization",
         "name": "Jaydus Inc",
@@ -340,7 +343,7 @@ export const pageSEOData: PageSEO = {
         "name": "App Suite",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.app-suite.io/images/logo.png"
+          "url": "${APP_CONFIG.url}/images/logo.png"
         }
       },
       "datePublished": "2025-06-20",
@@ -348,7 +351,7 @@ export const pageSEOData: PageSEO = {
       "description": "The comprehensive strategic guide to optimizing for AI search engines like ChatGPT, Google AI Overviews, and Perplexity.",
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://www.app-suite.io/blog/generative-engine-optimization-complete-guide-2025"
+        "@id": "${APP_CONFIG.url}/blog/generative-engine-optimization-complete-guide-2025"
       },
       "image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1200",
       "wordCount": 8500,
@@ -377,7 +380,7 @@ export const pageSEOData: PageSEO = {
         "name": "App Suite",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.app-suite.io/images/logo.png"
+          "url": "${APP_CONFIG.url}/images/logo.png"
         }
       },
       "datePublished": "2025-06-17",
@@ -385,7 +388,7 @@ export const pageSEOData: PageSEO = {
       "description": "A comprehensive white paper exploring how geo-blocking affects AI search visibility and Generative Engine Optimization (GEO) in 2025.",
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://www.app-suite.io/blog/hidden-cost-geo-blocking-ai-search-visibility"
+        "@id": "${APP_CONFIG.url}/blog/hidden-cost-geo-blocking-ai-search-visibility"
       },
       "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200"
     }
@@ -410,7 +413,7 @@ export const pageSEOData: PageSEO = {
         "name": "App Suite",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.app-suite.io/images/logo.png"
+          "url": "${APP_CONFIG.url}/images/logo.png"
         }
       },
       "datePublished": "2025-06-05",
@@ -418,7 +421,7 @@ export const pageSEOData: PageSEO = {
       "description": "Master the complex process of merging Google Business Profiles while preserving valuable reviews.",
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://www.app-suite.io/blog/google-business-profile-consolidation"
+        "@id": "${APP_CONFIG.url}/blog/google-business-profile-consolidation"
       },
       "image": "https://images.unsplash.com/photo-1611224923853-80b023f02d71?auto=format&fit=crop&q=80&w=1200"
     }
@@ -443,7 +446,7 @@ export const pageSEOData: PageSEO = {
         "name": "App Suite",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.app-suite.io/images/logo.png"
+          "url": "${APP_CONFIG.url}/images/logo.png"
         }
       },
       "datePublished": "2025-05-30",
@@ -451,12 +454,15 @@ export const pageSEOData: PageSEO = {
       "description": "Navigate OpenAI's complete model ecosystem with our comprehensive guide covering performance comparisons, selection strategies, and real-world applications.",
       "mainEntityOfPage": {
         "@type": "WebPage",
-        "@id": "https://www.app-suite.io/blog/openai-models-guide"
+        "@id": "${APP_CONFIG.url}/blog/openai-models-guide"
       },
       "image": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1200"
     }
   }
-};
+});
+
+// Export the SEO data
+export const pageSEOData = getPageSEOData();
 
 export const defaultSEO: SEOData = {
   title: 'App Suite - Custom Business Applications at Flat Rate',
@@ -464,7 +470,7 @@ export const defaultSEO: SEOData = {
   keywords: 'custom business applications, AI software development, flat rate pricing, business automation',
   ogTitle: 'App Suite - Custom Business Applications',
   ogDescription: 'Custom AI-powered business applications built in 2 weeks at flat-rate pricing.',
-  ogImage: 'https://www.app-suite.io/images/og-image.jpg',
+  ogImage: `${APP_CONFIG.url}/images/og-image.jpg`,
   ogType: 'website',
   twitterCard: 'summary_large_image'
 };
@@ -581,7 +587,7 @@ export function generateLocalBusinessSchema(): object {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "App Suite by Jaydus Inc",
-    "image": "https://www.app-suite.io/images/logo.png",
+    "image": "${APP_CONFIG.url}/images/logo.png",
     "description": "Custom AI-powered business applications at flat-rate pricing",
     "address": {
       "@type": "PostalAddress",
@@ -593,7 +599,7 @@ export function generateLocalBusinessSchema(): object {
     },
     "telephone": "+1-833-APP-SUIT",
     "email": "jason@jaydus.ai",
-    "url": "https://www.app-suite.io",
+    "url": "${APP_CONFIG.url}",
     "priceRange": "$5,000 - $10,000",
     "openingHours": "Mo-Fr 09:00-18:00",
     "sameAs": [
@@ -665,7 +671,7 @@ export function generateSoftwareApplicationSchema(appName: string, description: 
     "provider": {
       "@type": "Organization",
       "name": "App Suite",
-      "url": "https://www.app-suite.io"
+      "url": "${APP_CONFIG.url}"
     },
     "offers": {
       "@type": "Offer",
@@ -739,8 +745,8 @@ export function generateOrganizationSchema(): object {
     "@type": "Organization",
     "name": "Jaydus Inc",
     "alternateName": "App Suite",
-    "url": "https://www.app-suite.io",
-    "logo": "https://www.app-suite.io/images/logo.png",
+    "url": "${APP_CONFIG.url}",
+    "logo": "${APP_CONFIG.url}/images/logo.png",
     "description": "Leading provider of custom AI-powered business applications with flat-rate pricing and 2-week delivery",
     "foundingDate": "2023",
     "email": "jason@jaydus.ai",
@@ -777,8 +783,8 @@ export function generatePersonSchema(): object {
       "@type": "Organization",
       "name": "Jaydus Inc"
     },
-    "url": "https://www.app-suite.io/about",
-    "image": "https://www.app-suite.io/images/jason-gordon.jpg",
+    "url": "${APP_CONFIG.url}/about",
+    "image": "${APP_CONFIG.url}/images/jason-gordon.jpg",
     "description": "Expert in AI-powered business application development with over 10 years of experience in custom software solutions",
     "email": "jason@jaydus.ai",
     "knowsAbout": [
@@ -802,7 +808,7 @@ export function generateWebSiteSchema(): object {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "App Suite",
-    "url": "https://www.app-suite.io",
+    "url": "${APP_CONFIG.url}",
     "description": "Custom AI-powered business applications at flat-rate pricing",
     "publisher": {
       "@type": "Organization",
@@ -810,7 +816,7 @@ export function generateWebSiteSchema(): object {
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://www.app-suite.io/search?q={search_term_string}",
+      "target": "${APP_CONFIG.url}/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -911,7 +917,7 @@ export function generateAuthoritySchema(): object {
     "@type": "ProfilePage",
     "mainEntity": {
       "@type": "Organization",
-      "@id": "https://www.app-suite.io/#organization",
+      "@id": "${APP_CONFIG.url}/#organization",
       "name": "App Suite",
       "expertise": [
         {
@@ -960,7 +966,7 @@ export function generateOfferCatalogSchema(): object {
     "itemListElement": [
       {
         "@type": "Offer",
-        "@id": "https://www.app-suite.io/#standard-app",
+        "@id": "${APP_CONFIG.url}/#standard-app",
         "name": "Standard Business Application",
         "description": "Custom business application with up to 10 core features, user authentication, database, and responsive design",
         "price": "5000",
@@ -977,7 +983,7 @@ export function generateOfferCatalogSchema(): object {
       },
       {
         "@type": "Offer",
-        "@id": "https://www.app-suite.io/#ai-app",
+        "@id": "${APP_CONFIG.url}/#ai-app",
         "name": "AI-Enhanced Application",
         "description": "Everything in Standard plus AI integration with ChatGPT, Claude, voice/vision capabilities, and intelligent automation",
         "price": "7500",
@@ -990,7 +996,7 @@ export function generateOfferCatalogSchema(): object {
       },
       {
         "@type": "Offer",
-        "@id": "https://www.app-suite.io/#enterprise-app",
+        "@id": "${APP_CONFIG.url}/#enterprise-app",
         "name": "Enterprise Application",
         "description": "Everything in AI-Enhanced plus unlimited features, multiple integrations, advanced security, and priority support",
         "price": "10000",
@@ -1015,7 +1021,7 @@ export function generateActionSchema(): object {
         "@type": "OrderAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://www.app-suite.io/get-started",
+          "urlTemplate": "${APP_CONFIG.url}/get-started",
           "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
         },
         "result": {
@@ -1028,7 +1034,7 @@ export function generateActionSchema(): object {
         "target": {
           "@type": "ContactPoint",
           "telephone": "+1-833-APP-SUIT",
-          "email": "contact@app-suite.io",
+          "email": "${APP_CONFIG.supportEmail}",
           "contactType": "sales"
         }
       }

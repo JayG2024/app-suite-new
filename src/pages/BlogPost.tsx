@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, User, Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import SEO from "@/components/SEO";
+import { APP_CONFIG } from "@/config/app";
 
 // Import white paper components
 import HiddenCostGeoBlockingAiSearchVisibility from "./blog/HiddenCostGeoBlockingAiSearchVisibility";
@@ -345,7 +346,7 @@ const getBlogPost = (id: string) => {
           "name": "App Suite",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://app-suite.io/logo.png"
+            "url": `${APP_CONFIG.url}/logo.png`
           }
         },
         "datePublished": "2025-06-05",
@@ -353,7 +354,7 @@ const getBlogPost = (id: string) => {
         "image": "https://images.unsplash.com/photo-1611224923853-80b023f02d71?auto=format&fit=crop&q=80",
         "mainEntityOfPage": {
           "@type": "WebPage",
-          "@id": "https://app-suite.io/blog/google-business-profile-consolidation"
+          "@id": `${APP_CONFIG.url}/blog/google-business-profile-consolidation`
         },
         "keywords": "Google Business Profile, local SEO, business listing management, review consolidation, Google My Business, duplicate listings, local search optimization, business profile merge",
         "about": [
@@ -698,7 +699,7 @@ const getBlogPost = (id: string) => {
           "name": "App Suite",
           "logo": {
             "@type": "ImageObject", 
-            "url": "https://app-suite.io/logo.png"
+            "url": `${APP_CONFIG.url}/logo.png`
           }
         },
         "datePublished": "2025-05-30",
@@ -706,7 +707,7 @@ const getBlogPost = (id: string) => {
         "image": "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80",
         "mainEntityOfPage": {
           "@type": "WebPage",
-          "@id": "https://app-suite.io/blog/openai-models-complete-guide"
+          "@id": `${APP_CONFIG.url}/blog/openai-models-complete-guide`
         },
         "keywords": "OpenAI, GPT-4, AI models, machine learning, artificial intelligence, business AI, custom software development"
       }

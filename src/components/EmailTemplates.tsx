@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { APP_CONFIG } from "@/config/app";
 import {
   Dialog,
   DialogContent,
@@ -101,7 +102,7 @@ Based on your requirements, your investment will be:
 - 50% deposit + 50% on completion (standard)
 - Monthly payment plans (6 or 12 months)
 - Net 30 terms for qualified businesses
-Learn more: https://app-suite.io/payment-terms
+Learn more: ${APP_CONFIG.url}/payment-terms
 
 **How We Work - Our 5-Phase Process:**
 1. Discovery & Architecture (Days 1-3)
@@ -110,7 +111,7 @@ Learn more: https://app-suite.io/payment-terms
 4. Testing & Refinement (Days 15-18)
 5. Deployment & Training (Days 19-21)
 
-See full process: https://app-suite.io/ai-development-process
+See full process: ${APP_CONFIG.url}/ai-development-process
 
 **Next Steps:**
 1. Reply with answers to the questions above (as many as you can)
@@ -119,11 +120,11 @@ See full process: https://app-suite.io/ai-development-process
 4. Development starts immediately with regular updates
 
 **Helpful Resources:**
-- Calculate Your ROI: https://app-suite.io/roi-calculator
-- View Our Process: https://app-suite.io/get-started
-- AI Development Details: https://app-suite.io/ai-development-process
-- Client Success Stories: https://app-suite.io/blog
-- Technology We Use: https://app-suite.io/technology-partners
+- Calculate Your ROI: ${APP_CONFIG.url}/roi-calculator
+- View Our Process: ${APP_CONFIG.url}/get-started
+- AI Development Details: ${APP_CONFIG.url}/ai-development-process
+- Client Success Stories: ${APP_CONFIG.url}/blog
+- Technology We Use: ${APP_CONFIG.url}/technology-partners
 
 **Flexible Financing Available:**
 We understand that cash flow matters. That's why we offer:
@@ -132,7 +133,7 @@ We understand that cash flow matters. That's why we offer:
 - No prepayment penalties
 - Ownership transfers immediately
 
-Calculate your monthly payment: https://app-suite.io/price-calculator
+Calculate your monthly payment: ${APP_CONFIG.url}/price-calculator
 
 Looking forward to building something amazing for your business!
 
@@ -281,7 +282,7 @@ Please let us know if you have any questions about this timeline or the implemen
 Best regards,
 
 The App Suite Team
-https://www.app-suite.io`
+${APP_CONFIG.url}`
   },
   'progress-update': {
     id: 'progress-update',
@@ -461,7 +462,7 @@ Your 30-day support period for [APP_NAME] is now active!
 ✓ User guidance and best practices
 
 **How to Get Support:**
-1. Email: support@app-suite.io
+1. Email: ${APP_CONFIG.supportEmail}
 2. Priority Phone: [SUPPORT_PHONE]
 3. Support Portal: [SUPPORT_PORTAL]
 

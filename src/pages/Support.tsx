@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
+import { APP_CONFIG } from "@/config/app";
 import { 
   MessageCircle, 
   Clock, 
@@ -151,7 +152,7 @@ const Support = () => {
       response: "Within 4 hours",
       icon: <Mail className="h-5 w-5" />,
       action: "Send Email",
-      link: "mailto:hello@app-suite.io"
+      link: `mailto:${APP_CONFIG.supportEmail}`
     },
     {
       title: "Documentation",
@@ -319,7 +320,7 @@ const Support = () => {
               <Link to="/contact">Schedule Free Consultation</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="mailto:hello@app-suite.io">Email Us Directly</a>
+              <a href={`mailto:${APP_CONFIG.supportEmail}`}>Email Us Directly</a>
             </Button>
           </div>
         </div>

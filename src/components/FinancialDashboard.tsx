@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { API_ENDPOINTS, apiCall } from "@/utils/api";
+import { toast } from "sonner";
 import { 
   DollarSign, 
   TrendingUp, 
@@ -137,11 +139,8 @@ const FinancialDashboard = () => {
 
   const loadInvoices = async () => {
     try {
-      const response = await fetch('/api/invoices');
-      if (response.ok) {
-        const data = await response.json();
-        setInvoices(data.invoices);
-      }
+      const data = await apiCall(API_ENDPOINTS.invoices);
+      setInvoices(data.invoices || []);
     } catch (error) {
       console.error('Error loading invoices:', error);
     } finally {
@@ -151,11 +150,8 @@ const FinancialDashboard = () => {
 
   const loadExpenses = async () => {
     try {
-      const response = await fetch('/api/expenses');
-      if (response.ok) {
-        const data = await response.json();
-        setExpenses(data.expenses);
-      }
+      const data = await apiCall(API_ENDPOINTS.expenses);
+      setExpenses(data.expenses || []);
     } catch (error) {
       console.error('Error loading expenses:', error);
     }
@@ -163,11 +159,8 @@ const FinancialDashboard = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/users');
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
-      }
+      const data = await apiCall(API_ENDPOINTS.users);
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Error loading users:', error);
     }
@@ -175,11 +168,8 @@ const FinancialDashboard = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/api/projects-db');
-      if (response.ok) {
-        const data = await response.json();
-        setProjects(data.projects);
-      }
+      const data = await apiCall(API_ENDPOINTS.projects);
+      setProjects(data.projects || []);
     } catch (error) {
       console.error('Error loading projects:', error);
     }
@@ -197,37 +187,33 @@ const FinancialDashboard = () => {
     }
 
     try {
-      const response = await fetch('/api/invoices', {
+      await apiCall(API_ENDPOINTS.invoices, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newInvoice,
-          projectId: newInvoice.projectId ? parseInt(newInvoice.projectId) : null
+          project_id: newInvoice.projectId ? parseInt(newInvoice.projectId) : null,
+          client_id: 1 // TODO: Get from leads/clients
         })
       });
 
-      if (response.ok) {
-        await loadInvoices();
-        setNewInvoice({
-          clientName: "",
-          clientCompany: "",
-          clientEmail: "",
-          projectName: "",
-          projectId: "",
-          amount: 0,
-          taxAmount: 0,
-          description: "",
-          dueDate: "",
-          notes: ""
-        });
-        setShowInvoiceDialog(false);
-      } else {
-        const error = await response.json();
-        alert(`Failed to create invoice: ${error.error || 'Unknown error'}`);
-      }
+      await loadInvoices();
+      setNewInvoice({
+        clientName: "",
+        clientCompany: "",
+        clientEmail: "",
+        projectName: "",
+        projectId: "",
+        amount: 0,
+        taxAmount: 0,
+        description: "",
+        dueDate: "",
+        notes: ""
+      });
+      setShowInvoiceDialog(false);
+      toast.success('Invoice created successfully');
     } catch (error) {
       console.error('Error creating invoice:', error);
-      alert('Failed to create invoice. Please try again.');
+      toast.error('Failed to create invoice. Please try again.');
     }
   };
 
@@ -238,74 +224,71 @@ const FinancialDashboard = () => {
     }
 
     try {
-      const response = await fetch('/api/expenses', {
+      await apiCall(API_ENDPOINTS.expenses, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newExpense,
-          projectId: newExpense.projectId ? parseInt(newExpense.projectId) : null,
-          createdBy: getCurrentUserId()
+          project_id: newExpense.projectId ? parseInt(newExpense.projectId) : null,
+          created_by: getCurrentUserId()
         })
       });
 
-      if (response.ok) {
-        await loadExpenses();
-        setNewExpense({
-          description: "",
-          amount: 0,
-          category: "software",
-          subcategory: "",
-          vendor: "",
-          projectId: "",
-          expenseDate: "",
-          notes: "",
-          recurring: false,
-          recurringFrequency: "",
-          taxDeductible: false
-        });
-        setShowExpenseDialog(false);
-      } else {
-        const error = await response.json();
-        alert(`Failed to create expense: ${error.error || 'Unknown error'}`);
-      }
+      await loadExpenses();
+      setNewExpense({
+        description: "",
+        amount: 0,
+        category: "software",
+        subcategory: "",
+        vendor: "",
+        projectId: "",
+        expenseDate: "",
+        notes: "",
+        recurring: false,
+        recurringFrequency: "",
+        taxDeductible: false
+      });
+      setShowExpenseDialog(false);
+      toast.success('Expense created successfully');
     } catch (error) {
       console.error('Error creating expense:', error);
-      alert('Failed to create expense. Please try again.');
+      toast.error('Failed to create expense. Please try again.');
     }
   };
 
   const updateInvoiceStatus = async (invoiceId: string, status: string) => {
     try {
-      const response = await fetch(`/api/invoices?id=${invoiceId}`, {
+      await apiCall(API_ENDPOINTS.invoices, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
+          id: invoiceId,
           status,
-          paidDate: status === 'paid' ? new Date().toISOString().split('T')[0] : null
+          paid_date: status === 'paid' ? new Date().toISOString().split('T')[0] : null
         })
       });
 
-      if (response.ok) {
-        await loadInvoices();
-      }
+      await loadInvoices();
+      toast.success('Invoice status updated');
     } catch (error) {
       console.error('Error updating invoice status:', error);
+      toast.error('Failed to update invoice status');
     }
   };
 
   const updateExpenseStatus = async (expenseId: string, status: string) => {
     try {
-      const response = await fetch(`/api/expenses?id=${expenseId}`, {
+      await apiCall(API_ENDPOINTS.expenses, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ 
+          id: expenseId,
+          status 
+        })
       });
 
-      if (response.ok) {
-        await loadExpenses();
-      }
+      await loadExpenses();
+      toast.success('Expense status updated');
     } catch (error) {
       console.error('Error updating expense status:', error);
+      toast.error('Failed to update expense status');
     }
   };
 
@@ -313,15 +296,15 @@ const FinancialDashboard = () => {
     if (!confirm('Are you sure you want to delete this invoice?')) return;
 
     try {
-      const response = await fetch(`/api/invoices?id=${invoiceId}`, {
+      await apiCall(`${API_ENDPOINTS.invoices}?id=${invoiceId}`, {
         method: 'DELETE'
       });
 
-      if (response.ok) {
-        await loadInvoices();
-      }
+      await loadInvoices();
+      toast.success('Invoice deleted successfully');
     } catch (error) {
       console.error('Error deleting invoice:', error);
+      toast.error('Failed to delete invoice');
     }
   };
 
@@ -329,15 +312,15 @@ const FinancialDashboard = () => {
     if (!confirm('Are you sure you want to delete this expense?')) return;
 
     try {
-      const response = await fetch(`/api/expenses?id=${expenseId}`, {
+      await apiCall(`${API_ENDPOINTS.expenses}?id=${expenseId}`, {
         method: 'DELETE'
       });
 
-      if (response.ok) {
-        await loadExpenses();
-      }
+      await loadExpenses();
+      toast.success('Expense deleted successfully');
     } catch (error) {
       console.error('Error deleting expense:', error);
+      toast.error('Failed to delete expense');
     }
   };
 

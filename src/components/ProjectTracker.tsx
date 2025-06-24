@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
+import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import { 
   Clock, 
   DollarSign, 
@@ -145,11 +146,8 @@ const ProjectTracker = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/users');
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
-      }
+      const data = await apiCall(API_ENDPOINTS.users);
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Error loading users:', error);
     }
@@ -157,13 +155,8 @@ const ProjectTracker = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/api/projects-db');
-      if (response.ok) {
-        const data = await response.json();
-        setProjects(data.projects);
-      } else {
-        console.error('Failed to load projects');
-      }
+      const data = await apiCall(API_ENDPOINTS.projects);
+      setProjects(data.projects || []);
     } catch (error) {
       console.error('Error loading projects:', error);
     } finally {
@@ -183,36 +176,31 @@ const ProjectTracker = () => {
     }
 
     try {
-      const response = await fetch('/api/projects-db', {
+      await apiCall(API_ENDPOINTS.projects, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newProject,
-          assignedTo: newProject.assignedTo ? parseInt(newProject.assignedTo) : null,
-          createdBy: getCurrentUserId()
+          assigned_to: newProject.assignedTo ? parseInt(newProject.assignedTo) : null,
+          created_by: getCurrentUserId()
         })
       });
 
-      if (response.ok) {
-        await loadProjects(); // Refresh data
-        setNewProject({
-          projectName: "",
-          clientName: "",
-          type: "standard",
-          estimatedValue: 5000,
-          startDate: "",
-          deadline: "",
-          assignedTo: "",
-          notes: ""
-        });
-        setShowAddProject(false);
-      } else {
-        const error = await response.json();
-        alert(`Failed to create project: ${error.error || 'Unknown error'}`);
-      }
+      await loadProjects(); // Refresh data
+      setNewProject({
+        projectName: "",
+        clientName: "",
+        type: "standard",
+        estimatedValue: 5000,
+        startDate: "",
+        deadline: "",
+        assignedTo: "",
+        notes: ""
+      });
+      setShowAddProject(false);
+      toast.success('Project created successfully');
     } catch (error) {
       console.error('Error creating project:', error);
-      alert('Failed to create project. Please try again.');
+      toast.error('Failed to create project. Please try again.');
     }
   };
 
@@ -220,36 +208,29 @@ const ProjectTracker = () => {
     if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) return;
     
     try {
-      const response = await fetch(`/api/projects-db?id=${projectId}`, {
+      await apiCall(`${API_ENDPOINTS.projects}?id=${projectId}`, {
         method: 'DELETE'
       });
 
-      if (response.ok) {
-        await loadProjects(); // Refresh data
-      } else {
-        console.error('Failed to delete project');
-        alert('Failed to delete project. Please try again.');
-      }
+      await loadProjects(); // Refresh data
+      toast.success('Project deleted successfully');
     } catch (error) {
       console.error('Error deleting project:', error);
-      alert('Failed to delete project. Please try again.');
+      toast.error('Failed to delete project. Please try again.');
     }
   };
 
   const loadProjectActivities = async (projectId: string) => {
     try {
-      const response = await fetch(`/api/project-activities?projectId=${projectId}`);
-      if (response.ok) {
-        const data = await response.json();
-        // Update the selected project with activities
-        setProjects(prevProjects => 
-          prevProjects.map(p => 
-            p.id === projectId ? { ...p, activities: data.activities } : p
-          )
-        );
-        if (selectedProject?.id === projectId) {
-          setSelectedProject(prev => prev ? { ...prev, activities: data.activities } : null);
-        }
+      const data = await apiCall(`${API_ENDPOINTS.activityLog}?entity_type=project&entity_id=${projectId}`);
+      // Update the selected project with activities
+      setProjects(prevProjects => 
+        prevProjects.map(p => 
+          p.id === projectId ? { ...p, activities: data.activities } : p
+        )
+      );
+      if (selectedProject?.id === projectId) {
+        setSelectedProject(prev => prev ? { ...prev, activities: data.activities } : null);
       }
     } catch (error) {
       console.error('Error loading activities:', error);
@@ -262,27 +243,25 @@ const ProjectTracker = () => {
     setAddingNote(true);
     try {
       // Add note as an activity
-      const response = await fetch('/api/project-activities', {
+      await apiCall(API_ENDPOINTS.activityLog, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          project_id: parseInt(selectedProject.id),
-          activity_type: 'note_added',
-          activity_description: newNote,
-          metadata: { note_content: newNote },
+          action: 'note_added',
+          entity_type: 'project',
+          entity_id: selectedProject.id,
+          details: { note_content: newNote },
           user_id: getCurrentUserId()
         })
       });
 
-      if (response.ok) {
-        // Also update project notes in database
-        await fetch(`/api/projects-db?id=${selectedProject.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            notes: selectedProject.notes + '\n\n' + new Date().toLocaleString() + ': ' + newNote 
-          })
-        });
+      // Also update project notes in database
+      await apiCall(API_ENDPOINTS.projects, {
+        method: 'PUT',
+        body: JSON.stringify({ 
+          id: selectedProject.id,
+          notes: selectedProject.notes + '\n\n' + new Date().toLocaleString() + ': ' + newNote 
+        })
+      });
 
         // Refresh activities
         await loadProjectActivities(selectedProject.id);
@@ -294,7 +273,6 @@ const ProjectTracker = () => {
           activity_type: 'note_added',
           activity_description: newNote
         });
-      }
     } catch (error) {
       console.error('Error adding note:', error);
       toast.error('Failed to add note');
@@ -305,34 +283,39 @@ const ProjectTracker = () => {
 
   const updateProjectStatus = async (projectId: string, newStatus: Project["status"]) => {
     try {
-      const response = await fetch(`/api/projects-db?id=${projectId}`, {
+      await apiCall(API_ENDPOINTS.projects, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ 
+          id: projectId,
+          status: newStatus 
+        })
       });
 
-      if (response.ok) {
-        // Log status change activity
-        await fetch('/api/project-activities', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            project_id: parseInt(projectId),
-            activity_type: 'status_changed',
-            activity_description: `Project status changed to ${newStatus}`,
-            metadata: { old_status: projects.find(p => p.id === projectId)?.status, new_status: newStatus },
-            user_id: getCurrentUserId()
-          })
-        });
-        await loadProjects(); // Refresh data
-        
-        // Emit WebSocket event for real-time sync
-        emitProjectUpdate(projectId, { status: newStatus });
-      } else {
-        console.error('Failed to update project status');
-      }
+      // Log status change activity
+      await apiCall(API_ENDPOINTS.activityLog, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'status_changed',
+          entity_type: 'project',
+          entity_id: projectId,
+          details: { 
+            old_status: projects.find(p => p.id === projectId)?.status, 
+            new_status: newStatus,
+            description: `Project status changed to ${newStatus}`
+          },
+          user_id: getCurrentUserId()
+        })
+      });
+      
+      await loadProjects(); // Refresh data
+      
+      // Emit WebSocket event for real-time sync
+      emitProjectUpdate(projectId, { status: newStatus });
+      
+      toast.success('Project status updated');
     } catch (error) {
       console.error('Error updating project status:', error);
+      toast.error('Failed to update project status');
     }
   };
 

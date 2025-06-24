@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
+import { API_ENDPOINTS, apiCall } from "@/utils/api";
+import { toast } from "sonner";
 import { 
   DollarSign, 
   TrendingUp, 
@@ -83,11 +85,8 @@ const SalesPipeline = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/users');
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data.users);
-      }
+      const data = await apiCall(API_ENDPOINTS.users);
+      setUsers(data.users || []);
     } catch (error) {
       console.error('Error loading users:', error);
     }
@@ -95,11 +94,8 @@ const SalesPipeline = () => {
 
   const loadLeads = async () => {
     try {
-      const response = await fetch('/api/leads-db');
-      if (response.ok) {
-        const data = await response.json();
-        setLeads(data.leads);
-      }
+      const data = await apiCall(API_ENDPOINTS.leads);
+      setLeads(data.leads || []);
     } catch (error) {
       console.error('Error loading leads:', error);
       // Fallback to localStorage for now
@@ -169,19 +165,16 @@ const SalesPipeline = () => {
 
   const moveToStage = async (leadId: string, newStage: Lead["stage"]) => {
     try {
-      const response = await fetch(`/api/leads-db?id=${leadId}`, {
+      await apiCall(API_ENDPOINTS.leads, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ stage: newStage })
+        body: JSON.stringify({ id: leadId, stage: newStage })
       });
-
-      if (response.ok) {
-        await loadLeads(); // Refresh data
-      } else {
-        console.error('Failed to update lead stage');
-      }
+      
+      await loadLeads(); // Refresh data
+      toast.success('Lead stage updated');
     } catch (error) {
       console.error('Error updating lead stage:', error);
+      toast.error('Failed to update lead stage');
     }
   };
 
@@ -189,17 +182,15 @@ const SalesPipeline = () => {
     if (!confirm('Are you sure you want to delete this lead?')) return;
     
     try {
-      const response = await fetch(`/api/leads-db?id=${leadId}`, {
+      await apiCall(`${API_ENDPOINTS.leads}?id=${leadId}`, {
         method: 'DELETE'
       });
-
-      if (response.ok) {
-        await loadLeads(); // Refresh data
-      } else {
-        console.error('Failed to delete lead');
-      }
+      
+      await loadLeads(); // Refresh data
+      toast.success('Lead deleted successfully');
     } catch (error) {
       console.error('Error deleting lead:', error);
+      toast.error('Failed to delete lead');
     }
   };
 
@@ -210,9 +201,8 @@ const SalesPipeline = () => {
     }
 
     try {
-      const response = await fetch('/api/leads-db', {
+      await apiCall(API_ENDPOINTS.leads, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           company: newLead.company,
           contact: newLead.contact,
@@ -221,31 +211,27 @@ const SalesPipeline = () => {
           type: newLead.type,
           source: newLead.source,
           notes: newLead.notes,
-          assignedTo: newLead.assignedTo ? parseInt(newLead.assignedTo) : null,
-          createdBy: getCurrentUserId()
+          assigned_to: newLead.assignedTo ? parseInt(newLead.assignedTo) : null,
+          created_by: getCurrentUserId()
         })
       });
 
-      if (response.ok) {
-        await loadLeads(); // Refresh data
-        setNewLead({
-          company: "",
-          contact: "",
-          email: "",
-          phone: "",
-          type: "standard",
-          source: "website",
-          notes: "",
-          assignedTo: ""
-        });
-        setShowAddLead(false);
-      } else {
-        const error = await response.json();
-        alert(`Failed to create lead: ${error.error || 'Unknown error'}`);
-      }
+      await loadLeads(); // Refresh data
+      setNewLead({
+        company: "",
+        contact: "",
+        email: "",
+        phone: "",
+        type: "standard",
+        source: "website",
+        notes: "",
+        assignedTo: ""
+      });
+      setShowAddLead(false);
+      toast.success('Lead created successfully');
     } catch (error) {
       console.error('Error creating lead:', error);
-      alert('Failed to create lead. Please try again.');
+      toast.error('Failed to create lead. Please try again.');
     }
   };
 
@@ -428,7 +414,7 @@ const SalesPipeline = () => {
                     <SelectValue placeholder="Select team member" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Unassigned</SelectItem>
+                    <SelectItem value="unassigned">Unassigned</SelectItem>
                     {users.map(user => (
                       <SelectItem key={user.id} value={user.id.toString()}>
                         {user.name} ({user.email})

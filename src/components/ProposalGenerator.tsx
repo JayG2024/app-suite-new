@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { APP_CONFIG } from "@/config/app";
 import { Loader2, Sparkles, CheckCircle, Mail, Calendar, Upload, FileText, Paperclip, X } from "lucide-react";
 import { generateProposalPDF } from "@/utils/pdfGenerator";
 
@@ -160,7 +161,7 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
         viewCount: 0,
         isProtected: true,
         accessCode: accessCode,
-        proposalUrl: `https://app-suite.io/proposal/${proposalId}`
+        proposalUrl: `${APP_CONFIG.url}/proposal/${proposalId}`
       };
       
       // Store proposal securely (in production, this would be in database)

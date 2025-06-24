@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     if (process.env.RESEND_API_KEY) {
       try {
         const teamEmail = await resend.emails.send({
-          from: 'App Suite <contact@app-suite.io>',
+          from: `App Suite <contact@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
           to: 'jason@jaydus.ai',
           subject: `💬 New Contact Form: ${formData.subject || 'General Inquiry'}`,
           html: generateContactNotificationHTML(formData),
@@ -195,13 +195,13 @@ function generateAutoReplyHTML(formData) {
           
           <h3>🚀 While you wait, check out:</h3>
           <ul>
-            <li>📊 <a href="https://www.app-suite.io/get-started">Generate a custom proposal</a> with instant pricing</li>
-            <li>🎯 <a href="https://www.app-suite.io/solutions-weve-built">View our recent projects</a> and client success stories</li>
-            <li>🤖 <a href="https://www.app-suite.io/ai-development-process">Learn about our AI capabilities</a></li>
+            <li>📊 <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/get-started">Generate a custom proposal</a> with instant pricing</li>
+            <li>🎯 <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/solutions-weve-built">View our recent projects</a> and client success stories</li>
+            <li>🤖 <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/ai-development-process">Learn about our AI capabilities</a></li>
           </ul>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="https://www.app-suite.io/get-started" class="button">🎯 Generate My Proposal</a>
+            <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/get-started" class="button">🎯 Generate My Proposal</a>
           </div>
           
           <p><strong>Questions or urgent matters?</strong><br>
@@ -217,7 +217,7 @@ function generateAutoReplyHTML(formData) {
         
         <div class="footer">
           <p>🌟 <strong>App Suite</strong> - Custom Software Development<br>
-          <a href="https://app-suite.io">app-suite.io</a> | jason@jaydus.ai</p>
+          <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}">${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'app-suite.io'}</a> | jason@jaydus.ai</p>
         </div>
       </div>
     </body>

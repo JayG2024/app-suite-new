@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     if (process.env.RESEND_API_KEY) {
       try {
         const clientEmail = await resend.emails.send({
-          from: 'App Suite <proposals@app-suite.io>',
+          from: `App Suite <proposals@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
           to: clientData.email,
           subject: `Your Custom Software Proposal - ${clientData.companyName}`,
           html: generateProposalEmailHTML(clientData, proposalUrl, accessCode),
@@ -70,7 +70,7 @@ export default async function handler(req, res) {
     if (process.env.RESEND_API_KEY && leadData) {
       try {
         const teamEmail = await resend.emails.send({
-          from: 'App Suite <notifications@app-suite.io>',
+          from: `App Suite <notifications@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
           to: 'jason@jaydus.ai',
           subject: `🎯 New Lead: ${clientData.companyName} - $${leadData.estimatedValue}`,
           html: generateTeamNotificationHTML(clientData, leadData)
@@ -447,8 +447,8 @@ function generateProposalEmailHTML(clientData, proposalUrl, accessCode) {
               <h3>Ready to Transform Your Business?</h3>
               <p>Let's schedule a 30-minute discovery call to finalize your requirements and get started.</p>
               <div style="margin-top: 25px;">
-                <a href="https://app-suite.io/contact" class="button">📅 Schedule Discovery Call</a>
-                <a href="https://app-suite.io/portfolio/webaudit-dashboard" class="button button-secondary">🔍 View Similar Projects</a>
+                <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/contact" class="button">📅 Schedule Discovery Call</a>
+                <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/portfolio/webaudit-dashboard" class="button button-secondary">🔍 View Similar Projects</a>
               </div>
             </div>
 
@@ -477,9 +477,9 @@ function generateProposalEmailHTML(clientData, proposalUrl, accessCode) {
           <div class="footer">
             <p><strong>🌟 App Suite</strong> - Building AI-powered applications that businesses own, not rent</p>
             <p>
-              <a href="https://app-suite.io">app-suite.io</a> | 
-              <a href="https://app-suite.io/examples">View Portfolio</a> |
-              <a href="https://app-suite.io/documentation/process">How We Work</a>
+              <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}">${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'app-suite.io'}</a> | 
+              <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/examples">View Portfolio</a> |
+              <a href="${process.env.VITE_SITE_URL || 'https://www.app-suite.io'}/documentation/process">How We Work</a>
             </p>
             <p style="font-size: 12px; color: #666; margin-top: 20px;">
               This proposal is valid for 30 days from ${new Date().toLocaleDateString()}. 

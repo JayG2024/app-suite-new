@@ -9,6 +9,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { API_ENDPOINTS, apiCall } from "@/utils/api";
+import { APP_CONFIG } from "@/config/app";
 import { 
   MessageSquare, 
   Mail, 
@@ -63,13 +65,10 @@ const ClientCommunication = () => {
 
   const loadMessages = async () => {
     try {
-      const response = await fetch('/api/client-messages');
-      if (response.ok) {
-        const data = await response.json();
-        setMessages(data.messages);
-        if (data.messages.length > 0 && !selectedMessage) {
-          setSelectedMessage(data.messages[0].id);
-        }
+      const data = await apiCall(API_ENDPOINTS.messages);
+      setMessages(data.messages || []);
+      if (data.messages && data.messages.length > 0 && !selectedMessage) {
+        setSelectedMessage(data.messages[0].id);
       }
     } catch (error) {
       console.error('Error loading messages:', error);
@@ -86,27 +85,22 @@ const ClientCommunication = () => {
 
     try {
       // First, save the response to the database
-      const dbResponse = await fetch('/api/client-messages', {
+      await apiCall(API_ENDPOINTS.messages, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: 'App Suite Team',
-          email: 'team@app-suite.io',
-          company: 'App Suite',
+          email: APP_CONFIG.supportEmail,
+          company: APP_CONFIG.company,
           message: responseInput,
-          messageType: 'response',
+          message_type: 'response',
           priority: 'medium',
-          isResponse: true,
-          originalMessageId: selectedMessage
+          is_response: true,
+          original_message_id: selectedMessage
         })
       });
 
-      if (!dbResponse.ok) {
-        throw new Error('Failed to save response');
-      }
-
       // Then, send the actual email to the client
-      const emailResponse = await fetch('/api/email/send', {
+      const emailResponse = await fetch(API_ENDPOINTS.email.send, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -150,17 +144,19 @@ const ClientCommunication = () => {
 
   const updateMessageStatus = async (messageId: string, status: string) => {
     try {
-      const response = await fetch(`/api/client-messages?id=${messageId}`, {
+      await apiCall(API_ENDPOINTS.messages, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ 
+          id: messageId,
+          status 
+        })
       });
 
-      if (response.ok) {
-        await loadMessages();
-      }
+      await loadMessages();
+      toast.success('Message status updated');
     } catch (error) {
       console.error('Error updating message status:', error);
+      toast.error('Failed to update message status');
     }
   };
 
@@ -168,18 +164,18 @@ const ClientCommunication = () => {
     if (!confirm('Are you sure you want to delete this message?')) return;
 
     try {
-      const response = await fetch(`/api/client-messages?id=${messageId}`, {
+      await apiCall(`${API_ENDPOINTS.messages}?id=${messageId}`, {
         method: 'DELETE'
       });
 
-      if (response.ok) {
-        await loadMessages();
-        if (selectedMessage === messageId) {
-          setSelectedMessage(messages.length > 1 ? messages[0].id : null);
-        }
+      await loadMessages();
+      if (selectedMessage === messageId) {
+        setSelectedMessage(messages.length > 1 ? messages[0].id : null);
       }
+      toast.success('Message deleted successfully');
     } catch (error) {
       console.error('Error deleting message:', error);
+      toast.error('Failed to delete message');
     }
   };
 

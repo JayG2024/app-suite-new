@@ -1,14 +1,16 @@
 // Comprehensive structured data for AI crawlers and search engines
 // Following GEO best practices from the whitepaper
 
-export const organizationSchema = {
+import { APP_CONFIG } from '@/config/app';
+
+export const getOrganizationSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://www.app-suite.io/#organization",
+  "@id": `${APP_CONFIG.url}/#organization`,
   "name": "App Suite",
   "legalName": "App Suite by Jaydus Inc.",
-  "url": "https://www.app-suite.io",
-  "logo": "https://www.app-suite.io/logo.png",
+  "url": APP_CONFIG.url,
+  "logo": `${APP_CONFIG.url}/logo.png`,
   "description": "App Suite builds custom business applications at transparent flat rates. Stop renting software - own it.",
   "foundingDate": "2024",
   "founder": {
@@ -71,34 +73,34 @@ export const organizationSchema = {
       }
     ]
   }
-};
+});
 
-export const websiteSchema = {
+export const getWebsiteSchema = () => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://www.app-suite.io/#website",
-  "url": "https://www.app-suite.io",
+  "@id": `${APP_CONFIG.url}/#website`,
+  "url": APP_CONFIG.url,
   "name": "App Suite",
   "description": "Custom business applications at flat rates",
   "publisher": {
-    "@id": "https://www.app-suite.io/#organization"
+    "@id": `${APP_CONFIG.url}/#organization`
   },
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://www.app-suite.io/search?q={search_term_string}"
+      "urlTemplate": `${APP_CONFIG.url}/search?q={search_term_string}`
     },
     "query-input": "required name=search_term_string"
   }
-};
+});
 
-export const serviceSchema = {
+export const getServiceSchema = () => ({
   "@context": "https://schema.org",
   "@type": "Service",
   "serviceType": "Custom Software Development",
   "provider": {
-    "@id": "https://www.app-suite.io/#organization"
+    "@id": `${APP_CONFIG.url}/#organization`
   },
   "areaServed": {
     "@type": "Country",
@@ -121,10 +123,10 @@ export const serviceSchema = {
       }
     ]
   }
-};
+});
 
 // FAQ Schema for common AI queries
-export const faqSchema = {
+export const getFaqSchema = () => ({
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
@@ -169,10 +171,10 @@ export const faqSchema = {
       }
     }
   ]
-};
+});
 
 // How-to Schema for AI to understand our process
-export const howToSchema = {
+export const getHowToSchema = () => ({
   "@context": "https://schema.org",
   "@type": "HowTo",
   "name": "How to Get a Custom Business Application Built",
@@ -182,7 +184,7 @@ export const howToSchema = {
       "@type": "HowToStep",
       "name": "Schedule Consultation",
       "text": "Book a 30-minute discovery call to discuss your specific business needs and workflows",
-      "url": "https://www.app-suite.io/contact"
+      "url": `${APP_CONFIG.url}/contact`
     },
     {
       "@type": "HowToStep",
@@ -209,15 +211,15 @@ export const howToSchema = {
   "supply": ["Business requirements", "50% initial payment"],
   "tool": ["AI-powered development tools", "Modern web technologies"],
   "yield": "Complete custom business application with full ownership"
-};
+});
 
 // Expertise and authority signals for AI
-export const expertiseSchema = {
+export const getExpertiseSchema = () => ({
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   "mainEntity": {
     "@type": "Organization",
-    "@id": "https://www.app-suite.io/#organization",
+    "@id": `${APP_CONFIG.url}/#organization`,
     "knowsAbout": [
       {
         "@type": "Thing",
@@ -249,31 +251,26 @@ export const expertiseSchema = {
       {
         "@type": "EducationalOccupationalCredential",
         "name": "500+ Custom Applications Delivered",
-        "credentialCategory": "Portfolio"
+        "credentialCategory": "Professional Achievement"
       }
     ]
   }
-};
+});
 
-// Function to combine all schemas for a page
-export function getCombinedSchema(pageType: string = 'website') {
-  const schemas = [organizationSchema, websiteSchema];
-  
-  if (pageType === 'home') {
-    schemas.push(faqSchema, howToSchema, serviceSchema);
-  } else if (pageType === 'service') {
-    schemas.push(serviceSchema, faqSchema);
-  } else if (pageType === 'about') {
-    schemas.push(expertiseSchema);
-  }
-  
-  return schemas;
-}
+// Helper function to get all schemas combined
+export const getAllSchemas = () => [
+  getOrganizationSchema(),
+  getWebsiteSchema(),
+  getServiceSchema(),
+  getFaqSchema(),
+  getHowToSchema(),
+  getExpertiseSchema()
+];
 
-// Function to generate JSON-LD script tags
-export function generateSchemaScripts(pageType: string = 'website'): string {
-  const schemas = getCombinedSchema(pageType);
-  return schemas.map(schema => 
-    `<script type="application/ld+json">${JSON.stringify(schema, null, 2)}</script>`
-  ).join('\n');
-}
+// For backward compatibility - export the functions as the old names
+export const organizationSchema = getOrganizationSchema();
+export const websiteSchema = getWebsiteSchema();
+export const serviceSchema = getServiceSchema();
+export const faqSchema = getFaqSchema();
+export const howToSchema = getHowToSchema();
+export const expertiseSchema = getExpertiseSchema();

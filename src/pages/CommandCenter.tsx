@@ -10,6 +10,7 @@ import SEO from "@/components/SEO";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTracker from "@/components/ProjectTracker";
 import ClientCommunication from "@/components/ClientCommunication";
 import SalesPipeline from "@/components/SalesPipeline";
@@ -92,109 +93,27 @@ const CommandCenter = () => {
   useEffect(() => {
     const calculateMetrics = async () => {
       try {
-        // Fetch leads from database
-        const response = await fetch('/api/leads-db');
-        if (response.ok) {
-          const data = await response.json();
-          const leads = data.leads;
+        // Fetch metrics from dashboard endpoint
+        const metricsData = await apiCall(API_ENDPOINTS.dashboard.metrics);
+        setMetrics(metricsData);
+        
+        // Fetch leads for recent activity
+        const leadsData = await apiCall(API_ENDPOINTS.leads);
+        const leads = leadsData.leads || [];
           
-          const proposals = Object.keys(localStorage).filter(key => key.startsWith('proposal_'));
+          // Generate recent activity from leads
+          const activities: RecentActivity[] = leads
+            .slice(0, 5)
+            .map((lead: any) => ({
+              id: `lead-${lead.id}`,
+              type: lead.status === 'closed-won' ? 'sale' : 'client',
+              title: lead.status === 'closed-won' ? 'New Sale Closed' : 'New Lead',
+              description: `${lead.name} - ${lead.company || 'Direct'}`,
+              value: lead.value,
+              timestamp: lead.created_at || new Date().toISOString()
+            }));
           
-          const totalRevenue = leads
-            .filter((lead: any) => lead.stage === 'closed-won')
-            .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
-          
-          const activeProjects = leads.filter((lead: any) => 
-            ['qualified', 'proposal', 'negotiation'].includes(lead.stage)
-          ).length;
-          
-          const totalClients = leads.filter((lead: any) => lead.stage === 'closed-won').length;
-          
-          const pipelineValue = leads
-            .filter((lead: any) => ['qualified', 'proposal', 'negotiation'].includes(lead.stage))
-            .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
-          
-          const proposalsSent = proposals.length;
-          
-          const wonDeals = leads.filter((lead: any) => lead.stage === 'closed-won').length;
-          const lostDeals = leads.filter((lead: any) => lead.stage === 'closed-lost').length;
-          const conversionRate = (wonDeals + lostDeals) > 0 ? Math.round((wonDeals / (wonDeals + lostDeals)) * 100) : 0;
-          
-          const averageProjectValue = totalClients > 0 ? Math.round(totalRevenue / totalClients) : 0;
-          
-          // Fetch tasks data
-          let totalTasks = 0;
-          let completedTasks = 0;
-          let taskCompletionRate = 0;
-          
-          try {
-            const tasksResponse = await fetch('/api/tasks');
-            if (tasksResponse.ok) {
-              const tasksData = await tasksResponse.json();
-              const tasks = tasksData.tasks || [];
-              totalTasks = tasks.length;
-              completedTasks = tasks.filter((task: any) => task.status === 'completed').length;
-              taskCompletionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-            }
-          } catch (error) {
-            console.error('Error fetching tasks:', error);
-          }
-          
-          setMetrics({
-            totalRevenue,
-            activeProjects,
-            totalClients,
-            monthlyGrowth: 0, // TODO: Calculate based on historical data
-            pipelineValue,
-            proposalsSent,
-            conversionRate,
-            averageProjectValue,
-            totalTasks,
-            completedTasks,
-            taskCompletionRate
-          });
-
-          // Generate recent activity from actual data
-          const activity: RecentActivity[] = [];
-          
-          // Recent closed deals
-          const recentDeals = leads
-            .filter((lead: any) => lead.stage === 'closed-won')
-            .sort((a: any, b: any) => new Date(b.created_at || b.createdAt || Date.now()).getTime() - new Date(a.created_at || a.createdAt || Date.now()).getTime())
-            .slice(0, 2);
-          
-          recentDeals.forEach((deal: any) => {
-            activity.push({
-              id: `deal-${deal.id}`,
-              type: 'sale',
-              title: `New project signed: ${deal.company || deal.name}`,
-              description: `$${(deal.value || 0).toLocaleString()} ${deal.description || 'custom application'}`,
-              value: deal.value,
-              timestamp: new Date(deal.created_at || deal.createdAt || Date.now()).toISOString()
-            });
-          });
-
-          // Recent proposals
-          const recentProposals = leads
-            .filter((lead: any) => lead.stage === 'proposal')
-            .sort((a: any, b: any) => new Date(b.created_at || b.createdAt || Date.now()).getTime() - new Date(a.created_at || a.createdAt || Date.now()).getTime())
-            .slice(0, 2);
-          
-          recentProposals.forEach((proposal: any) => {
-            activity.push({
-              id: `proposal-${proposal.id}`,
-              type: 'proposal',
-              title: `Proposal sent to ${proposal.company || proposal.name}`,
-              description: `$${(proposal.value || 0).toLocaleString()} ${proposal.description || 'custom application'}`,
-              value: proposal.value,
-              timestamp: new Date(proposal.created_at || proposal.createdAt || Date.now()).toISOString()
-            });
-          });
-
-          // Sort by timestamp and limit to 5 most recent
-          activity.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-          setRecentActivity(activity.slice(0, 5));
-        }
+          setRecentActivity(activities);
       } catch (error) {
         console.error('Error fetching metrics:', error);
         // Fallback to localStorage
@@ -299,21 +218,14 @@ const CommandCenter = () => {
     setLoadingAction(action);
     
     try {
-      const response = await fetch('/api/ai/generate-content', {
+      const result = await apiCall(API_ENDPOINTS.ai.generateContent, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action,
           data: data || getActionData(action),
           userId: user?.email
         })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate content');
-      }
-
-      const result = await response.json();
       
       // Handle the generated content based on action type
       switch (action) {

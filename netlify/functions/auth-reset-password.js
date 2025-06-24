@@ -72,7 +72,7 @@ exports.handler = async (event, context) => {
     `;
 
     await resend.emails.send({
-      from: 'App Suite <admin@app-suite.io>',
+      from: `App Suite <admin@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
       to: email,
       subject: 'Password Reset - App Suite Admin',
       html: emailContent,

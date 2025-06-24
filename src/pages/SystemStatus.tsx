@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, AlertCircle, XCircle, RefreshCw, Clock, TrendingUp } from "lucide-react";
 import SEO from '@/components/SEO';
+import { APP_CONFIG } from '@/config/app';
 
 interface ServiceStatus {
   name: string;
@@ -279,7 +280,7 @@ const SystemStatus = () => {
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-500">
           <p>Status page automatically updates every 60 seconds</p>
-          <p className="mt-1">For emergency support, contact support@app-suite.io</p>
+          <p className="mt-1">For emergency support, contact {APP_CONFIG.supportEmail}</p>
         </div>
       </div>
     </div>
