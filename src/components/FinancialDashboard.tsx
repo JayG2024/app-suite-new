@@ -191,7 +191,7 @@ const FinancialDashboard = () => {
         method: 'POST',
         body: JSON.stringify({
           ...newInvoice,
-          project_id: newInvoice.projectId ? parseInt(newInvoice.projectId) : null,
+          project_id: newInvoice.projectId && newInvoice.projectId !== 'none' ? parseInt(newInvoice.projectId) : null,
           client_id: 1 // TODO: Get from leads/clients
         })
       });
@@ -228,7 +228,7 @@ const FinancialDashboard = () => {
         method: 'POST',
         body: JSON.stringify({
           ...newExpense,
-          project_id: newExpense.projectId ? parseInt(newExpense.projectId) : null,
+          project_id: newExpense.projectId && newExpense.projectId !== 'none' ? parseInt(newExpense.projectId) : null,
           created_by: getCurrentUserId()
         })
       });
@@ -498,7 +498,7 @@ const FinancialDashboard = () => {
                         <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No project</SelectItem>
+                        <SelectItem value="none">No project</SelectItem>
                         {projects.map(project => (
                           <SelectItem key={project.id} value={project.id}>
                             {project.projectName} - {project.clientName}
@@ -683,7 +683,7 @@ const FinancialDashboard = () => {
                         <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No project</SelectItem>
+                        <SelectItem value="none">No project</SelectItem>
                         {projects.map(project => (
                           <SelectItem key={project.id} value={project.id}>
                             {project.projectName}

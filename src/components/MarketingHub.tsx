@@ -274,7 +274,7 @@ const MarketingHub = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newContent,
-          campaignId: newContent.campaignId ? parseInt(newContent.campaignId) : null,
+          campaignId: newContent.campaignId && newContent.campaignId !== 'none' ? parseInt(newContent.campaignId) : null,
           keywords: newContent.keywords ? newContent.keywords.split(',').map(k => k.trim()) : [],
           createdBy: getCurrentUserId()
         })
@@ -528,7 +528,7 @@ const MarketingHub = () => {
                         <SelectValue placeholder="Select campaign" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No campaign</SelectItem>
+                        <SelectItem value="none">No campaign</SelectItem>
                         {campaigns.map(campaign => (
                           <SelectItem key={campaign.id} value={campaign.id}>
                             {campaign.name}

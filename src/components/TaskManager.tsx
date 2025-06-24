@@ -177,8 +177,8 @@ const TaskManager = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...newTask,
-          project_id: newTask.project_id ? parseInt(newTask.project_id) : null,
-          assigned_to: newTask.assigned_to ? parseInt(newTask.assigned_to) : null,
+          project_id: newTask.project_id && newTask.project_id !== 'none' ? parseInt(newTask.project_id) : null,
+          assigned_to: newTask.assigned_to && newTask.assigned_to !== 'unassigned' ? parseInt(newTask.assigned_to) : null,
           estimated_hours: parseFloat(newTask.estimated_hours.toString()) || 0,
           tags: newTask.tags.split(',').map(t => t.trim()).filter(t => t)
         })
@@ -416,7 +416,7 @@ const TaskManager = () => {
                       <SelectValue placeholder="Select project" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No Project</SelectItem>
+                      <SelectItem value="none">No Project</SelectItem>
                       {projects.map((project) => (
                         <SelectItem key={project.id} value={project.id.toString()}>
                           {project.project_name || project.name}
@@ -436,7 +436,7 @@ const TaskManager = () => {
                       <SelectValue placeholder="Select assignee" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Unassigned</SelectItem>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
                       {users.map((user) => (
                         <SelectItem key={user.id} value={user.id.toString()}>
                           {user.name}

@@ -180,7 +180,7 @@ const ProjectTracker = () => {
         method: 'POST',
         body: JSON.stringify({
           ...newProject,
-          assigned_to: newProject.assignedTo ? parseInt(newProject.assignedTo) : null,
+          assigned_to: newProject.assignedTo && newProject.assignedTo !== 'unassigned' ? parseInt(newProject.assignedTo) : null,
           created_by: getCurrentUserId()
         })
       });
@@ -614,7 +614,7 @@ const ProjectTracker = () => {
                   <SelectValue placeholder="Select team member" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Unassigned</SelectItem>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
                   {users.map(user => (
                     <SelectItem key={user.id} value={user.id.toString()}>
                       {user.name} ({user.email})

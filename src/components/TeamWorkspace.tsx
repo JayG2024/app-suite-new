@@ -207,8 +207,8 @@ const TeamWorkspace = () => {
           priority: newTask.priority,
           dueDate: newTask.dueDate || null,
           estimatedHours: newTask.estimatedHours,
-          projectId: newTask.projectId ? parseInt(newTask.projectId) : null,
-          assignedTo: newTask.assignedTo ? parseInt(newTask.assignedTo) : null,
+          projectId: newTask.projectId && newTask.projectId !== 'none' ? parseInt(newTask.projectId) : null,
+          assignedTo: newTask.assignedTo && newTask.assignedTo !== 'unassigned' ? parseInt(newTask.assignedTo) : null,
           createdBy: getCurrentUserId(),
           tags: newTask.tags ? newTask.tags.split(',').map(t => t.trim()) : [],
           notes: newTask.notes
@@ -254,7 +254,7 @@ const TeamWorkspace = () => {
           content: newDocument.content,
           type: newDocument.type,
           category: newDocument.category,
-          projectId: newDocument.projectId ? parseInt(newDocument.projectId) : null,
+          projectId: newDocument.projectId && newDocument.projectId !== 'none' ? parseInt(newDocument.projectId) : null,
           createdBy: getCurrentUserId(),
           tags: newDocument.tags ? newDocument.tags.split(',').map(t => t.trim()) : [],
           isPublic: newDocument.isPublic
@@ -541,7 +541,7 @@ const TeamWorkspace = () => {
                         <SelectValue placeholder="Select team member" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">Unassigned</SelectItem>
+                        <SelectItem value="unassigned">Unassigned</SelectItem>
                         {users.map(user => (
                           <SelectItem key={user.id} value={user.id.toString()}>
                             {user.name}
@@ -557,7 +557,7 @@ const TeamWorkspace = () => {
                         <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No project</SelectItem>
+                        <SelectItem value="none">No project</SelectItem>
                         {projects.map(project => (
                           <SelectItem key={project.id} value={project.id}>
                             {project.projectName}
@@ -728,7 +728,7 @@ const TeamWorkspace = () => {
                         <SelectValue placeholder="Select project" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">No project</SelectItem>
+                        <SelectItem value="none">No project</SelectItem>
                         {projects.map(project => (
                           <SelectItem key={project.id} value={project.id}>
                             {project.projectName}
