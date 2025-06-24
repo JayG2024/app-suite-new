@@ -698,6 +698,7 @@ const ClientManager = () => {
                           <SelectItem value="email">Email Campaign</SelectItem>
                           <SelectItem value="cold">Cold Outreach</SelectItem>
                           <SelectItem value="event">Event</SelectItem>
+                          <SelectItem value="already-client">Already a Client</SelectItem>
                           <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
@@ -940,6 +941,7 @@ const ClientManager = () => {
                       <SelectItem value="email">Email Campaign</SelectItem>
                       <SelectItem value="cold">Cold Outreach</SelectItem>
                       <SelectItem value="event">Event</SelectItem>
+                      <SelectItem value="already-client">Already a Client</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
