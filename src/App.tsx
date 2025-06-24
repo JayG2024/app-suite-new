@@ -114,7 +114,7 @@ function App() {
           <Route path="solutions-weve-built" element={<SolutionsWeveBuilt />} />
           <Route path="portfolio/webaudit-dashboard" element={<WebAuditDashboard />} />
           <Route path="proposal/:proposalId" element={<Proposal />} />
-          <Route path="ai-brain" element={<AdminPage />} />
+          <Route path="ai-brain" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
           <Route path="documentation" element={<Documentation />} />
           <Route path="documentation/quick-start" element={<QuickStart />} />
           <Route path="documentation/installation" element={<Installation />} />

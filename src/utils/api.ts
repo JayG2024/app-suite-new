@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   
   // Core entities
   leads: `${API_BASE}/leads`,
+  clients: `${API_BASE}/clients`,
   projects: `${API_BASE}/projects`,
   tasks: `${API_BASE}/tasks`,
   users: `${API_BASE}/users`,

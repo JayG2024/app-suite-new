@@ -12,7 +12,7 @@ import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTracker from "@/components/ProjectTracker";
-import ClientCommunication from "@/components/ClientCommunication";
+import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
 import MarketingHub from "@/components/MarketingHub";
 import FinancialDashboard from "@/components/FinancialDashboard";
@@ -664,7 +664,7 @@ const CommandCenter = () => {
           </TabsContent>
 
           <TabsContent value="clients">
-            <ClientCommunication />
+            <ClientManager />
           </TabsContent>
 
           <TabsContent value="projects">
