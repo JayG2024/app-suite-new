@@ -11,14 +11,14 @@ import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
-import ProjectTracker from "@/components/ProjectTracker";
+import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
 import MarketingHub from "@/components/MarketingHub";
 import FinancialDashboard from "@/components/FinancialDashboard";
 import TeamWorkspace from "@/components/TeamWorkspace";
 import EmailTemplates from "@/components/EmailTemplates";
-import TaskManager from "@/components/TaskManager";
+import TaskManagerV2 from "@/components/TaskManagerV2";
 import { 
   Brain, 
   Users, 
@@ -370,6 +370,10 @@ const CommandCenter = () => {
                   {user?.name || user?.email}
                 </span>
               </div>
+              <Button variant="outline" size="sm" onClick={() => navigate('/')}>
+                <Globe className="h-4 w-4 mr-2" />
+                View Site
+              </Button>
               <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -668,11 +672,11 @@ const CommandCenter = () => {
           </TabsContent>
 
           <TabsContent value="projects">
-            <ProjectTracker />
+            <ProjectTrackerV2 />
           </TabsContent>
 
           <TabsContent value="tasks">
-            <TaskManager />
+            <TaskManagerV2 />
           </TabsContent>
 
           <TabsContent value="sales">

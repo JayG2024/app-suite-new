@@ -64,6 +64,8 @@ const SalesPipeline = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [showEditLead, setShowEditLead] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
 
   // Load data from database
   useEffect(() => {
@@ -145,6 +147,22 @@ const SalesPipeline = () => {
     source: "website",
     notes: "",
     assignedTo: ""
+  });
+  
+  const [editLead, setEditLead] = useState({
+    company: "",
+    contact: "",
+    email: "",
+    phone: "",
+    type: "standard" as Lead["type"],
+    source: "website",
+    notes: "",
+    assignedTo: "",
+    value: 5000,
+    probability: 20,
+    nextAction: "",
+    nextActionDate: "",
+    stage: "lead" as Lead["stage"]
   });
 
   const stages = [
@@ -252,6 +270,62 @@ const SalesPipeline = () => {
       console.error('Error creating lead:', error);
       toast.error('Failed to create lead. Please try again.');
     }
+  };
+
+  const updateLead = async () => {
+    if (!selectedLead || !editLead.company || !editLead.contact || !editLead.email) {
+      alert("Please fill in company, contact, and email fields");
+      return;
+    }
+
+    try {
+      await apiCall(`${API_ENDPOINTS.leads}?id=${selectedLead.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          name: editLead.contact,
+          company: editLead.company,
+          email: editLead.email,
+          phone: editLead.phone,
+          type: editLead.type,
+          stage: editLead.stage,
+          value: editLead.value,
+          probability: editLead.probability,
+          source: editLead.source,
+          notes: editLead.notes,
+          next_action: editLead.nextAction,
+          next_action_date: editLead.nextActionDate,
+          assigned_to: editLead.assignedTo ? parseInt(editLead.assignedTo) : null
+        })
+      });
+
+      await loadLeads(); // Refresh data
+      setShowEditLead(false);
+      setSelectedLead(null);
+      toast.success('Lead updated successfully');
+    } catch (error) {
+      console.error('Error updating lead:', error);
+      toast.error('Failed to update lead. Please try again.');
+    }
+  };
+
+  const openEditDialog = (lead: Lead) => {
+    setSelectedLead(lead);
+    setEditLead({
+      company: lead.company,
+      contact: lead.contact,
+      email: lead.email,
+      phone: lead.phone || "",
+      type: lead.type,
+      source: lead.source || "website",
+      notes: lead.notes || "",
+      assignedTo: lead.assignedTo?.toString() || "",
+      value: lead.value,
+      probability: lead.probability,
+      nextAction: lead.nextAction || "",
+      nextActionDate: lead.nextActionDate || "",
+      stage: lead.stage
+    });
+    setShowEditLead(true);
   };
 
   const getTypeInfo = (type: string) => {
@@ -542,6 +616,12 @@ const SalesPipeline = () => {
                               ))}
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
+                                onClick={() => openEditDialog(lead)}
+                              >
+                                <Edit className="h-3 w-3 mr-2" />
+                                Edit Lead
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
                                 onClick={() => deleteLead(lead.id)}
                                 className="text-red-600"
                               >
@@ -594,6 +674,168 @@ const SalesPipeline = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Edit Lead Dialog */}
+      <Dialog open={showEditLead} onOpenChange={setShowEditLead}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Lead</DialogTitle>
+            <DialogDescription>Update lead information</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="edit-company">Company *</Label>
+              <Input 
+                id="edit-company"
+                value={editLead.company} 
+                onChange={(e) => setEditLead({...editLead, company: e.target.value})}
+                placeholder="Company name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-contact">Contact Person *</Label>
+              <Input 
+                id="edit-contact"
+                value={editLead.contact} 
+                onChange={(e) => setEditLead({...editLead, contact: e.target.value})}
+                placeholder="John Doe"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-email">Email *</Label>
+                <Input 
+                  id="edit-email"
+                  type="email"
+                  value={editLead.email} 
+                  onChange={(e) => setEditLead({...editLead, email: e.target.value})}
+                  placeholder="john@company.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-phone">Phone</Label>
+                <Input 
+                  id="edit-phone"
+                  value={editLead.phone} 
+                  onChange={(e) => setEditLead({...editLead, phone: e.target.value})}
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-type">Deal Type</Label>
+                <Select value={editLead.type} onValueChange={(value) => {
+                  setEditLead({
+                    ...editLead, 
+                    type: value as Lead["type"],
+                    value: value === "standard" ? 5000 : value === "ai-enhanced" ? 7500 : 10000
+                  });
+                }}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard ($5,000)</SelectItem>
+                    <SelectItem value="ai-enhanced">AI-Enhanced ($7,500)</SelectItem>
+                    <SelectItem value="enterprise">Enterprise ($10,000)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="edit-stage">Stage</Label>
+                <Select value={editLead.stage} onValueChange={(value) => setEditLead({...editLead, stage: value as Lead["stage"]})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {stages.map(stage => (
+                      <SelectItem key={stage.name} value={stage.name}>
+                        {stage.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-value">Deal Value</Label>
+                <Input 
+                  id="edit-value"
+                  type="number"
+                  value={editLead.value} 
+                  onChange={(e) => setEditLead({...editLead, value: parseInt(e.target.value) || 0})}
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-probability">Probability (%)</Label>
+                <Input 
+                  id="edit-probability"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={editLead.probability} 
+                  onChange={(e) => setEditLead({...editLead, probability: parseInt(e.target.value) || 0})}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="edit-nextAction">Next Action</Label>
+                <Input 
+                  id="edit-nextAction"
+                  value={editLead.nextAction} 
+                  onChange={(e) => setEditLead({...editLead, nextAction: e.target.value})}
+                  placeholder="Follow up call"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-nextActionDate">Action Date</Label>
+                <Input 
+                  id="edit-nextActionDate"
+                  type="date"
+                  value={editLead.nextActionDate} 
+                  onChange={(e) => setEditLead({...editLead, nextActionDate: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="edit-assignTo">Assign To</Label>
+              <Select value={editLead.assignedTo} onValueChange={(value) => setEditLead({...editLead, assignedTo: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select assignee" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  {users.map(user => (
+                    <SelectItem key={user.id} value={user.id.toString()}>
+                      {user.name} ({user.email})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="edit-notes">Notes</Label>
+              <Textarea 
+                id="edit-notes"
+                value={editLead.notes} 
+                onChange={(e) => setEditLead({...editLead, notes: e.target.value})}
+                placeholder="Additional notes..."
+                rows={3}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowEditLead(false);
+                setSelectedLead(null);
+              }}>Cancel</Button>
+              <Button onClick={updateLead}>Update Lead</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
