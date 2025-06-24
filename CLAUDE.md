@@ -9,62 +9,40 @@
 
 ## Quick Commands
 - Navigate to this project: `cd ~/Desktop/appsuitenew`
-- Find Vercel projects: `find ~ -maxdepth 3 -name ".vercel" -type d 2>/dev/null`
-- Navigate to any Vercel project: `cd $(find ~ -maxdepth 3 -name ".vercel" -type d 2>/dev/null | grep PROJECT_NAME | sed 's/\.vercel$//')`
+- Start dev server: `yarn dev`
+- Build for production: `yarn build`
+- Preview production build: `yarn preview`
 
-## Vercel Deployment Info
-- **Linked Account**: jason-gordon
-- **Project ID**: prj_Nv9ZvrYSRqaqaY4dfpZH0IRUinZM
-- **Organization ID**: team_VJO48Kb7SR0DiBcz7T8v8aib
-- **Framework**: Vite
-- **Node Version**: 22.x
+## Netlify Deployment Info
+- **Framework**: Vite + React
+- **Node Version**: 20.x (specified in netlify.toml)
+- **Build Command**: `yarn build`
+- **Publish Directory**: `dist`
+- **Functions Directory**: `netlify/functions`
 
-### Vercel Commands
-- Check current account: `vercel whoami`
-- Deploy to production: `vercel --prod`
-- Deploy to preview: `vercel`
-- Link to different project: `vercel link`
-- View project info: `cat .vercel/project.json`
+### Netlify Commands
+- Deploy via CLI: `netlify deploy`
+- Deploy to production: `netlify deploy --prod`
+- Open Netlify admin: `netlify open`
+- Check deployment status: `netlify status`
 
-### Best Practices for Vercel + Claude Code
-1. **Always verify project connection before deploying:**
-   ```bash
-   cat .vercel/project.json | grep projectId
-   # Should show: prj_Nv9ZvrYSRqaqaY4dfpZH0IRUinZM
-   ```
+### Best Practices for Netlify + Claude Code
+1. **Environment Variables:**
+   - Set in Netlify Dashboard → Site Settings → Environment Variables
+   - Use `VITE_` prefix for client-side variables
+   - Server-side variables don't need prefix
 
-2. **Keep CLAUDE.md updated with current project ID**
-   - Update immediately after any project changes
-   - Include in git commits for team sync
-
-3. **Use environment variables for consistency:**
-   ```bash
-   export VERCEL_PROJECT_ID="prj_Nv9ZvrYSRqaqaY4dfpZH0IRUinZM"
-   export VERCEL_ORG_ID="team_VJO48Kb7SR0DiBcz7T8v8aib"
-   ```
-
-4. **Verification checklist before deployment:**
-   - [ ] Run `vercel whoami` to confirm account
-   - [ ] Check `.vercel/project.json` has correct project ID
-   - [ ] Verify `vercel.json` configuration is current
+2. **Deployment Workflow:**
    - [ ] Test build locally with `yarn build`
-   - [ ] Deploy to preview first: `vercel`
-   - [ ] Then deploy to production: `vercel --prod`
+   - [ ] Check for build errors
+   - [ ] Push to GitHub (auto-deploys if connected)
+   - [ ] Or use CLI: `netlify deploy` for preview
+   - [ ] Then `netlify deploy --prod` for production
 
-5. **If project gets disconnected:**
-   ```bash
-   # Remove old connection
-   rm -rf .vercel
-   
-   # Re-link with specific project
-   vercel link
-   # Then manually update .vercel/project.json with correct IDs
-   ```
-
-6. **Git workflow for Vercel consistency:**
-   - Commit `.vercel/project.json` to git (it's already in the repo)
-   - Include CLAUDE.md updates when project changes
-   - Use git hooks to verify project ID before push
+3. **Serverless Functions:**
+   - Place in `/netlify/functions/` directory
+   - Export as `exports.handler` (not default export)
+   - Access via `/.netlify/functions/function-name`
 
 ## SEO Setup Complete ✅
 
