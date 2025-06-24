@@ -1,5 +1,5 @@
 // Netlify function for password reset
-const { Resend } = require('resend');
+import { Resend } from 'resend';
 
 // Initialize Resend
 const resend = new Resend(process.env.VITE_RESEND_API_KEY || process.env.RESEND_API_KEY);
@@ -16,7 +16,7 @@ const AUTHORIZED_USERS = {
   }
 };
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {

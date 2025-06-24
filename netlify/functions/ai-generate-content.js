@@ -6,7 +6,7 @@ const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 };
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // Handle CORS
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };

@@ -1,5 +1,5 @@
 // Netlify function for sending emails
-const nodemailer = require('nodemailer');
+// Simplified version - logs email instead of sending
 
 const headers = {
   'Content-Type': 'application/json',
@@ -8,38 +8,7 @@ const headers = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 };
 
-// Create transporter (configure with your email service)
-const createTransporter = () => {
-  // Using SendGrid (recommended for production)
-  if (process.env.SENDGRID_API_KEY) {
-    const sgMail = require('@sendgrid/mail');
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    return {
-      sendMail: async (mailOptions) => {
-        await sgMail.send({
-          to: mailOptions.to,
-          from: mailOptions.from || process.env.EMAIL_FROM || `noreply@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}`,
-          subject: mailOptions.subject,
-          text: mailOptions.text,
-          html: mailOptions.html
-        });
-      }
-    };
-  }
-  
-  // Fallback to SMTP
-  return nodemailer.createTransporter({
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: process.env.SMTP_PORT || 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  });
-};
-
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
   // Handle CORS
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers, body: '' };
@@ -64,35 +33,34 @@ exports.handler = async (event, context) => {
       };
     }
     
-    const transporter = createTransporter();
-    
-    const mailOptions = {
-      from: from || process.env.EMAIL_FROM || `App Suite <noreply@${process.env.VITE_SITE_URL ? new URL(process.env.VITE_SITE_URL).hostname.replace('www.', '') : 'localhost'}>`,
+    // For now, just log the email details
+    console.log('Email would be sent:', {
+      from: from || process.env.EMAIL_FROM || 'App Suite <noreply@app-suite.io>',
       to,
       subject,
-      text,
-      html,
+      text: text || 'No text content',
       replyTo: replyTo || from
-    };
+    });
     
-    await transporter.sendMail(mailOptions);
+    // TODO: Implement actual email sending with SendGrid or SMTP
+    // This requires proper setup in Netlify environment
     
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({ 
         success: true, 
-        message: 'Email sent successfully' 
+        message: 'Email logged successfully (sending disabled in demo)' 
       })
     };
     
   } catch (error) {
-    console.error('Email sending error:', error);
+    console.error('Email handling error:', error);
     return {
       statusCode: 500,
       headers,
       body: JSON.stringify({ 
-        error: 'Failed to send email',
+        error: 'Failed to process email request',
         details: error.message 
       })
     };
