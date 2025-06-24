@@ -1,18 +1,30 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { AlertCircle, Lock, Mail, Loader2 } from 'lucide-react';
+import { AlertCircle, Lock, Mail, Loader2, KeyRound } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const { login } = useAuth();
+
+  // Authorized emails
+  const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
+
+    // Check if email is authorized
+    if (!AUTHORIZED_EMAILS.includes(email.toLowerCase())) {
+      setError('Unauthorized email. Access restricted to authorized administrators only.');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await login(email, password);
@@ -20,6 +32,43 @@ export default function LoginForm() {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async () => {
+    if (!email) {
+      setError('Please enter your email address first');
+      return;
+    }
+
+    // Check if email is authorized
+    if (!AUTHORIZED_EMAILS.includes(email.toLowerCase())) {
+      setError('Password reset is only available for authorized administrators');
+      return;
+    }
+
+    setIsResetting(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        toast.success('Password reset instructions have been sent to your email');
+        setEmail('');
+        setPassword('');
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Failed to send reset email');
+      }
+    } catch (err) {
+      setError('Failed to send reset email. Please try again.');
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -110,6 +159,33 @@ export default function LoginForm() {
                   'Sign in'
                 )}
               </button>
+            </div>
+
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={handlePasswordReset}
+                disabled={isResetting}
+                className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isResetting ? (
+                  <>
+                    <Loader2 className="animate-spin -ml-1 mr-3 h-4 w-4 text-gray-700" />
+                    Sending reset email...
+                  </>
+                ) : (
+                  <>
+                    <KeyRound className="h-4 w-4 mr-2" />
+                    Reset Password
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                Access restricted to authorized administrators only
+              </p>
             </div>
           </form>
         </div>

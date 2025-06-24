@@ -53,6 +53,13 @@ export default async function handler(req, res) {
   const client = await pool.connect();
 
   try {
+    // Only allow these two emails
+    const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai'];
+    
+    if (!AUTHORIZED_EMAILS.includes(email.toLowerCase())) {
+      return res.status(401).json({ error: 'Unauthorized email. Access restricted to authorized administrators only.' });
+    }
+
     // For now, use hardcoded users since the database doesn't have password column
     const hardcodedUsers = [
       {
@@ -60,28 +67,31 @@ export default async function handler(req, res) {
         email: 'almir@jaydus.ai',
         name: 'Almir',
         role: 'admin',
-        password: await bcrypt.hash('Welcome2025!', 10)
+        password: await bcrypt.hash('Welcome2025!', 10),
+        tempPassword: await bcrypt.hash('TempPass2025!', 10)
       },
       {
         id: 2,
         email: 'jason@jaydus.ai',
         name: 'Jason',
         role: 'admin',
-        password: await bcrypt.hash('Welcome2025!', 10)
+        password: await bcrypt.hash('Welcome2025!', 10),
+        tempPassword: await bcrypt.hash('TempPass2025!', 10)
       }
     ];
 
     // Find user
-    const user = hardcodedUsers.find(u => u.email === email);
+    const user = hardcodedUsers.find(u => u.email === email.toLowerCase());
 
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    // Verify password
+    // Verify password (check both regular and temporary password)
     const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidTempPassword = await bcrypt.compare(password, user.tempPassword);
 
-    if (!isValidPassword) {
+    if (!isValidPassword && !isValidTempPassword) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
