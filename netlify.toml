@@ -7,6 +7,12 @@
   NODE_VERSION = "20"
 
 [[redirects]]
+  from = "https://app-suite.io/*"
+  to = "https://www.app-suite.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
