@@ -1,0 +1,38 @@
+
+User-agent: *
+Allow: /
+
+# AI Crawlers - Explicitly welcome them (for our white paper!)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot  
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Sitemap location
+Sitemap: https://www.app-suite.io/sitemap.xml
+
+# Prevent indexing of sensitive directories
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Allow crawling of important pages
+Allow: /extensions
+Allow: /pricing
+Allow: /about
+Allow: /contact
+Allow: /blog
+Allow: /blog/*

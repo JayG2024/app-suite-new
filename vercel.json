@@ -1,0 +1,93 @@
+{
+  "buildCommand": "yarn build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "app-suite.io"
+        }
+      ],
+      "destination": "https://www.app-suite.io/$1",
+      "permanent": true
+    },
+    {
+      "source": "/examples",
+      "destination": "/solutions-weve-built",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/solutions-weve-built", 
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/blog/generative-engine-optimization-complete-guide-2025",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(GPTBot|ChatGPT-User|ClaudeBot|Claude-Web|CCBot|FacebookBot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discord|OAI-SearchBot|Google-Extended|PerplexityBot|Applebot|facebookexternalhit|Facebot|bingbot|Googlebot|AdsBot-Google|Mediapartners-Google).*"
+        }
+      ],
+      "destination": "/api/whitepaper-geo"
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": ".*(GPTBot|ChatGPT-User|ClaudeBot|Claude-Web|CCBot|FacebookBot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|Discord|OAI-SearchBot|Google-Extended|PerplexityBot|Applebot|facebookexternalhit|Facebot|bingbot|Googlebot|AdsBot-Google|Mediapartners-Google|Baiduspider|YandexBot|DuckDuckBot|Sogou|Exabot|facebot|ia_archiver|Alexa|Bing|SemrushBot|AhrefsBot|Moz).*"
+        }
+      ],
+      "destination": "/api/seo-pages?path=/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options", 
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/blog/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+# Git files (ensure no git integration)
+.git/
+.gitignore
+.github/
+
+# Development files
+.env.local
+.env.development
+node_modules/
+npm-debug.log*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Firebase files (since we're using Vercel)
+.firebase/
+firebase.json
+.firebaserc
+
+# Build artifacts
+dist/
+build/
