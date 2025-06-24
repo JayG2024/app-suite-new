@@ -136,7 +136,7 @@ const ChatbotOverlay: React.FC<ChatbotOverlayProps> = ({ appName, appCategory, i
       const endTime = new Date(bookingDate.getTime() + 30 * 60000).toISOString(); // 30 minutes later
       
       // Make API call to book the meeting
-      const response = await fetch('/api/calendar/book', {
+      const response = await fetch('/.netlify/functions/calendar-book', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -65,7 +65,7 @@ const AIChatbot = () => {
     
     try {
       // Use the actual API endpoint
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/.netlify/functions/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

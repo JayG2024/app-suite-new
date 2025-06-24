@@ -15,7 +15,7 @@ export const handler = async (event, context) => {
   }
 
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.NETLIFY_DATABASE_URL,
     ssl: { rejectUnauthorized: false }
   });
 
@@ -51,7 +51,7 @@ export const handler = async (event, context) => {
         tables: existingTables,
         missingTables,
         leadsCount,
-        databaseUrl: process.env.DATABASE_URL ? 'Set' : 'Not set'
+        databaseUrl: process.env.NETLIFY_DATABASE_URL ? 'Set' : 'Not set'
       })
     };
   } catch (error) {

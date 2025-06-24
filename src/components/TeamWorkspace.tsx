@@ -138,7 +138,7 @@ const TeamWorkspace = () => {
 
   const loadTasks = async () => {
     try {
-      const response = await fetch('/api/tasks');
+      const response = await fetch('/.netlify/functions/tasks');
       if (response.ok) {
         const data = await response.json();
         setTasks(data.tasks);
@@ -152,7 +152,7 @@ const TeamWorkspace = () => {
 
   const loadDocuments = async () => {
     try {
-      const response = await fetch('/api/documents');
+      const response = await fetch('/.netlify/functions/documents');
       if (response.ok) {
         const data = await response.json();
         setDocuments(data.documents);
@@ -164,7 +164,7 @@ const TeamWorkspace = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch('/.netlify/functions/users');
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
@@ -176,7 +176,7 @@ const TeamWorkspace = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/api/projects-db');
+      const response = await fetch('/.netlify/functions/projects');
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects);
@@ -198,7 +198,7 @@ const TeamWorkspace = () => {
     }
 
     try {
-      const response = await fetch('/api/tasks', {
+      const response = await fetch('/.netlify/functions/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -246,7 +246,7 @@ const TeamWorkspace = () => {
     }
 
     try {
-      const response = await fetch('/api/documents', {
+      const response = await fetch('/.netlify/functions/documents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

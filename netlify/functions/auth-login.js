@@ -54,16 +54,14 @@ export const handler = async (event, context) => {
         email: 'almir@jaydus.ai',
         name: 'Almir',
         role: 'admin',
-        password: await bcrypt.hash('Welcome2025!', 10),
-        tempPassword: await bcrypt.hash('TempPass2025!', 10)
+        password: await bcrypt.hash('admin123', 10)
       },
       {
         id: 2,
         email: 'jason@jaydus.ai',
         name: 'Jason',
         role: 'admin',
-        password: await bcrypt.hash('Welcome2025!', 10),
-        tempPassword: await bcrypt.hash('TempPass2025!', 10)
+        password: await bcrypt.hash('admin123', 10)
       }
     ];
 
@@ -81,11 +79,10 @@ export const handler = async (event, context) => {
       };
     }
 
-    // Verify password (check both regular and temporary password)
+    // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
-    const isValidTempPassword = await bcrypt.compare(password, user.tempPassword);
 
-    if (!isValidPassword && !isValidTempPassword) {
+    if (!isValidPassword) {
       return {
         statusCode: 401,
         headers: {

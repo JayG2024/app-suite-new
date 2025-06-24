@@ -199,7 +199,7 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
 
       // Send to Command Center API
       try {
-        const leadResponse = await fetch('/api/leads', {
+        const leadResponse = await fetch('/.netlify/functions/leads', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -216,7 +216,7 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
 
       // Send professional proposal email via Resend
       try {
-        const emailResponse = await fetch('/api/send-proposal', {
+        const emailResponse = await fetch('/.netlify/functions/send-proposal', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

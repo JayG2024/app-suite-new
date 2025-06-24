@@ -27,7 +27,7 @@ const Newsletter = ({
     
     try {
       // Send newsletter subscription via Resend
-      const response = await fetch('/api/send-newsletter', {
+      const response = await fetch('/.netlify/functions/send-newsletter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

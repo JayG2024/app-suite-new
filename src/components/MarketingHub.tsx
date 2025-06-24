@@ -170,7 +170,7 @@ const MarketingHub = () => {
 
   const loadCampaigns = async () => {
     try {
-      const response = await fetch('/api/marketing-campaigns');
+      const response = await fetch('/.netlify/functions/marketing-campaigns');
       if (response.ok) {
         const data = await response.json();
         setCampaigns(data.campaigns);
@@ -184,7 +184,7 @@ const MarketingHub = () => {
 
   const loadContent = async () => {
     try {
-      const response = await fetch('/api/marketing-content');
+      const response = await fetch('/.netlify/functions/marketing-content');
       if (response.ok) {
         const data = await response.json();
         setContent(data.content);
@@ -196,7 +196,7 @@ const MarketingHub = () => {
 
   const loadAnalytics = async () => {
     try {
-      const response = await fetch('/api/analytics');
+      const response = await fetch('/.netlify/functions/analytics');
       if (response.ok) {
         const data = await response.json();
         setAnalytics(data.analytics);
@@ -208,7 +208,7 @@ const MarketingHub = () => {
 
   const loadUsers = async () => {
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch('/.netlify/functions/users');
       if (response.ok) {
         const data = await response.json();
         setUsers(data.users);
@@ -230,7 +230,7 @@ const MarketingHub = () => {
     }
 
     try {
-      const response = await fetch('/api/marketing-campaigns', {
+      const response = await fetch('/.netlify/functions/marketing-campaigns', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -269,7 +269,7 @@ const MarketingHub = () => {
     }
 
     try {
-      const response = await fetch('/api/marketing-content', {
+      const response = await fetch('/.netlify/functions/marketing-content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

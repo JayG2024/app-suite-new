@@ -46,7 +46,7 @@ const Contact = () => {
 
     try {
       // Send contact form via Resend
-      const response = await fetch('/api/send-contact', {
+      const response = await fetch('/.netlify/functions/send-contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

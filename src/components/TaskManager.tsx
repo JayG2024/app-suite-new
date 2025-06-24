@@ -100,7 +100,7 @@ const TaskManager = () => {
 
   const loadTasks = async () => {
     try {
-      const response = await fetch('/api/tasks');
+      const response = await fetch('/.netlify/functions/tasks');
       if (response.ok) {
         const data = await response.json();
         const tasks = data.tasks || [];
