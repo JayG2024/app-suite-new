@@ -8,6 +8,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { APP_CONFIG } from "@/config/app";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -33,9 +40,17 @@ import {
   CheckCircle,
   AlertCircle,
   Sparkles,
-  Send
+  Send,
+  Plus,
+  Edit,
+  Trash2,
+  MoreVertical,
+  Download,
+  Upload,
+  Save
 } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface EmailTemplate {
   id: string;
@@ -491,9 +506,22 @@ App Suite Support Team`
 };
 
 const EmailTemplates = () => {
+  const [templates, setTemplates] = useState<Record<string, EmailTemplate>>(emailTemplates);
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showTrackingDialog, setShowTrackingDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
+  const [newTemplate, setNewTemplate] = useState({
+    id: '',
+    name: '',
+    category: 'Sales',
+    subject: '',
+    content: '',
+    variables: [] as string[],
+    icon: <FileText className="h-4 w-4" />
+  });
   const [trackingData, setTrackingData] = useState({
     projectId: '',
     clientEmail: '',
@@ -502,6 +530,20 @@ const EmailTemplates = () => {
   });
   const [projects, setProjects] = useState<{id: number; name: string; client_name: string}[]>([]);
   const [loading, setLoading] = useState(false);
+  const [variableInput, setVariableInput] = useState('');
+
+  // Load templates from localStorage on mount
+  useEffect(() => {
+    const savedTemplates = localStorage.getItem('emailTemplates');
+    if (savedTemplates) {
+      try {
+        const parsed = JSON.parse(savedTemplates);
+        setTemplates({ ...emailTemplates, ...parsed });
+      } catch (e) {
+        console.error('Failed to parse saved templates:', e);
+      }
+    }
+  }, []);
 
   // Fetch projects for dropdown
   useEffect(() => {
@@ -511,6 +553,19 @@ const EmailTemplates = () => {
       .catch(err => console.error('Failed to fetch projects:', err));
   }, []);
 
+  // Save templates to localStorage whenever they change
+  const saveTemplates = (newTemplates: Record<string, EmailTemplate>) => {
+    setTemplates(newTemplates);
+    // Only save custom templates, not the default ones
+    const customTemplates: Record<string, EmailTemplate> = {};
+    Object.entries(newTemplates).forEach(([id, template]) => {
+      if (!emailTemplates[id]) {
+        customTemplates[id] = template;
+      }
+    });
+    localStorage.setItem('emailTemplates', JSON.stringify(customTemplates));
+  };
+
   const copyToClipboard = (content: string, templateId: string) => {
     navigator.clipboard.writeText(content);
     setCopiedId(templateId);
@@ -519,11 +574,12 @@ const EmailTemplates = () => {
   };
 
   const handleTrackEmail = (template: EmailTemplate) => {
+    const templateToUse = templates[template.id] || template;
     setTrackingData({
       projectId: '',
       clientEmail: '',
-      templateId: template.id,
-      templateContent: template.content
+      templateId: templateToUse.id,
+      templateContent: templateToUse.content
     });
     setShowTrackingDialog(true);
   };
@@ -579,7 +635,143 @@ const EmailTemplates = () => {
     }
   };
 
-  const categories = [...new Set(Object.values(emailTemplates).map(t => t.category))];
+  const openEditDialog = (template: EmailTemplate) => {
+    setEditingTemplate({
+      ...template,
+      variables: [...template.variables]
+    });
+    setShowEditDialog(true);
+  };
+
+  const saveEditedTemplate = () => {
+    if (!editingTemplate) return;
+    
+    const updatedTemplates = {
+      ...templates,
+      [editingTemplate.id]: editingTemplate
+    };
+    saveTemplates(updatedTemplates);
+    setShowEditDialog(false);
+    setEditingTemplate(null);
+    toast.success('Template updated successfully!');
+  };
+
+  const createNewTemplate = () => {
+    if (!newTemplate.name || !newTemplate.subject || !newTemplate.content) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    const id = newTemplate.name.toLowerCase().replace(/\s+/g, '-');
+    const template: EmailTemplate = {
+      ...newTemplate,
+      id,
+      icon: <FileText className="h-4 w-4" />
+    };
+
+    const updatedTemplates = {
+      ...templates,
+      [id]: template
+    };
+    saveTemplates(updatedTemplates);
+    setShowCreateDialog(false);
+    setNewTemplate({
+      id: '',
+      name: '',
+      category: 'Sales',
+      subject: '',
+      content: '',
+      variables: [],
+      icon: <FileText className="h-4 w-4" />
+    });
+    setVariableInput('');
+    toast.success('Template created successfully!');
+  };
+
+  const deleteTemplate = (templateId: string) => {
+    if (emailTemplates[templateId]) {
+      toast.error('Cannot delete default templates');
+      return;
+    }
+
+    if (confirm('Are you sure you want to delete this template?')) {
+      const updatedTemplates = { ...templates };
+      delete updatedTemplates[templateId];
+      saveTemplates(updatedTemplates);
+      toast.success('Template deleted successfully!');
+    }
+  };
+
+  const addVariable = () => {
+    if (variableInput && !variableInput.startsWith('[')) {
+      const variable = `[${variableInput.toUpperCase().replace(/\s+/g, '_')}]`;
+      if (showEditDialog && editingTemplate) {
+        setEditingTemplate({
+          ...editingTemplate,
+          variables: [...editingTemplate.variables, variable]
+        });
+      } else {
+        setNewTemplate({
+          ...newTemplate,
+          variables: [...newTemplate.variables, variable]
+        });
+      }
+      setVariableInput('');
+    }
+  };
+
+  const removeVariable = (variable: string) => {
+    if (showEditDialog && editingTemplate) {
+      setEditingTemplate({
+        ...editingTemplate,
+        variables: editingTemplate.variables.filter(v => v !== variable)
+      });
+    } else {
+      setNewTemplate({
+        ...newTemplate,
+        variables: newTemplate.variables.filter(v => v !== variable)
+      });
+    }
+  };
+
+  const exportTemplates = () => {
+    const customTemplates: Record<string, EmailTemplate> = {};
+    Object.entries(templates).forEach(([id, template]) => {
+      if (!emailTemplates[id]) {
+        customTemplates[id] = template;
+      }
+    });
+    
+    const dataStr = JSON.stringify(customTemplates, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = 'email-templates.json';
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
+
+  const importTemplates = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const imported = JSON.parse(e.target?.result as string);
+        const updatedTemplates = { ...templates, ...imported };
+        saveTemplates(updatedTemplates);
+        toast.success('Templates imported successfully!');
+      } catch (error) {
+        toast.error('Failed to import templates. Please check the file format.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const categories = [...new Set(Object.values(templates).map(t => t.category))];
 
   return (
     <div className="space-y-6">
@@ -588,10 +780,41 @@ const EmailTemplates = () => {
           <h2 className="text-2xl font-bold">Email Templates</h2>
           <p className="text-muted-foreground">Pre-written templates for common communications</p>
         </div>
-        <Badge variant="secondary" className="gap-1">
-          <Mail className="h-3 w-3" />
-          {Object.keys(emailTemplates).length} Templates
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="gap-1">
+            <Mail className="h-3 w-3" />
+            {Object.keys(templates).length} Templates
+          </Badge>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setShowCreateDialog(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Template
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={exportTemplates}>
+                <Download className="h-4 w-4 mr-2" />
+                Export Templates
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <label className="flex items-center cursor-pointer">
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import Templates
+                  <input
+                    type="file"
+                    accept=".json"
+                    className="hidden"
+                    onChange={importTemplates}
+                  />
+                </label>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       <Tabs defaultValue="Sales" className="space-y-4">
@@ -606,7 +829,7 @@ const EmailTemplates = () => {
         {categories.map(category => (
           <TabsContent key={category} value={category} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {Object.values(emailTemplates)
+              {Object.values(templates)
                 .filter(template => template.category === category)
                 .map(template => (
                   <Card 
@@ -620,38 +843,64 @@ const EmailTemplates = () => {
                           {template.icon}
                           <CardTitle className="text-base">{template.name}</CardTitle>
                         </div>
-                        <div className="flex gap-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={(e) => {
+                              e.stopPropagation();
+                              openEditDialog(template);
+                            }}>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit Template
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => {
                               e.stopPropagation();
                               handleTrackEmail(template);
-                            }}
-                            title="Send & Track"
-                          >
-                            <Send className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={(e) => {
+                            }}>
+                              <Send className="h-4 w-4 mr-2" />
+                              Send & Track
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={(e) => {
                               e.stopPropagation();
                               copyToClipboard(template.content, template.id);
-                            }}
-                            title="Copy"
-                          >
-                            {copiedId === template.id ? (
-                              <CheckCircle className="h-4 w-4 text-green-600" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
+                            }}>
+                              <Copy className="h-4 w-4 mr-2" />
+                              Copy
+                            </DropdownMenuItem>
+                            {!emailTemplates[template.id] && (
+                              <>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    deleteTemplate(template.id);
+                                  }}
+                                  className="text-red-600"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </>
                             )}
-                          </Button>
-                        </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       <CardDescription className="text-sm">
                         Subject: {template.subject}
                       </CardDescription>
+                      {!emailTemplates[template.id] && (
+                        <Badge variant="secondary" className="text-xs mt-1">
+                          Custom
+                        </Badge>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-wrap gap-1">
@@ -682,6 +931,14 @@ const EmailTemplates = () => {
                 <Button
                   size="sm"
                   variant="outline"
+                  onClick={() => openEditDialog(selectedTemplate)}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
                   onClick={() => copyToClipboard(selectedTemplate.content, selectedTemplate.id)}
                 >
                   <Copy className="h-4 w-4 mr-2" />
@@ -699,6 +956,11 @@ const EmailTemplates = () => {
             <CardDescription>
               Subject: {selectedTemplate.subject}
             </CardDescription>
+            {!emailTemplates[selectedTemplate.id] && (
+              <Badge variant="secondary" className="text-xs mt-1">
+                Custom Template
+              </Badge>
+            )}
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -787,6 +1049,202 @@ const EmailTemplates = () => {
                   Track & Copy
                 </>
               )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Template Dialog */}
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create New Email Template</DialogTitle>
+            <DialogDescription>
+              Create a custom email template for your communications
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label>Template Name *</Label>
+              <Input
+                placeholder="e.g., Follow-up Email"
+                value={newTemplate.name}
+                onChange={(e) => setNewTemplate({...newTemplate, name: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Category</Label>
+              <Select 
+                value={newTemplate.category} 
+                onValueChange={(value) => setNewTemplate({...newTemplate, category: value})}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Sales">Sales</SelectItem>
+                  <SelectItem value="Project">Project</SelectItem>
+                  <SelectItem value="Support">Support</SelectItem>
+                  <SelectItem value="Marketing">Marketing</SelectItem>
+                  <SelectItem value="Finance">Finance</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Subject Line *</Label>
+              <Input
+                placeholder="e.g., Your Project Update - [PROJECT_NAME]"
+                value={newTemplate.subject}
+                onChange={(e) => setNewTemplate({...newTemplate, subject: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Variables</Label>
+              <div className="flex gap-2 mb-2">
+                <Input
+                  placeholder="e.g., CLIENT_NAME"
+                  value={variableInput}
+                  onChange={(e) => setVariableInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addVariable())}
+                />
+                <Button type="button" onClick={addVariable} size="sm">
+                  Add
+                </Button>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {newTemplate.variables.map(variable => (
+                  <Badge key={variable} variant="secondary" className="text-xs">
+                    {variable}
+                    <button
+                      onClick={() => removeVariable(variable)}
+                      className="ml-1 hover:text-red-600"
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            <div>
+              <Label>Template Content *</Label>
+              <Textarea
+                placeholder="Write your email template here..."
+                value={newTemplate.content}
+                onChange={(e) => setNewTemplate({...newTemplate, content: e.target.value})}
+                className="min-h-[300px] font-mono text-sm"
+              />
+            </div>
+          </div>
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={createNewTemplate}>
+              <Save className="h-4 w-4 mr-2" />
+              Create Template
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Template Dialog */}
+      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Email Template</DialogTitle>
+            <DialogDescription>
+              Modify your email template
+            </DialogDescription>
+          </DialogHeader>
+          {editingTemplate && (
+            <div className="space-y-4 mt-4">
+              <div>
+                <Label>Template Name *</Label>
+                <Input
+                  value={editingTemplate.name}
+                  onChange={(e) => setEditingTemplate({...editingTemplate, name: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Category</Label>
+                <Select 
+                  value={editingTemplate.category} 
+                  onValueChange={(value) => setEditingTemplate({...editingTemplate, category: value})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Sales">Sales</SelectItem>
+                    <SelectItem value="Project">Project</SelectItem>
+                    <SelectItem value="Support">Support</SelectItem>
+                    <SelectItem value="Marketing">Marketing</SelectItem>
+                    <SelectItem value="Finance">Finance</SelectItem>
+                    <SelectItem value="Other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Subject Line *</Label>
+                <Input
+                  value={editingTemplate.subject}
+                  onChange={(e) => setEditingTemplate({...editingTemplate, subject: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Variables</Label>
+                <div className="flex gap-2 mb-2">
+                  <Input
+                    placeholder="e.g., CLIENT_NAME"
+                    value={variableInput}
+                    onChange={(e) => setVariableInput(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addVariable())}
+                  />
+                  <Button type="button" onClick={addVariable} size="sm">
+                    Add
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {editingTemplate.variables.map(variable => (
+                    <Badge key={variable} variant="secondary" className="text-xs">
+                      {variable}
+                      <button
+                        onClick={() => removeVariable(variable)}
+                        className="ml-1 hover:text-red-600"
+                      >
+                        ×
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Label>Template Content *</Label>
+                <Textarea
+                  value={editingTemplate.content}
+                  onChange={(e) => setEditingTemplate({...editingTemplate, content: e.target.value})}
+                  className="min-h-[300px] font-mono text-sm"
+                />
+              </div>
+              {emailTemplates[editingTemplate.id] && (
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Default Template</AlertTitle>
+                  <AlertDescription>
+                    This is a default template. Your changes will be saved separately and can be reverted.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
+          )}
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setShowEditDialog(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveEditedTemplate}>
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
             </Button>
           </DialogFooter>
         </DialogContent>

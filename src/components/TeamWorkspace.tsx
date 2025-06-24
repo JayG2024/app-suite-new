@@ -90,7 +90,12 @@ const TeamWorkspace = () => {
   const [loading, setLoading] = useState(true);
   
   const [showTaskDialog, setShowTaskDialog] = useState(false);
+  const [showEditTaskDialog, setShowEditTaskDialog] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [showDocumentDialog, setShowDocumentDialog] = useState(false);
+  const [showEditDocumentDialog, setShowEditDocumentDialog] = useState(false);
+  const [showDocumentPreview, setShowDocumentPreview] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
   const [taskFilter, setTaskFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -106,6 +111,20 @@ const TeamWorkspace = () => {
     notes: ""
   });
 
+  const [editTask, setEditTask] = useState({
+    title: "",
+    description: "",
+    priority: "medium",
+    dueDate: "",
+    estimatedHours: 0,
+    actualHours: 0,
+    projectId: "",
+    assignedTo: "",
+    tags: "",
+    notes: "",
+    status: "todo" as Task["status"]
+  });
+
   const [newDocument, setNewDocument] = useState({
     title: "",
     content: "",
@@ -115,6 +134,19 @@ const TeamWorkspace = () => {
     tags: "",
     isPublic: false
   });
+
+  const [editDocument, setEditDocument] = useState({
+    title: "",
+    content: "",
+    type: "document",
+    category: "general",
+    projectId: "",
+    tags: "",
+    isPublic: false,
+    version: "1.0"
+  });
+
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
   useEffect(() => {
     // Get current user
@@ -283,9 +315,146 @@ const TeamWorkspace = () => {
     }
   };
 
+  const updateTask = async () => {
+    if (!selectedTask || !editTask.title) {
+      alert("Please fill in task title");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/.netlify/functions/tasks?id=${selectedTask.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editTask.title,
+          description: editTask.description,
+          priority: editTask.priority,
+          status: editTask.status,
+          dueDate: editTask.dueDate || null,
+          estimatedHours: editTask.estimatedHours,
+          actualHours: editTask.actualHours,
+          projectId: editTask.projectId && editTask.projectId !== 'none' ? parseInt(editTask.projectId) : null,
+          assignedTo: editTask.assignedTo && editTask.assignedTo !== 'unassigned' ? parseInt(editTask.assignedTo) : null,
+          tags: editTask.tags ? editTask.tags.split(',').map(t => t.trim()) : [],
+          notes: editTask.notes
+        })
+      });
+
+      if (response.ok) {
+        await loadTasks();
+        setShowEditTaskDialog(false);
+        setSelectedTask(null);
+      } else {
+        const error = await response.json();
+        alert(`Failed to update task: ${error.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+      alert('Failed to update task. Please try again.');
+    }
+  };
+
+  const openEditTaskDialog = (task: Task) => {
+    setSelectedTask(task);
+    setEditTask({
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      dueDate: task.dueDate || "",
+      estimatedHours: task.estimatedHours,
+      actualHours: task.actualHours,
+      projectId: task.projectId?.toString() || "",
+      assignedTo: task.assignedTo?.toString() || "",
+      tags: task.tags.join(', '),
+      notes: task.notes || "",
+      status: task.status
+    });
+    setShowEditTaskDialog(true);
+  };
+
+  const updateDocument = async () => {
+    if (!selectedDocument || !editDocument.title) {
+      alert("Please fill in document title");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/.netlify/functions/documents?id=${selectedDocument.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editDocument.title,
+          content: editDocument.content,
+          type: editDocument.type,
+          category: editDocument.category,
+          projectId: editDocument.projectId && editDocument.projectId !== 'none' ? parseInt(editDocument.projectId) : null,
+          updatedBy: getCurrentUserId(),
+          tags: editDocument.tags ? editDocument.tags.split(',').map(t => t.trim()) : [],
+          isPublic: editDocument.isPublic,
+          version: editDocument.version
+        })
+      });
+
+      if (response.ok) {
+        await loadDocuments();
+        setShowEditDocumentDialog(false);
+        setSelectedDocument(null);
+      } else {
+        const error = await response.json();
+        alert(`Failed to update document: ${error.error || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error('Error updating document:', error);
+      alert('Failed to update document. Please try again.');
+    }
+  };
+
+  const openEditDocumentDialog = (doc: Document) => {
+    setSelectedDocument(doc);
+    setEditDocument({
+      title: doc.title,
+      content: doc.content,
+      type: doc.type,
+      category: doc.category,
+      projectId: doc.projectId?.toString() || "",
+      tags: doc.tags.join(', '),
+      isPublic: doc.isPublic,
+      version: doc.version || "1.0"
+    });
+    setShowEditDocumentDialog(true);
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setUploadedFile(file);
+      if (file.type.startsWith('text/') || file.name.endsWith('.md') || file.name.endsWith('.txt')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setNewDocument({
+            ...newDocument,
+            title: file.name.replace(/\.[^/.]+$/, ""),
+            content: e.target?.result as string
+          });
+        };
+        reader.readAsText(file);
+      }
+    }
+  };
+
+  const downloadDocument = (doc: Document) => {
+    const element = document.createElement("a");
+    const file = new Blob([doc.content], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${doc.title}.${doc.type === 'template' ? 'template' : 'txt'}`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
   const updateTaskStatus = async (taskId: string, status: string) => {
     try {
-      const response = await fetch(`/api/tasks?id=${taskId}`, {
+      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status })
@@ -303,7 +472,7 @@ const TeamWorkspace = () => {
     if (!confirm('Are you sure you want to delete this task?')) return;
 
     try {
-      const response = await fetch(`/api/tasks?id=${taskId}`, {
+      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
         method: 'DELETE'
       });
 
@@ -319,7 +488,7 @@ const TeamWorkspace = () => {
     if (!confirm('Are you sure you want to delete this document?')) return;
 
     try {
-      const response = await fetch(`/api/documents?id=${documentId}`, {
+      const response = await fetch(`/.netlify/functions/documents?id=${documentId}`, {
         method: 'DELETE'
       });
 
@@ -628,6 +797,13 @@ const TeamWorkspace = () => {
                       <Button 
                         size="sm" 
                         variant="outline" 
+                        onClick={() => openEditTaskDialog(task)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
                         onClick={() => deleteTask(task.id)}
                         className="text-red-600"
                       >
@@ -673,6 +849,34 @@ const TeamWorkspace = () => {
                   <DialogDescription>Add a new document to the knowledge base</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 mt-4">
+                  <div>
+                    <Label>Upload File (Optional)</Label>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="file"
+                        onChange={handleFileUpload}
+                        accept=".txt,.md,.doc,.docx,.pdf"
+                        className="file:mr-2 file:px-3 file:py-1 file:rounded file:border-0 file:text-sm file:font-medium"
+                      />
+                      {uploadedFile && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setUploadedFile(null);
+                            setNewDocument({...newDocument, content: ""});
+                          }}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                    {uploadedFile && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        File: {uploadedFile.name} ({(uploadedFile.size / 1024).toFixed(1)} KB)
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <Label>Title</Label>
                     <Input 
@@ -764,14 +968,39 @@ const TeamWorkspace = () => {
                     <Badge variant="outline" className="text-xs">
                       {doc.type}
                     </Badge>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => deleteDocument(doc.id)}
-                      className="text-red-600 h-6 w-6 p-0"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <FileText className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => {
+                          setSelectedDocument(doc);
+                          setShowDocumentPreview(true);
+                        }}>
+                          <Eye className="h-4 w-4 mr-2" />
+                          Preview
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => openEditDocumentDialog(doc)}>
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => downloadDocument(doc)}>
+                          <Download className="h-4 w-4 mr-2" />
+                          Download
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem 
+                          onClick={() => deleteDocument(doc.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   <CardTitle className="text-base">{doc.title}</CardTitle>
                   <CardDescription className="text-xs">
@@ -855,6 +1084,310 @@ const TeamWorkspace = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Task Dialog */}
+      <Dialog open={showEditTaskDialog} onOpenChange={setShowEditTaskDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Task</DialogTitle>
+            <DialogDescription>Update task details</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label>Title</Label>
+              <Input 
+                placeholder="Task title" 
+                value={editTask.title}
+                onChange={(e) => setEditTask({...editTask, title: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea 
+                placeholder="Task description" 
+                value={editTask.description}
+                onChange={(e) => setEditTask({...editTask, description: e.target.value})}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Status</Label>
+                <Select value={editTask.status} onValueChange={(value) => setEditTask({...editTask, status: value as Task["status"]})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="todo">To Do</SelectItem>
+                    <SelectItem value="in-progress">In Progress</SelectItem>
+                    <SelectItem value="review">Review</SelectItem>
+                    <SelectItem value="completed">Completed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Priority</Label>
+                <Select value={editTask.priority} onValueChange={(value) => setEditTask({...editTask, priority: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Estimated Hours</Label>
+                <Input 
+                  type="number" 
+                  placeholder="8" 
+                  value={editTask.estimatedHours}
+                  onChange={(e) => setEditTask({...editTask, estimatedHours: parseFloat(e.target.value) || 0})}
+                />
+              </div>
+              <div>
+                <Label>Actual Hours</Label>
+                <Input 
+                  type="number" 
+                  placeholder="0" 
+                  value={editTask.actualHours}
+                  onChange={(e) => setEditTask({...editTask, actualHours: parseFloat(e.target.value) || 0})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Due Date</Label>
+              <Input 
+                type="date" 
+                value={editTask.dueDate}
+                onChange={(e) => setEditTask({...editTask, dueDate: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Assign To</Label>
+              <Select value={editTask.assignedTo} onValueChange={(value) => setEditTask({...editTask, assignedTo: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select team member" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="unassigned">Unassigned</SelectItem>
+                  {users.map(user => (
+                    <SelectItem key={user.id} value={user.id.toString()}>
+                      {user.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Project</Label>
+              <Select value={editTask.projectId} onValueChange={(value) => setEditTask({...editTask, projectId: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No project</SelectItem>
+                  {projects.map(project => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.projectName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Tags (comma separated)</Label>
+              <Input 
+                placeholder="frontend, ui, urgent" 
+                value={editTask.tags}
+                onChange={(e) => setEditTask({...editTask, tags: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Notes</Label>
+              <Textarea 
+                placeholder="Additional notes..." 
+                value={editTask.notes}
+                onChange={(e) => setEditTask({...editTask, notes: e.target.value})}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowEditTaskDialog(false);
+                setSelectedTask(null);
+              }}>Cancel</Button>
+              <Button onClick={updateTask}>Update Task</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Document Dialog */}
+      <Dialog open={showEditDocumentDialog} onOpenChange={setShowEditDocumentDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Document</DialogTitle>
+            <DialogDescription>Update document content and metadata</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4 max-h-[60vh] overflow-y-auto pr-2">
+            <div>
+              <Label>Title</Label>
+              <Input 
+                placeholder="Document title" 
+                value={editDocument.title}
+                onChange={(e) => setEditDocument({...editDocument, title: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Content</Label>
+              <Textarea 
+                placeholder="Document content" 
+                value={editDocument.content}
+                onChange={(e) => setEditDocument({...editDocument, content: e.target.value})}
+                className="min-h-[200px]"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Type</Label>
+                <Select value={editDocument.type} onValueChange={(value) => setEditDocument({...editDocument, type: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="document">Document</SelectItem>
+                    <SelectItem value="template">Template</SelectItem>
+                    <SelectItem value="guide">Guide</SelectItem>
+                    <SelectItem value="specification">Specification</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Category</Label>
+                <Select value={editDocument.category} onValueChange={(value) => setEditDocument({...editDocument, category: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="general">General</SelectItem>
+                    <SelectItem value="development">Development</SelectItem>
+                    <SelectItem value="design">Design</SelectItem>
+                    <SelectItem value="process">Process</SelectItem>
+                    <SelectItem value="client">Client</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Project</Label>
+                <Select value={editDocument.projectId} onValueChange={(value) => setEditDocument({...editDocument, projectId: value})}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select project" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">No project</SelectItem>
+                    {projects.map(project => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.projectName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Version</Label>
+                <Input 
+                  placeholder="1.0" 
+                  value={editDocument.version}
+                  onChange={(e) => setEditDocument({...editDocument, version: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Tags (comma separated)</Label>
+              <Input 
+                placeholder="api, documentation, v2" 
+                value={editDocument.tags}
+                onChange={(e) => setEditDocument({...editDocument, tags: e.target.value})}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="editIsPublic"
+                checked={editDocument.isPublic}
+                onChange={(e) => setEditDocument({...editDocument, isPublic: e.target.checked})}
+              />
+              <Label htmlFor="editIsPublic">Make public</Label>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowEditDocumentDialog(false);
+                setSelectedDocument(null);
+              }}>Cancel</Button>
+              <Button onClick={updateDocument}>Update Document</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Preview Dialog */}
+      <Dialog open={showDocumentPreview} onOpenChange={setShowDocumentPreview}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>{selectedDocument?.title}</span>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{selectedDocument?.type}</Badge>
+                <Badge variant="outline">v{selectedDocument?.version || "1.0"}</Badge>
+              </div>
+            </DialogTitle>
+            <DialogDescription>
+              <div className="flex items-center gap-4 text-sm">
+                <span>{selectedDocument?.category}</span>
+                <span>•</span>
+                <span>By {selectedDocument?.createdByName}</span>
+                <span>•</span>
+                <span>Updated {selectedDocument && new Date(selectedDocument.updatedDate).toLocaleDateString()}</span>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <div className="bg-muted p-6 rounded-lg max-h-[60vh] overflow-y-auto">
+              <pre className="whitespace-pre-wrap font-mono text-sm">
+                {selectedDocument?.content}
+              </pre>
+            </div>
+            {selectedDocument?.tags && selectedDocument.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                <span className="text-sm text-muted-foreground">Tags:</span>
+                {selectedDocument.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+            <div className="flex justify-end gap-2 mt-4">
+              <Button variant="outline" onClick={() => {
+                openEditDocumentDialog(selectedDocument!);
+                setShowDocumentPreview(false);
+              }}>
+                <Edit className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+              <Button onClick={() => downloadDocument(selectedDocument!)}>
+                <Download className="h-4 w-4 mr-2" />
+                Download
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

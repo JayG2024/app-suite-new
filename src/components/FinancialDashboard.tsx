@@ -88,7 +88,11 @@ const FinancialDashboard = () => {
   const [loading, setLoading] = useState(true);
   
   const [showInvoiceDialog, setShowInvoiceDialog] = useState(false);
+  const [showEditInvoiceDialog, setShowEditInvoiceDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [showExpenseDialog, setShowExpenseDialog] = useState(false);
+  const [showEditExpenseDialog, setShowEditExpenseDialog] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   
   const [newInvoice, setNewInvoice] = useState({
     clientName: "",
@@ -104,6 +108,34 @@ const FinancialDashboard = () => {
   });
 
   const [newExpense, setNewExpense] = useState({
+    description: "",
+    amount: 0,
+    category: "software",
+    subcategory: "",
+    vendor: "",
+    projectId: "",
+    expenseDate: "",
+    notes: "",
+    recurring: false,
+    recurringFrequency: "",
+    taxDeductible: false
+  });
+
+  const [editInvoice, setEditInvoice] = useState({
+    clientName: "",
+    clientCompany: "",
+    clientEmail: "",
+    projectName: "",
+    projectId: "",
+    amount: 0,
+    taxAmount: 0,
+    description: "",
+    dueDate: "",
+    notes: "",
+    status: "draft" as const
+  });
+
+  const [editExpense, setEditExpense] = useState({
     description: "",
     amount: 0,
     category: "software",
@@ -274,6 +306,52 @@ const FinancialDashboard = () => {
     }
   };
 
+  const updateInvoice = async () => {
+    if (!selectedInvoice || !editInvoice.clientName || !editInvoice.amount) {
+      alert("Please fill in client name and amount");
+      return;
+    }
+
+    try {
+      await apiCall(`${API_ENDPOINTS.invoices}?id=${selectedInvoice.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...editInvoice,
+          project_id: editInvoice.projectId && editInvoice.projectId !== 'none' ? parseInt(editInvoice.projectId) : null,
+          amount: parseFloat(editInvoice.amount.toString()),
+          tax_amount: parseFloat(editInvoice.taxAmount.toString()),
+          total_amount: parseFloat(editInvoice.amount.toString()) + parseFloat(editInvoice.taxAmount.toString())
+        })
+      });
+
+      await loadInvoices();
+      setShowEditInvoiceDialog(false);
+      setSelectedInvoice(null);
+      toast.success('Invoice updated successfully');
+    } catch (error) {
+      console.error('Error updating invoice:', error);
+      toast.error('Failed to update invoice. Please try again.');
+    }
+  };
+
+  const openEditInvoiceDialog = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setEditInvoice({
+      clientName: invoice.clientName,
+      clientCompany: invoice.clientCompany || "",
+      clientEmail: invoice.clientEmail || "",
+      projectName: invoice.projectName || "",
+      projectId: invoice.projectId?.toString() || "",
+      amount: invoice.amount,
+      taxAmount: invoice.taxAmount || 0,
+      description: invoice.description || "",
+      dueDate: invoice.dueDate,
+      notes: invoice.notes || "",
+      status: invoice.status
+    });
+    setShowEditInvoiceDialog(true);
+  };
+
   const updateExpenseStatus = async (expenseId: string, status: string) => {
     try {
       await apiCall(API_ENDPOINTS.expenses, {
@@ -306,6 +384,50 @@ const FinancialDashboard = () => {
       console.error('Error deleting invoice:', error);
       toast.error('Failed to delete invoice');
     }
+  };
+
+  const updateExpense = async () => {
+    if (!selectedExpense || !editExpense.description || !editExpense.amount) {
+      alert("Please fill in description and amount");
+      return;
+    }
+
+    try {
+      await apiCall(`${API_ENDPOINTS.expenses}?id=${selectedExpense.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...editExpense,
+          project_id: editExpense.projectId && editExpense.projectId !== 'none' ? parseInt(editExpense.projectId) : null,
+          amount: parseFloat(editExpense.amount.toString())
+        })
+      });
+
+      await loadExpenses();
+      setShowEditExpenseDialog(false);
+      setSelectedExpense(null);
+      toast.success('Expense updated successfully');
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      toast.error('Failed to update expense. Please try again.');
+    }
+  };
+
+  const openEditExpenseDialog = (expense: Expense) => {
+    setSelectedExpense(expense);
+    setEditExpense({
+      description: expense.description,
+      amount: expense.amount,
+      category: expense.category,
+      subcategory: expense.subcategory || "",
+      vendor: expense.vendor || "",
+      projectId: expense.projectId?.toString() || "",
+      expenseDate: expense.expenseDate,
+      notes: expense.notes || "",
+      recurring: expense.recurring || false,
+      recurringFrequency: expense.recurringFrequency || "",
+      taxDeductible: expense.taxDeductible || false
+    });
+    setShowEditExpenseDialog(true);
   };
 
   const deleteExpense = async (expenseId: string) => {
@@ -595,6 +717,13 @@ const FinancialDashboard = () => {
                       <Button 
                         size="sm" 
                         variant="outline" 
+                        onClick={() => openEditInvoiceDialog(invoice)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
                         onClick={() => deleteInvoice(invoice.id)}
                         className="text-red-600"
                       >
@@ -762,6 +891,13 @@ const FinancialDashboard = () => {
                       <Button 
                         size="sm" 
                         variant="outline" 
+                        onClick={() => openEditExpenseDialog(expense)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
                         onClick={() => deleteExpense(expense.id)}
                         className="text-red-600"
                       >
@@ -839,6 +975,238 @@ const FinancialDashboard = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Invoice Dialog */}
+      <Dialog open={showEditInvoiceDialog} onOpenChange={setShowEditInvoiceDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Invoice</DialogTitle>
+            <DialogDescription>Update invoice details</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Client Name</Label>
+                <Input 
+                  placeholder="John Doe" 
+                  value={editInvoice.clientName}
+                  onChange={(e) => setEditInvoice({...editInvoice, clientName: e.target.value})}
+                />
+              </div>
+              <div>
+                <Label>Company</Label>
+                <Input 
+                  placeholder="Acme Corp" 
+                  value={editInvoice.clientCompany}
+                  onChange={(e) => setEditInvoice({...editInvoice, clientCompany: e.target.value})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Email</Label>
+              <Input 
+                type="email"
+                placeholder="john@acme.com" 
+                value={editInvoice.clientEmail}
+                onChange={(e) => setEditInvoice({...editInvoice, clientEmail: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Project</Label>
+              <Select value={editInvoice.projectId} onValueChange={(value) => {
+                const project = projects.find(p => p.id === value);
+                setEditInvoice({
+                  ...editInvoice, 
+                  projectId: value,
+                  projectName: project?.projectName || ''
+                });
+              }}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No project</SelectItem>
+                  {projects.map(project => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.projectName} - {project.clientName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Amount</Label>
+                <Input 
+                  type="number" 
+                  placeholder="5000" 
+                  value={editInvoice.amount}
+                  onChange={(e) => setEditInvoice({...editInvoice, amount: parseFloat(e.target.value) || 0})}
+                />
+              </div>
+              <div>
+                <Label>Tax Amount</Label>
+                <Input 
+                  type="number" 
+                  placeholder="0" 
+                  value={editInvoice.taxAmount}
+                  onChange={(e) => setEditInvoice({...editInvoice, taxAmount: parseFloat(e.target.value) || 0})}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Status</Label>
+              <Select value={editInvoice.status} onValueChange={(value) => setEditInvoice({...editInvoice, status: value as any})}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="sent">Sent</SelectItem>
+                  <SelectItem value="paid">Paid</SelectItem>
+                  <SelectItem value="overdue">Overdue</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Due Date</Label>
+              <Input 
+                type="date" 
+                value={editInvoice.dueDate}
+                onChange={(e) => setEditInvoice({...editInvoice, dueDate: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Description</Label>
+              <Textarea 
+                placeholder="Invoice description..." 
+                value={editInvoice.description}
+                onChange={(e) => setEditInvoice({...editInvoice, description: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Notes</Label>
+              <Textarea 
+                placeholder="Additional notes..." 
+                value={editInvoice.notes}
+                onChange={(e) => setEditInvoice({...editInvoice, notes: e.target.value})}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowEditInvoiceDialog(false);
+                setSelectedInvoice(null);
+              }}>Cancel</Button>
+              <Button onClick={updateInvoice}>Update Invoice</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Expense Dialog */}
+      <Dialog open={showEditExpenseDialog} onOpenChange={setShowEditExpenseDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Expense</DialogTitle>
+            <DialogDescription>Update expense details</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label>Description</Label>
+              <Input 
+                placeholder="Office supplies" 
+                value={editExpense.description}
+                onChange={(e) => setEditExpense({...editExpense, description: e.target.value})}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Amount</Label>
+                <Input 
+                  type="number" 
+                  placeholder="100" 
+                  value={editExpense.amount}
+                  onChange={(e) => setEditExpense({...editExpense, amount: parseFloat(e.target.value) || 0})}
+                />
+              </div>
+              <div>
+                <Label>Category</Label>
+                <Select value={editExpense.category} onValueChange={(value) => setEditExpense({...editExpense, category: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="software">Software</SelectItem>
+                    <SelectItem value="hardware">Hardware</SelectItem>
+                    <SelectItem value="marketing">Marketing</SelectItem>
+                    <SelectItem value="office">Office</SelectItem>
+                    <SelectItem value="travel">Travel</SelectItem>
+                    <SelectItem value="legal">Legal</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div>
+              <Label>Vendor</Label>
+              <Input 
+                placeholder="Microsoft" 
+                value={editExpense.vendor}
+                onChange={(e) => setEditExpense({...editExpense, vendor: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Project (Optional)</Label>
+              <Select value={editExpense.projectId} onValueChange={(value) => setEditExpense({...editExpense, projectId: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select project" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No project</SelectItem>
+                  {projects.map(project => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.projectName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Date</Label>
+              <Input 
+                type="date" 
+                value={editExpense.expenseDate}
+                onChange={(e) => setEditExpense({...editExpense, expenseDate: e.target.value})}
+              />
+            </div>
+            <div>
+              <Label>Notes</Label>
+              <Textarea 
+                placeholder="Additional notes..." 
+                value={editExpense.notes}
+                onChange={(e) => setEditExpense({...editExpense, notes: e.target.value})}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                id="editTaxDeductible"
+                checked={editExpense.taxDeductible}
+                onChange={(e) => setEditExpense({...editExpense, taxDeductible: e.target.checked})}
+              />
+              <Label htmlFor="editTaxDeductible">Tax deductible</Label>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => {
+                setShowEditExpenseDialog(false);
+                setSelectedExpense(null);
+              }}>Cancel</Button>
+              <Button onClick={updateExpense}>Update Expense</Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
