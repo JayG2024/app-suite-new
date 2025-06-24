@@ -20,6 +20,7 @@ import TeamWorkspace from "@/components/TeamWorkspace";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
 import AIDashboardAssistant from "@/components/AIDashboardAssistant";
+import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import { 
   Brain, 
   Users, 
@@ -342,7 +343,7 @@ const CommandCenter = () => {
 
         {/* Main Tabs */}
         <Tabs defaultValue="overview" onValueChange={setCurrentTab} className="space-y-6">
-          <TabsList className="grid grid-cols-9 w-full">
+          <TabsList className="grid grid-cols-10 w-full text-xs">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
             <TabsTrigger value="projects">Projects</TabsTrigger>
@@ -350,6 +351,7 @@ const CommandCenter = () => {
             <TabsTrigger value="sales">Sales</TabsTrigger>
             <TabsTrigger value="marketing">Marketing</TabsTrigger>
             <TabsTrigger value="finance">Finance</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
             <TabsTrigger value="templates">Templates</TabsTrigger>
           </TabsList>
@@ -498,6 +500,10 @@ const CommandCenter = () => {
 
           <TabsContent value="finance">
             <FinancialDashboard />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AnalyticsDashboard />
           </TabsContent>
 
           <TabsContent value="team">
