@@ -64,18 +64,20 @@ const AIChatbot = () => {
     setStreamingMessage("");
     
     try {
-      // Use the actual API endpoint
-      const response = await fetch('/.netlify/functions/chat', {
+      // Use OpenAI API endpoint
+      const response = await fetch('/.netlify/functions/openai-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: userMessage,
-          conversationHistory: messages.map(msg => ({
+          messages: messages.map(msg => ({
             role: msg.type === 'user' ? 'user' : 'assistant',
             content: msg.content
-          }))
+          })).concat([{ role: 'user', content: userMessage }]),
+          context: 'customer_support',
+          temperature: 0.7,
+          maxTokens: 500
         })
       });
 
@@ -83,21 +85,21 @@ const AIChatbot = () => {
         const data = await response.json();
         setIsTyping(false);
         
-        if (data.response && data.response.message) {
-          await streamResponse(data.response.message);
+        if (data.message) {
+          await streamResponse(data.message);
           return {
-            content: data.response.message,
-            suggestions: data.response.suggestions || generateSmartSuggestions(userMessage, data.response.message)
+            content: data.message,
+            suggestions: generateSmartSuggestions(userMessage, data.message)
           };
         }
       } else {
-        console.log('API returned error, using fallback');
+        console.log('OpenAI API error, using fallback');
       }
     } catch (error) {
-      console.log('API unavailable, using local responses:', error);
+      console.log('OpenAI unavailable, using local responses:', error);
     }
     
-    // Fallback to local responses with minimal delay
+    // Fallback to local responses if OpenAI fails
     await new Promise(resolve => setTimeout(resolve, 300));
     setIsTyping(false);
     

@@ -19,6 +19,7 @@ import FinancialDashboard from "@/components/FinancialDashboard";
 import TeamWorkspace from "@/components/TeamWorkspace";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
+import AIDashboardAssistant from "@/components/AIDashboardAssistant";
 import { 
   Brain, 
   Users, 
@@ -73,6 +74,7 @@ const CommandCenter = () => {
   const { socket, connected } = useSocket();
   const { user, logout } = useAuth();
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
+  const [currentTab, setCurrentTab] = useState("overview");
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalRevenue: 0,
     activeProjects: 0,
@@ -87,6 +89,7 @@ const CommandCenter = () => {
     taskCompletionRate: 0
   });
   const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [dashboardData, setDashboardData] = useState<any>(null);
 
 
   // Calculate metrics from database
@@ -196,6 +199,16 @@ const CommandCenter = () => {
         // Sort by timestamp and limit to 5 most recent
         activity.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         setRecentActivity(activity.slice(0, 5));
+
+        // Set dashboard data for AI assistant
+        setDashboardData({
+          metrics,
+          leads,
+          projects: [], // Would be fetched from projects API
+          clients: leads.filter((lead: any) => lead.stage === 'closed-won'),
+          tasks: [], // Would be fetched from tasks API
+          invoices: [] // Would be fetched from invoices API
+        });
       }
     };
 
@@ -211,130 +224,6 @@ const CommandCenter = () => {
 
   const handleLogout = () => {
     logout();
-  };
-
-  // AI Action Handlers
-  const handleAIAction = async (action: string, data?: any) => {
-    setLoadingAction(action);
-    
-    try {
-      const result = await apiCall(API_ENDPOINTS.ai.generateContent, {
-        method: 'POST',
-        body: JSON.stringify({
-          action,
-          data: data || getActionData(action),
-          userId: user?.email
-        })
-      });
-      
-      // Handle the generated content based on action type
-      switch (action) {
-        case 'weekly-report':
-          // Open in new tab with generated report
-          const reportWindow = window.open('', '_blank');
-          if (reportWindow) {
-            reportWindow.document.write(result.content);
-            reportWindow.document.title = 'Weekly Client Report';
-          }
-          toast.success('Weekly report generated successfully!');
-          break;
-          
-        case 'email-campaign':
-          // Copy to clipboard
-          navigator.clipboard.writeText(result.content);
-          toast.success('Email campaign created and copied to clipboard!');
-          break;
-          
-        case 'proposal':
-          // Navigate to proposal page with generated content
-          localStorage.setItem('generated_proposal', result.content);
-          navigate('/proposal/new');
-          break;
-          
-        case 'competitor-analysis':
-          // Display in modal or new page
-          const analysisWindow = window.open('', '_blank');
-          if (analysisWindow) {
-            analysisWindow.document.write(`<pre>${result.content}</pre>`);
-            analysisWindow.document.title = 'Competitor Analysis';
-          }
-          toast.success('Competitor analysis complete!');
-          break;
-          
-        case 'social-media':
-          navigator.clipboard.writeText(result.content);
-          toast.success('Social media content created and copied!');
-          break;
-          
-        case 'conversion-optimization':
-          const optimizationWindow = window.open('', '_blank');
-          if (optimizationWindow) {
-            optimizationWindow.document.write(`<pre>${result.content}</pre>`);
-            optimizationWindow.document.title = 'Conversion Optimization Report';
-          }
-          toast.success('Optimization recommendations generated!');
-          break;
-      }
-    } catch (error) {
-      console.error('AI action error:', error);
-      toast.error(`Failed to ${action.replace('-', ' ')}`);
-    } finally {
-      setLoadingAction(null);
-    }
-  };
-
-  const getActionData = (action: string) => {
-    // Gather relevant data based on action type
-    switch (action) {
-      case 'weekly-report':
-        return {
-          projectData: [], // Would fetch from projects API
-          startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-          endDate: new Date().toISOString()
-        };
-        
-      case 'email-campaign':
-        return {
-          campaignType: 'lead-nurture',
-          targetAudience: 'small-business-owners',
-          product: 'Custom Business Applications',
-          goals: 'Convert leads to customers'
-        };
-        
-      case 'proposal':
-        return {
-          clientName: 'Prospective Client',
-          projectType: 'Custom Business Application',
-          requirements: 'CRM, Inventory Management, Reporting',
-          budget: '$5,000-$10,000',
-          timeline: '14-30 days'
-        };
-        
-      case 'competitor-analysis':
-        return {
-          competitors: ['Bubble.io', 'OutSystems', 'Mendix', 'PowerApps'],
-          focusAreas: ['Pricing', 'Features', 'Customer Support', 'Delivery Time']
-        };
-        
-      case 'social-media':
-        return {
-          platform: 'LinkedIn',
-          topic: 'Benefits of owning your software vs renting SaaS',
-          tone: 'professional',
-          includeHashtags: true
-        };
-        
-      case 'conversion-optimization':
-        return {
-          pageType: 'Landing Page',
-          currentConversion: 2.5,
-          targetConversion: 5.0,
-          issues: 'High bounce rate, unclear value proposition'
-        };
-        
-      default:
-        return {};
-    }
   };
 
   // This component is now protected by the AdminRoute wrapper
@@ -384,7 +273,7 @@ const CommandCenter = () => {
       </div>
 
       {/* Main Dashboard */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 relative">
         {/* KPI Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -452,7 +341,7 @@ const CommandCenter = () => {
         </div>
 
         {/* Main Tabs */}
-        <Tabs defaultValue="overview" className="space-y-6">
+        <Tabs defaultValue="overview" onValueChange={setCurrentTab} className="space-y-6">
           <TabsList className="grid grid-cols-9 w-full">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="clients">Clients</TabsTrigger>
@@ -495,93 +384,13 @@ const CommandCenter = () => {
                 </CardContent>
               </Card>
 
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>AI-Powered Actions</CardTitle>
-                  <CardDescription>Let AI help you scale faster</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('weekly-report')}
-                    disabled={loadingAction === 'weekly-report'}
-                  >
-                    {loadingAction === 'weekly-report' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Sparkles className="h-4 w-4 mr-2" />
-                    )}
-                    Generate Weekly Client Report
-                  </Button>
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('email-campaign')}
-                    disabled={loadingAction === 'email-campaign'}
-                  >
-                    {loadingAction === 'email-campaign' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Mail className="h-4 w-4 mr-2" />
-                    )}
-                    Create Email Campaign
-                  </Button>
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('proposal')}
-                    disabled={loadingAction === 'proposal'}
-                  >
-                    {loadingAction === 'proposal' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <FileText className="h-4 w-4 mr-2" />
-                    )}
-                    Generate Proposal from Template
-                  </Button>
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('competitor-analysis')}
-                    disabled={loadingAction === 'competitor-analysis'}
-                  >
-                    {loadingAction === 'competitor-analysis' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Globe className="h-4 w-4 mr-2" />
-                    )}
-                    Analyze Competitor Websites
-                  </Button>
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('social-media')}
-                    disabled={loadingAction === 'social-media'}
-                  >
-                    {loadingAction === 'social-media' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                    )}
-                    Draft Social Media Content
-                  </Button>
-                  <Button 
-                    className="w-full justify-start" 
-                    variant="outline"
-                    onClick={() => handleAIAction('conversion-optimization')}
-                    disabled={loadingAction === 'conversion-optimization'}
-                  >
-                    {loadingAction === 'conversion-optimization' ? (
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    ) : (
-                      <Rocket className="h-4 w-4 mr-2" />
-                    )}
-                    Optimize Conversion Funnel
-                  </Button>
-                </CardContent>
-              </Card>
+              {/* AI Dashboard Assistant */}
+              <div className="h-[600px]">
+                <AIDashboardAssistant 
+                  dashboardData={dashboardData}
+                  currentTab={currentTab}
+                />
+              </div>
             </div>
 
             {/* Recent Activity */}
@@ -699,6 +508,16 @@ const CommandCenter = () => {
             <EmailTemplates />
           </TabsContent>
         </Tabs>
+
+        {/* Global AI Assistant - Available on all tabs except overview */}
+        {currentTab !== "overview" && (
+          <div className="fixed bottom-4 right-4 w-96 h-[500px] z-50 shadow-2xl">
+            <AIDashboardAssistant 
+              dashboardData={dashboardData}
+              currentTab={currentTab}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
