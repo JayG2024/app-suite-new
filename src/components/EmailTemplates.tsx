@@ -29,6 +29,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { 
   Copy, 
   Mail, 
@@ -47,7 +59,9 @@ import {
   MoreVertical,
   Download,
   Upload,
-  Save
+  Save,
+  Check,
+  ChevronsUpDown
 } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -529,8 +543,11 @@ const EmailTemplates = () => {
     templateContent: ''
   });
   const [projects, setProjects] = useState<{id: number; name: string; client_name: string}[]>([]);
+  const [clients, setClients] = useState<{id: number; name: string; email: string; company?: string}[]>([]);
   const [loading, setLoading] = useState(false);
   const [variableInput, setVariableInput] = useState('');
+  const [projectSearchOpen, setProjectSearchOpen] = useState(false);
+  const [clientEmailSearchOpen, setClientEmailSearchOpen] = useState(false);
 
   // Load templates from localStorage on mount
   useEffect(() => {
@@ -545,12 +562,19 @@ const EmailTemplates = () => {
     }
   }, []);
 
-  // Fetch projects for dropdown
+  // Fetch projects and clients for dropdowns
   useEffect(() => {
+    // Fetch projects
     fetch('/.netlify/functions/projects')
       .then(res => res.json())
       .then(data => setProjects(data.projects || []))
       .catch(err => console.error('Failed to fetch projects:', err));
+
+    // Fetch clients
+    fetch('/.netlify/functions/clients')
+      .then(res => res.json())
+      .then(data => setClients(data.clients || []))
+      .catch(err => console.error('Failed to fetch clients:', err));
   }, []);
 
   // Save templates to localStorage whenever they change
@@ -585,45 +609,56 @@ const EmailTemplates = () => {
   };
 
   const trackEmailSent = async () => {
-    if (!trackingData.projectId) {
-      toast.error("Please select a project");
+    // Allow sending without project if client email is provided
+    if (!trackingData.projectId && !trackingData.clientEmail) {
+      toast.error("Please select a project or provide a client email");
       return;
     }
 
     setLoading(true);
     try {
-      // Get user info from localStorage
-      const userStr = localStorage.getItem('adminUser') || localStorage.getItem('teamUser');
-      const user = userStr ? JSON.parse(userStr) : null;
+      // If project is selected, log to project activities
+      if (trackingData.projectId) {
+        // Get user info from localStorage
+        const userStr = localStorage.getItem('adminUser') || localStorage.getItem('teamUser');
+        const user = userStr ? JSON.parse(userStr) : null;
 
-      // Log the email activity
-      const response = await fetch('/.netlify/functions/project-activities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          project_id: parseInt(trackingData.projectId),
-          activity_type: 'email_sent',
-          activity_description: `${trackingData.templateId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} email sent to ${trackingData.clientEmail || 'client'}`,
-          metadata: {
-            email_type: trackingData.templateId,
-            recipient: trackingData.clientEmail,
-            template_used: trackingData.templateId
+        // Log the email activity
+        const response = await fetch('/.netlify/functions/project-activities', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-          user_id: user?.id || 1
-        }),
-      });
+          body: JSON.stringify({
+            project_id: parseInt(trackingData.projectId),
+            activity_type: 'email_sent',
+            activity_description: `${trackingData.templateId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} email sent to ${trackingData.clientEmail || 'client'}`,
+            metadata: {
+              email_type: trackingData.templateId,
+              recipient: trackingData.clientEmail,
+              template_used: trackingData.templateId
+            },
+            user_id: user?.id || 1
+          }),
+        });
 
-      if (response.ok) {
-        toast.success("Email tracked successfully! Project updated.");
-        setShowTrackingDialog(false);
-        
-        // Copy the template content to clipboard
-        copyToClipboard(trackingData.templateContent, trackingData.templateId);
-      } else {
-        throw new Error('Failed to track email');
+        if (!response.ok) {
+          throw new Error('Failed to track email');
+        }
       }
+
+      // Show success message based on tracking method
+      if (trackingData.projectId) {
+        toast.success("Email tracked successfully! Project updated.");
+      } else {
+        toast.success("Email template copied to clipboard!");
+      }
+      
+      setShowTrackingDialog(false);
+      
+      // Copy the template content to clipboard
+      copyToClipboard(trackingData.templateContent, trackingData.templateId);
+      
     } catch (error) {
       console.error('Error tracking email:', error);
       toast.error("Failed to track email. Template still copied to clipboard.");
@@ -989,46 +1024,150 @@ const EmailTemplates = () => {
 
       {/* Email Tracking Dialog */}
       <Dialog open={showTrackingDialog} onOpenChange={setShowTrackingDialog}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Track Email Sent</DialogTitle>
             <DialogDescription>
-              Log this email to automatically update the project status and activity timeline.
+              Log this email to update project activity or simply copy the template with client email.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="project">Project</Label>
-              <Select
-                value={trackingData.projectId}
-                onValueChange={(value) => setTrackingData({ ...trackingData, projectId: value })}
-              >
-                <SelectTrigger id="project">
-                  <SelectValue placeholder="Select a project" />
-                </SelectTrigger>
-                <SelectContent>
-                  {projects.map((project) => (
-                    <SelectItem key={project.id} value={project.id.toString()}>
-                      {project.name} - {project.client_name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="project">Project (Optional)</Label>
+              <Popover open={projectSearchOpen} onOpenChange={setProjectSearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={projectSearchOpen}
+                    className="justify-between"
+                  >
+                    {trackingData.projectId
+                      ? projects.find((project) => project.id.toString() === trackingData.projectId)?.name
+                      : "Select project (optional)"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[460px] p-0">
+                  <Command>
+                    <CommandInput placeholder="Search projects..." />
+                    <CommandEmpty>No projects found.</CommandEmpty>
+                    <CommandGroup>
+                      <CommandItem
+                        onSelect={() => {
+                          setTrackingData({ ...trackingData, projectId: '' });
+                          setProjectSearchOpen(false);
+                        }}
+                      >
+                        <Check
+                          className={`mr-2 h-4 w-4 ${
+                            trackingData.projectId === '' ? "opacity-100" : "opacity-0"
+                          }`}
+                        />
+                        No project selected
+                      </CommandItem>
+                      {projects.map((project) => (
+                        <CommandItem
+                          key={project.id}
+                          onSelect={() => {
+                            setTrackingData({ ...trackingData, projectId: project.id.toString() });
+                            setProjectSearchOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={`mr-2 h-4 w-4 ${
+                              trackingData.projectId === project.id.toString() ? "opacity-100" : "opacity-0"
+                            }`}
+                          />
+                          {project.name} - {project.client_name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Client Email (optional)</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="client@example.com"
-                value={trackingData.clientEmail}
-                onChange={(e) => setTrackingData({ ...trackingData, clientEmail: e.target.value })}
-              />
+              <Label htmlFor="email">Client Email</Label>
+              <Popover open={clientEmailSearchOpen} onOpenChange={setClientEmailSearchOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={clientEmailSearchOpen}
+                    className="justify-between"
+                  >
+                    {trackingData.clientEmail || "Type or select client email"}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[460px] p-0">
+                  <Command>
+                    <CommandInput 
+                      placeholder="Type email or search clients..." 
+                      value={trackingData.clientEmail}
+                      onValueChange={(value) => setTrackingData({ ...trackingData, clientEmail: value })}
+                    />
+                    <CommandEmpty>
+                      <div className="p-2">
+                        <p className="text-sm text-muted-foreground">
+                          {trackingData.clientEmail ? "Press Enter to use this email" : "Type an email address"}
+                        </p>
+                        {trackingData.clientEmail && (
+                          <Button 
+                            size="sm" 
+                            className="mt-2"
+                            onClick={() => setClientEmailSearchOpen(false)}
+                          >
+                            Use "{trackingData.clientEmail}"
+                          </Button>
+                        )}
+                      </div>
+                    </CommandEmpty>
+                    <CommandGroup>
+                      {clients
+                        .filter(client => 
+                          client.email.toLowerCase().includes(trackingData.clientEmail.toLowerCase()) ||
+                          client.name.toLowerCase().includes(trackingData.clientEmail.toLowerCase())
+                        )
+                        .map((client) => (
+                        <CommandItem
+                          key={client.id}
+                          onSelect={() => {
+                            setTrackingData({ ...trackingData, clientEmail: client.email });
+                            setClientEmailSearchOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={`mr-2 h-4 w-4 ${
+                              trackingData.clientEmail === client.email ? "opacity-100" : "opacity-0"
+                            }`}
+                          />
+                          <div className="flex-1">
+                            <div className="font-medium">{client.email}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {client.name} {client.company ? `- ${client.company}` : ''}
+                            </div>
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
-            <div className="text-sm text-muted-foreground">
-              {trackingData.templateId === 'project-kickoff' && (
-                <p className="text-green-600">
-                  ✓ Kickoff email will automatically update project status to "In Progress" and create initial tasks
+            <div className="text-sm space-y-2">
+              <div className="p-3 bg-muted rounded-lg">
+                <p className="font-medium text-muted-foreground">How it works:</p>
+                <ul className="text-sm text-muted-foreground mt-1 space-y-1">
+                  <li>• Project selected: Email activity logged to project timeline</li>
+                  <li>• Only email provided: Template copied for manual sending</li>
+                  <li>• Both: Project updated AND email copied</li>
+                </ul>
+              </div>
+              {trackingData.templateId === 'project-kickoff' && trackingData.projectId && (
+                <p className="text-green-600 text-sm">
+                  ✓ Kickoff email will automatically update project status to "In Progress"
                 </p>
               )}
             </div>
@@ -1037,16 +1176,16 @@ const EmailTemplates = () => {
             <Button variant="outline" onClick={() => setShowTrackingDialog(false)}>
               Cancel
             </Button>
-            <Button onClick={trackEmailSent} disabled={loading}>
+            <Button onClick={trackEmailSent} disabled={loading || (!trackingData.projectId && !trackingData.clientEmail)}>
               {loading ? (
                 <>
                   <CheckCircle className="mr-2 h-4 w-4 animate-spin" />
-                  Tracking...
+                  Processing...
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Track & Copy
+                  {trackingData.projectId ? 'Track & Copy' : 'Copy Template'}
                 </>
               )}
             </Button>

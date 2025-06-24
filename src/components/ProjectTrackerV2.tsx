@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -394,6 +394,21 @@ const ProjectTrackerV2 = () => {
     });
   };
 
+  // Optimized form field update functions
+  const updateProjectForm = useCallback((field: string, value: any) => {
+    setProjectForm(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }, []);
+
+  const updateProjectFormMultiple = useCallback((updates: Record<string, any>) => {
+    setProjectForm(prev => ({
+      ...prev,
+      ...updates
+    }));
+  }, []);
+
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       planning: "bg-gray-100 text-gray-800",
@@ -542,7 +557,7 @@ const ProjectTrackerV2 = () => {
     );
   };
 
-  const ProjectForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
+  const ProjectForm = useCallback(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
     <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -550,7 +565,7 @@ const ProjectTrackerV2 = () => {
           <Input
             id="projectName"
             value={projectForm.projectName}
-            onChange={(e) => setProjectForm({...projectForm, projectName: e.target.value})}
+            onChange={(e) => updateProjectForm('projectName', e.target.value)}
             placeholder="Website Redesign"
           />
         </div>
@@ -559,7 +574,7 @@ const ProjectTrackerV2 = () => {
           <Input
             id="clientName"
             value={projectForm.clientName}
-            onChange={(e) => setProjectForm({...projectForm, clientName: e.target.value})}
+            onChange={(e) => updateProjectForm('clientName', e.target.value)}
             placeholder="Acme Corp"
           />
         </div>
@@ -571,11 +586,17 @@ const ProjectTrackerV2 = () => {
           <Select
             value={projectForm.client_id}
             onValueChange={(value) => {
-              setProjectForm({...projectForm, client_id: value});
-              if (value !== 'new') {
+              if (value === 'new') {
+                updateProjectForm('client_id', value);
+              } else {
                 const client = clients.find(c => c.id.toString() === value);
                 if (client) {
-                  setProjectForm({...projectForm, client_id: value, clientName: client.name});
+                  updateProjectFormMultiple({ 
+                    client_id: value, 
+                    clientName: client.name 
+                  });
+                } else {
+                  updateProjectForm('client_id', value);
                 }
               }
             }}
@@ -598,8 +619,7 @@ const ProjectTrackerV2 = () => {
           <Select
             value={projectForm.type}
             onValueChange={(value) => {
-              setProjectForm({
-                ...projectForm, 
+              updateProjectFormMultiple({
                 type: value as any,
                 price: value === 'standard' ? 5000 : value === 'ai-enhanced' ? 7500 : 10000
               });
@@ -624,7 +644,7 @@ const ProjectTrackerV2 = () => {
             id="price"
             type="number"
             value={projectForm.price}
-            onChange={(e) => setProjectForm({...projectForm, price: parseInt(e.target.value) || 0})}
+            onChange={(e) => updateProjectForm('price', parseInt(e.target.value) || 0)}
             min="0"
           />
         </div>
@@ -634,7 +654,7 @@ const ProjectTrackerV2 = () => {
             id="estimated_hours"
             type="number"
             value={projectForm.estimated_hours}
-            onChange={(e) => setProjectForm({...projectForm, estimated_hours: parseInt(e.target.value) || 0})}
+            onChange={(e) => updateProjectForm('estimated_hours', parseInt(e.target.value) || 0)}
             min="0"
             placeholder="160"
           />
@@ -648,7 +668,7 @@ const ProjectTrackerV2 = () => {
             id="startDate"
             type="date"
             value={projectForm.startDate}
-            onChange={(e) => setProjectForm({...projectForm, startDate: e.target.value})}
+            onChange={(e) => updateProjectForm('startDate', e.target.value)}
           />
         </div>
         <div>
@@ -657,7 +677,7 @@ const ProjectTrackerV2 = () => {
             id="deadline"
             type="date"
             value={projectForm.deadline}
-            onChange={(e) => setProjectForm({...projectForm, deadline: e.target.value})}
+            onChange={(e) => updateProjectForm('deadline', e.target.value)}
           />
         </div>
       </div>
@@ -666,7 +686,7 @@ const ProjectTrackerV2 = () => {
         <Label htmlFor="assignTo">Assign To</Label>
         <Select 
           value={projectForm.assignedTo} 
-          onValueChange={(value) => setProjectForm({...projectForm, assignedTo: value})}
+          onValueChange={(value) => updateProjectForm('assignedTo', value)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select team member" />
@@ -687,7 +707,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="description"
           value={projectForm.description}
-          onChange={(e) => setProjectForm({...projectForm, description: e.target.value})}
+          onChange={(e) => updateProjectForm('description', e.target.value)}
           placeholder="Detailed project description..."
           rows={3}
         />
@@ -698,7 +718,7 @@ const ProjectTrackerV2 = () => {
         <Input
           id="technologies"
           value={projectForm.technologies}
-          onChange={(e) => setProjectForm({...projectForm, technologies: e.target.value})}
+          onChange={(e) => updateProjectForm('technologies', e.target.value)}
           placeholder="React, Node.js, PostgreSQL"
         />
       </div>
@@ -708,7 +728,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="deliverables"
           value={projectForm.deliverables}
-          onChange={(e) => setProjectForm({...projectForm, deliverables: e.target.value})}
+          onChange={(e) => updateProjectForm('deliverables', e.target.value)}
           placeholder="Website design, API development, Documentation"
           rows={2}
         />
@@ -720,7 +740,7 @@ const ProjectTrackerV2 = () => {
           id="notes"
           placeholder="Project notes and requirements..." 
           value={projectForm.notes}
-          onChange={(e) => setProjectForm({...projectForm, notes: e.target.value})}
+          onChange={(e) => updateProjectForm('notes', e.target.value)}
           rows={3}
         />
       </div>
@@ -737,7 +757,7 @@ const ProjectTrackerV2 = () => {
         <Button onClick={onSubmit}>{submitLabel}</Button>
       </div>
     </div>
-  );
+  ), [projectForm, clients, users, updateProjectForm, updateProjectFormMultiple]);
 
   if (loading) {
     return (

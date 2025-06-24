@@ -1,15 +1,12 @@
 
 import { useLocation } from "react-router-dom";
-import { ReactNode, lazy, Suspense } from "react";
+import { ReactNode } from "react";
 import ChatSidebar from "./ChatSidebar";
 import Header from "./Header";
 import Footer from "./Footer";
 import SEO from "./SEO";
 import FinancingCTA from "./FinancingCTA";
 import { SidebarProvider } from "./ui/sidebar";
-
-// Lazy load the AI Chatbot
-const AIChatbot = lazy(() => import("./AIChatbot"));
 
 interface LayoutProps {
   children: ReactNode;
@@ -47,15 +44,6 @@ const Layout = ({ children }: LayoutProps) => {
          !location.pathname.includes('/payment-terms') && 
          !location.pathname.includes('/contact') && (
           <FinancingCTA variant="compact" />
-        )}
-        
-        {/* Show AI Chatbot on all public pages, but not on internal/admin pages */}
-        {!location.pathname.includes('/command-center') &&
-         !location.pathname.includes('/admin') &&
-         !isAuthPage && (
-          <Suspense fallback={null}>
-            <AIChatbot />
-          </Suspense>
         )}
       </div>
     </SidebarProvider>
