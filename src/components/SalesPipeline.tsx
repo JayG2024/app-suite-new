@@ -84,11 +84,30 @@ const SalesPipeline = () => {
   }, []);
 
   const loadUsers = async () => {
+    // Hardcode Jason and Almir as team members
+    const hardcodedUsers = [
+      { id: 1, name: 'Jason Gordon', email: 'jason@jaydus.ai' },
+      { id: 2, name: 'Almir', email: 'almir@jaydus.ai' }
+    ];
+    
     try {
       const data = await apiCall(API_ENDPOINTS.users);
-      setUsers(data.users || []);
+      // Combine API users with hardcoded ones, avoiding duplicates
+      const apiUsers = data.users || [];
+      const allUsers = [...hardcodedUsers];
+      
+      // Add any API users that aren't already in our hardcoded list
+      apiUsers.forEach((apiUser: User) => {
+        if (!allUsers.find(u => u.email === apiUser.email)) {
+          allUsers.push(apiUser);
+        }
+      });
+      
+      setUsers(allUsers);
     } catch (error) {
       console.error('Error loading users:', error);
+      // Fallback to hardcoded users
+      setUsers(hardcodedUsers);
     }
   };
 

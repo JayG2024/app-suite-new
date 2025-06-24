@@ -1,5 +1,6 @@
 // Initialize database tables
 import pg from 'pg';
+import bcrypt from 'bcryptjs';
 const { Pool } = pg;
 
 const headers = {
@@ -148,6 +149,18 @@ export const handler = async (event, context) => {
       )
     `);
 
+    // Add admin users
+    const passwordHash = await bcrypt.hash('admin123', 10);
+    await client.query(`
+      INSERT INTO users (email, name, role, password_hash) VALUES
+      ('jason@jaydus.ai', 'Jason Gordon', 'admin', $1),
+      ('almir@jaydus.ai', 'Almir', 'admin', $2)
+      ON CONFLICT (email) DO UPDATE SET 
+        name = EXCLUDED.name,
+        role = EXCLUDED.role,
+        password_hash = EXCLUDED.password_hash
+    `, [passwordHash, passwordHash]);
+    
     // Add sample data
     await client.query(`
       INSERT INTO leads (name, company, contact, email, phone, status, stage, value, source, type) VALUES

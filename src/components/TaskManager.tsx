@@ -62,6 +62,7 @@ interface Project {
 interface User {
   id: number;
   name: string;
+  email?: string;
 }
 
 const TaskManager = () => {
@@ -143,7 +144,7 @@ const TaskManager = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/api/projects-db');
+      const response = await fetch('/.netlify/functions/projects');
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects || []);
@@ -154,14 +155,36 @@ const TaskManager = () => {
   };
 
   const loadUsers = async () => {
+    // Hardcode Jason and Almir as team members
+    const hardcodedUsers = [
+      { id: 1, name: 'Jason Gordon', email: 'jason@jaydus.ai' },
+      { id: 2, name: 'Almir', email: 'almir@jaydus.ai' }
+    ];
+    
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch('/.netlify/functions/users');
       if (response.ok) {
         const data = await response.json();
-        setUsers(data.users || []);
+        // Combine API users with hardcoded ones, avoiding duplicates
+        const apiUsers = data.users || [];
+        const allUsers = [...hardcodedUsers];
+        
+        // Add any API users that aren't already in our hardcoded list
+        apiUsers.forEach((apiUser: User) => {
+          if (!allUsers.find(u => u.email === apiUser.email)) {
+            allUsers.push(apiUser);
+          }
+        });
+        
+        setUsers(allUsers);
+      } else {
+        // Fallback to hardcoded users if API fails
+        setUsers(hardcodedUsers);
       }
     } catch (error) {
       console.error('Error loading users:', error);
+      // Fallback to hardcoded users
+      setUsers(hardcodedUsers);
     }
   };
 
@@ -172,7 +195,7 @@ const TaskManager = () => {
     }
 
     try {
-      const response = await fetch('/api/tasks', {
+      const response = await fetch('/.netlify/functions/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -211,7 +234,7 @@ const TaskManager = () => {
 
   const updateTask = async (taskId: string | number, updates: Partial<Task>) => {
     try {
-      const response = await fetch(`/api/tasks?id=${taskId}`, {
+      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)
@@ -233,7 +256,7 @@ const TaskManager = () => {
     if (!confirm('Are you sure you want to delete this task?')) return;
 
     try {
-      const response = await fetch(`/api/tasks?id=${taskId}`, {
+      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
         method: 'DELETE'
       });
 
