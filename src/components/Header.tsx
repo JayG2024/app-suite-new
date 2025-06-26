@@ -87,10 +87,10 @@ const Header = () => {
             </Link>
             
             <Link 
-              to="/price-calculator" 
+              to="/payment-terms" 
               className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
             >
-              Pricing
+              Payment Terms
             </Link>
             
             {/* Solutions Mega Menu */}
@@ -380,12 +380,12 @@ const Header = () => {
                 </Link>
                 
                 <Link
-                  to="/price-calculator"
+                  to="/payment-terms"
                   className="flex flex-col items-center gap-2 py-3 px-3 rounded-lg hover:bg-accent transition-all duration-200 text-center"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <DollarSign className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium">Pricing</span>
+                  <span className="text-sm font-medium">Payment Terms</span>
                 </Link>
               </div>
               
