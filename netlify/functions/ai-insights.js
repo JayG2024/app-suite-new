@@ -1,5 +1,4 @@
 const OpenAI = require('openai');
-const { createClient } = require('@supabase/supabase-js');
 
 // Initialize OpenAI
 const openai = new OpenAI({
