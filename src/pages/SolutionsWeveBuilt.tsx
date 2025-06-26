@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SEO from "@/components/SEO";
+import BusinessPlanRequestForm from "@/components/BusinessPlanRequestForm";
 import { 
   FileSignature, 
   Brain, 
@@ -29,6 +30,8 @@ import {
 const SolutionsWeveBuilt = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [activeTab, setActiveTab] = useState('products');
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<string>('');
 
   // Our own SaaS products that we keep and operate
   const ownProducts = [
@@ -40,7 +43,7 @@ const SolutionsWeveBuilt = () => {
       status: "live",
       category: "ai",
       revenue: "Growing",
-      users: "10,000+ active users",
+      users: "1000+ users",
       features: ["AI Chat Assistant", "Document Processing", "Workflow Automation", "Enterprise Integration"],
       icon: Brain,
       color: "bg-purple-500",
@@ -135,6 +138,11 @@ const SolutionsWeveBuilt = () => {
     window.open(`/contact?subject=Purchase ${productName}&type=purchase`, '_blank');
   };
 
+  const handleRequestBusinessPlan = (productName: string) => {
+    setSelectedProduct(productName);
+    setIsFormOpen(true);
+  };
+
 
   return (
     <div className="container mx-auto px-4 py-16">
@@ -155,20 +163,7 @@ const SolutionsWeveBuilt = () => {
         </p>
       </div>
 
-      {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-12">
-        {categories.map((category) => (
-          <Button
-            key={category.id}
-            variant={selectedCategory === category.id ? "default" : "outline"}
-            size="sm"
-            onClick={() => setSelectedCategory(category.id)}
-            className="text-xs"
-          >
-            {category.label}
-          </Button>
-        ))}
-      </div>
+      {/* Category Filter - Hidden for now until more products are added */}
 
       <Tabs defaultValue="our-products" className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-8">
@@ -235,7 +230,7 @@ const SolutionsWeveBuilt = () => {
                       <div className="font-medium text-green-600">{product.revenue}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-muted-foreground">Target Market</div>
+                      <div className="text-xs text-muted-foreground">Users</div>
                       <div className="font-medium">{product.users}</div>
                     </div>
                   </div>
@@ -347,7 +342,7 @@ const SolutionsWeveBuilt = () => {
                     </div>
                   </div>
 
-                  <Button onClick={() => handleContactAboutPurchase(product.name)} className="w-full">
+                  <Button onClick={() => handleRequestBusinessPlan(product.name)} className="w-full">
                     Request Full Business Plan
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
@@ -374,6 +369,17 @@ const SolutionsWeveBuilt = () => {
           </Button>
         </div>
       </div>
+
+      {/* Business Plan Request Form */}
+      <BusinessPlanRequestForm
+        isOpen={isFormOpen}
+        onClose={() => {
+          setIsFormOpen(false);
+          setSelectedProduct('');
+        }}
+        productName={selectedProduct}
+        availableProducts={availableForPurchase.map(p => ({ id: p.id, name: p.name }))}
+      />
     </div>
   );
 };
