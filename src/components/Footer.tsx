@@ -34,13 +34,13 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="font-semibold mb-4">Applications</h3>
+            <h3 className="font-semibold mb-4">Solutions</h3>
             <ul className="space-y-2">
-              <li><Link to="/finance-apps" className="text-sm text-muted-foreground hover:text-foreground">Finance Apps</Link></li>
-              <li><Link to="/customer-management" className="text-sm text-muted-foreground hover:text-foreground">Customer Management</Link></li>
-              <li><Link to="/operations-tools" className="text-sm text-muted-foreground hover:text-foreground">Operations Tools</Link></li>
-              <li><Link to="/marketing-solutions" className="text-sm text-muted-foreground hover:text-foreground">Marketing Solutions</Link></li>
-              <li><Link to="/apps" className="text-sm text-muted-foreground hover:text-foreground">View All Apps</Link></li>
+              <li><Link to="/apps?type=small-business" className="text-sm text-muted-foreground hover:text-foreground">Small Business Tools</Link></li>
+              <li><Link to="/apps?type=business" className="text-sm text-muted-foreground hover:text-foreground">Business Applications</Link></li>
+              <li><Link to="/apps?type=enterprise" className="text-sm text-muted-foreground hover:text-foreground">Enterprise Applications</Link></li>
+              <li><Link to="/roi-calculator" className="text-sm text-muted-foreground hover:text-foreground">ROI Calculator</Link></li>
+              <li><Link to="/apps" className="text-sm text-muted-foreground hover:text-foreground">View All Examples</Link></li>
             </ul>
           </div>
           

@@ -53,36 +53,6 @@ const Documentation = () => {
         <Card className="p-6 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="h-5 w-5 text-primary" />
-            <h3 className="text-xl font-semibold">Application Categories</h3>
-          </div>
-          <p className="text-muted-foreground mb-4 flex-grow">
-            Explore the types of custom applications we build for our clients.
-          </p>
-          <ul className="space-y-2">
-            <li>
-              <Link to="/finance-apps" className="text-primary hover:underline flex items-center">
-                <span>Finance Applications</span>
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </li>
-            <li>
-              <Link to="/customer-management" className="text-primary hover:underline flex items-center">
-                <span>Customer Management</span>
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </li>
-            <li>
-              <Link to="/operations-tools" className="text-primary hover:underline flex items-center">
-                <span>Operations Tools</span>
-                <ArrowRight className="h-4 w-4 ml-1" />
-              </Link>
-            </li>
-          </ul>
-        </Card>
-
-        <Card className="p-6 flex flex-col">
-          <div className="flex items-center gap-2 mb-3">
-            <FileText className="h-5 w-5 text-primary" />
             <h3 className="text-xl font-semibold">Project Process</h3>
           </div>
           <p className="text-muted-foreground mb-4 flex-grow">
@@ -154,7 +124,7 @@ const Documentation = () => {
           <div>
             <h3 className="text-lg font-medium mb-2">Need Technical Support?</h3>
             <p className="text-muted-foreground">
-              Our support team is available 24/7 to help you with any issues.
+              Our support team is here to help you with any issues or questions.
             </p>
           </div>
           <Button className="mt-4 md:mt-0" asChild>

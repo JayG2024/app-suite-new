@@ -127,62 +127,38 @@ const Header = () => {
                       </div>
                       <div className="space-y-3">
                         <Link 
-                          to="/documentation/process" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Code className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Our Process</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/finance-apps" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <DollarSign className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Finance Apps</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/customer-management" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Users className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Customer Management</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/operations-tools" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Code className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Operations Tools</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/marketing-solutions" 
+                          to="/apps?type=small-business" 
                           className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
                         >
                           <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
                             <Zap className="h-3 w-3 text-primary" />
                           </div>
                           <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Marketing Solutions</h4>
+                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Small Business Tools</h4>
+                          </div>
+                        </Link>
+                        
+                        <Link 
+                          to="/apps?type=business" 
+                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                        >
+                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Code className="h-3 w-3 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Business Applications</h4>
+                          </div>
+                        </Link>
+                        
+                        <Link 
+                          to="/apps?type=enterprise" 
+                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                        >
+                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Users className="h-3 w-3 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Enterprise Applications</h4>
                           </div>
                         </Link>
                         
@@ -293,6 +269,18 @@ const Header = () => {
                           </div>
                           <div>
                             <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">About App Suite</h4>
+                          </div>
+                        </Link>
+                        
+                        <Link 
+                          to="/documentation/process" 
+                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                        >
+                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Code className="h-3 w-3 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Our Process</h4>
                           </div>
                         </Link>
                         
@@ -414,47 +402,36 @@ const Header = () => {
               </div>
               <div className="space-y-2 pl-2">
                 <Link 
-                  to="/finance-apps"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Target className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Finance Apps</div>
-                    <div className="text-xs text-muted-foreground">Financial management tools</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/customer-management"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Users className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Customer Management</div>
-                    <div className="text-xs text-muted-foreground">CRM solutions</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/operations-tools"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Code className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Operations Tools</div>
-                    <div className="text-xs text-muted-foreground">Business operations</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/marketing-solutions"
+                  to="/apps?type=small-business"
                   className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Zap className="h-4 w-4 text-primary" />
                   <div>
-                    <div className="font-medium">Marketing Solutions</div>
-                    <div className="text-xs text-muted-foreground">Marketing automation</div>
+                    <div className="font-medium">Small Business Tools</div>
+                    <div className="text-xs text-muted-foreground">Streamline your operations</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/apps?type=business"
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Code className="h-4 w-4 text-primary" />
+                  <div>
+                    <div className="font-medium">Business Applications</div>
+                    <div className="text-xs text-muted-foreground">Custom business solutions</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/apps?type=enterprise"
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Users className="h-4 w-4 text-primary" />
+                  <div>
+                    <div className="font-medium">Enterprise Applications</div>
+                    <div className="text-xs text-muted-foreground">Scale your enterprise</div>
                   </div>
                 </Link>
                 <Link 
@@ -551,6 +528,17 @@ const Header = () => {
                   <div>
                     <div className="font-medium">About Us</div>
                     <div className="text-xs text-muted-foreground">Our story & mission</div>
+                  </div>
+                </Link>
+                <Link
+                  to="/documentation/process" 
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Code className="h-4 w-4 text-primary" />
+                  <div>
+                    <div className="font-medium">Our Process</div>
+                    <div className="text-xs text-muted-foreground">How we work</div>
                   </div>
                 </Link>
                 <Link 
