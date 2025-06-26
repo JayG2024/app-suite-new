@@ -45,9 +45,12 @@ const Apps = () => {
             <Sparkles className="h-4 w-4" />
             <span>AI-Powered Business Solutions</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-4">Browse All Applications</h1>
+          <h1 className="text-4xl font-bold tracking-tight mb-4">Example Applications & Ideas</h1>
           <p className="text-xl text-muted-foreground">
-            Discover our complete collection of AI-powered business applications
+            Browse example applications for inspiration. We can build ANY custom solution you need - these are just ideas to get you started!
+          </p>
+          <p className="text-sm text-muted-foreground mt-2">
+            Don't see what you need? No problem! We build 100% custom applications tailored to your exact requirements.
           </p>
         </div>
 
@@ -134,6 +137,27 @@ const Apps = () => {
               </CardFooter>
             </Card>
           ))}
+        </div>
+        
+        {/* Custom Solutions CTA */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <Card className="bg-gradient-to-r from-primary/10 to-blue/10 border-primary/20">
+            <CardContent className="p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">Need Something Different?</h3>
+              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+                These are just examples to spark ideas. We specialize in building completely custom applications 
+                that match your unique business processes and requirements. If you can imagine it, we can build it.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild size="lg">
+                  <a href="/contact">Discuss Your Custom Solution</a>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href="/proposal">Get Instant Proposal</a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
   );
