@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import SEO from "@/components/SEO";
+import Newsletter from "@/components/Newsletter";
 import { 
   Headphones, 
   Play, 
@@ -40,6 +41,7 @@ const Podcast = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(1);
+  const [showNewsletter, setShowNewsletter] = useState(false);
 
   // Episodes data
   const episodes: Episode[] = [
@@ -317,11 +319,9 @@ const Podcast = () => {
                 We're producing new episodes weekly covering AI, custom software development, and business technology trends.
               </p>
               <div className="flex justify-center gap-4">
-                <Link to="/newsletter">
-                  <Button variant="outline">
-                    Subscribe for Updates
-                  </Button>
-                </Link>
+                <Button variant="outline" onClick={() => setShowNewsletter(true)}>
+                  Subscribe for Updates
+                </Button>
                 <Link to="/resources">
                   <Button variant="outline">
                     View All Resources
@@ -333,6 +333,11 @@ const Podcast = () => {
           </div>
         </section>
       </div>
+
+      {/* Newsletter Popup */}
+      {showNewsletter && (
+        <Newsletter onClose={() => setShowNewsletter(false)} />
+      )}
     </>
   );
 };
