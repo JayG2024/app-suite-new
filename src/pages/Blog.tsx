@@ -53,6 +53,18 @@ const allPosts = [
     author: "Jason Gordon",
     readTime: "12 min read",
     image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1000"
+  },
+  {
+    id: "modern-vs-traditional-hosting-infrastructure",
+    title: "Modern vs Traditional Hosting Infrastructure for AI Applications: The Complete Implementation Guide",
+    date: "June 26, 2025",
+    excerpt: "Transform your infrastructure approach from server management to platform leverage for 5x cost reduction and deployment acceleration. A comprehensive guide for technical leaders.",
+    category: "Strategic Research",
+    author: "Jason Gordon",
+    readTime: "27 min read",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80&w=1000",
+    isWhitePaper: true,
+    featured: true
   }
 ];
 
