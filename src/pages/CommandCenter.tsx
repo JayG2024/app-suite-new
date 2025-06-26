@@ -19,7 +19,7 @@ import FinancialDashboard from "@/components/FinancialDashboard";
 import TeamWorkspace from "@/components/TeamWorkspace";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
-import AIDashboardAssistant from "@/components/AIDashboardAssistant";
+import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import { 
   Brain, 
@@ -386,13 +386,7 @@ const CommandCenter = () => {
                 </CardContent>
               </Card>
 
-              {/* AI Dashboard Assistant */}
-              <div className="h-[600px]">
-                <AIDashboardAssistant 
-                  dashboardData={dashboardData}
-                  currentTab={currentTab}
-                />
-              </div>
+              {/* Removed embedded AI Assistant - now using floating version */}
             </div>
 
             {/* Recent Activity */}
@@ -515,15 +509,11 @@ const CommandCenter = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Global AI Assistant - Available on all tabs except overview */}
-        {currentTab !== "overview" && (
-          <div className="fixed bottom-4 right-4 w-96 h-[500px] z-50 shadow-2xl">
-            <AIDashboardAssistant 
-              dashboardData={dashboardData}
-              currentTab={currentTab}
-            />
-          </div>
-        )}
+        {/* Floating AI Assistant - Available globally */}
+        <FloatingAIAssistant 
+          dashboardData={dashboardData}
+          currentTab={currentTab}
+        />
       </div>
     </div>
   );

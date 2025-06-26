@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
 import SEO from "@/components/SEO";
+import { CALENDLY_DISCOVERY_CALL_URL } from "@/utils/constants";
 import { 
   MessageCircle, 
   FileText, 
@@ -365,10 +366,10 @@ const GetStarted = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
-                  <Link to="/contact">
+                  <a href={CALENDLY_DISCOVERY_CALL_URL} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="h-5 w-5 mr-2" />
                     Schedule Discovery Call
-                  </Link>
+                  </a>
                 </Button>
                 <Button size="lg" variant="outline">
                   <Users className="h-5 w-5 mr-2" />

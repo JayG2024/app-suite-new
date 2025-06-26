@@ -7,6 +7,7 @@ import { Calculator, ArrowRight, Download, DollarSign } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProposalButton from "@/components/ProposalButton";
 import SEO from "@/components/SEO";
+import { CALENDLY_DISCOVERY_CALL_URL } from "@/utils/constants";
 
 const PriceCalculator = () => {
   const [selectedApp, setSelectedApp] = useState("");
@@ -175,10 +176,10 @@ const PriceCalculator = () => {
           {/* CTA */}
           <div className="text-center">
             <Button size="lg" asChild>
-              <Link to="/contact">
+              <a href={CALENDLY_DISCOVERY_CALL_URL} target="_blank" rel="noopener noreferrer">
                 Schedule Discovery Call
                 <ArrowRight className="h-5 w-5 ml-2" />
-              </Link>
+              </a>
             </Button>
           </div>
         </div>
