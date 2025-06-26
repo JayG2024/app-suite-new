@@ -116,7 +116,7 @@ export const faqData: FAQ[] = [
     id: "implementation-4",
     category: "Implementation & Support",
     question: "What ongoing support do you provide?",
-    answer: "We provide 24/7 customer support, regular updates and improvements, technical assistance, and dedicated implementation team support. Our goal is to ensure your applications continue to serve your business effectively long-term.",
+    answer: "We provide comprehensive customer support, regular updates and improvements, technical assistance, and dedicated implementation team support. Our goal is to ensure your applications continue to serve your business effectively long-term.",
     tags: ["ongoing support", "maintenance", "updates"]
   },
 
@@ -201,7 +201,7 @@ export const faqData: FAQ[] = [
     id: "troubleshooting-1",
     category: "Troubleshooting",
     question: "What if something goes wrong with my application?",
-    answer: "Our 24/7 support team is available to address any issues quickly. We provide multiple support channels including live chat, email, and phone support. Most issues are resolved within hours, and we guarantee rapid response times.",
+    answer: "Our support team is available to address any issues quickly. We provide multiple support channels including live chat, email, and phone support. Most issues are resolved within hours, and we guarantee rapid response times.",
     tags: ["troubleshooting", "support", "issues"]
   },
   {
