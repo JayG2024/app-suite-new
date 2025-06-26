@@ -49,9 +49,8 @@ const HelpCenter = () => {
         </div>
 
         <Tabs defaultValue="faq" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="faq">FAQ</TabsTrigger>
-            <TabsTrigger value="guides">Guides</TabsTrigger>
             <TabsTrigger value="support">Support</TabsTrigger>
           </TabsList>
 
@@ -135,67 +134,6 @@ const HelpCenter = () => {
                 </Button>
               </div>
             )}
-          </TabsContent>
-
-          {/* Guides Tab */}
-          <TabsContent value="guides" className="space-y-6">
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Getting Started Guide</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    <li><Link to="/documentation" className="text-primary hover:underline">How App Suite Works</Link></li>
-                    <li><Link to="/ai-development-process" className="text-primary hover:underline">Our Development Process</Link></li>
-                    <li><Link to="/contact" className="text-primary hover:underline">Schedule a Consultation</Link></li>
-                    <li><Link to="/roi-calculator" className="text-primary hover:underline">Calculate Your ROI</Link></li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Service Categories</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    <li><Link to="/finance-apps" className="text-primary hover:underline">Finance Applications</Link></li>
-                    <li><Link to="/customer-management" className="text-primary hover:underline">Customer Management</Link></li>
-                    <li><Link to="/operations-tools" className="text-primary hover:underline">Operations Tools</Link></li>
-                    <li><Link to="/marketing-solutions" className="text-primary hover:underline">Marketing Solutions</Link></li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Implementation Guides</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    <li><Link to="/documentation/installation" className="text-primary hover:underline">Project Kickoff Process</Link></li>
-                    <li><Link to="/documentation/configuration" className="text-primary hover:underline">Requirements Gathering</Link></li>
-                    <li><Link to="/documentation/integrations" className="text-primary hover:underline">Integration Planning</Link></li>
-                    <li><Link to="/documentation/customization" className="text-primary hover:underline">Customization Options</Link></li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Best Practices</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    <li><Link to="/blog" className="text-primary hover:underline">Latest Insights & Tips</Link></li>
-                    <li><a href="#optimization" className="text-primary hover:underline">Workflow Optimization</a></li>
-                    <li><a href="#data-best-practices" className="text-primary hover:underline">Data Management Best Practices</a></li>
-                    <li><a href="#team-training" className="text-primary hover:underline">Team Training Resources</a></li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
           </TabsContent>
 
           {/* Support Tab */}

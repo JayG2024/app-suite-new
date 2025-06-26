@@ -53,6 +53,42 @@ const Documentation = () => {
         <Card className="p-6 flex flex-col">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="h-5 w-5 text-primary" />
+            <h3 className="text-xl font-semibold">Implementation Guides</h3>
+          </div>
+          <p className="text-muted-foreground mb-4 flex-grow">
+            Step-by-step guides for project implementation and setup.
+          </p>
+          <ul className="space-y-2">
+            <li>
+              <Link to="/documentation/installation" className="text-primary hover:underline flex items-center">
+                <span>Project Kickoff Process</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Link>
+            </li>
+            <li>
+              <Link to="/documentation/configuration" className="text-primary hover:underline flex items-center">
+                <span>Requirements Gathering</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Link>
+            </li>
+            <li>
+              <Link to="/documentation/integrations" className="text-primary hover:underline flex items-center">
+                <span>Integration Planning</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Link>
+            </li>
+            <li>
+              <Link to="/documentation/customization" className="text-primary hover:underline flex items-center">
+                <span>Customization Options</span>
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Link>
+            </li>
+          </ul>
+        </Card>
+
+        <Card className="p-6 flex flex-col">
+          <div className="flex items-center gap-2 mb-3">
+            <FileText className="h-5 w-5 text-primary" />
             <h3 className="text-xl font-semibold">Project Process</h3>
           </div>
           <p className="text-muted-foreground mb-4 flex-grow">
