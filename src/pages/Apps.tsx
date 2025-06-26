@@ -40,6 +40,16 @@ const Apps = () => {
   return (
       <div className="container mx-auto py-12 px-4 md:px-6 flex-grow">
         <SEO title="Business Apps - Custom AI-Powered Solutions" description="Browse our comprehensive catalog of AI-powered business applications. From finance to marketing, find the perfect custom software solution for your business needs." />
+        
+        {/* Notice Banner */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 text-center">
+            <p className="text-sm font-medium">
+              💡 <strong>Note:</strong> These are example applications to inspire ideas. We build 100% custom solutions tailored to YOUR specific business needs.
+            </p>
+          </div>
+        </div>
+        
         <div className="max-w-3xl mx-auto text-center mb-12">
           <div className="inline-flex items-center justify-center gap-2 bg-primary/10 px-3 py-1 rounded-full text-primary font-medium text-sm mb-4">
             <Sparkles className="h-4 w-4" />
@@ -124,16 +134,16 @@ const Apps = () => {
                           AI Capabilities
                         </h4>
                         <p className="text-sm mt-1">
-                          This application leverages advanced AI to automate tasks, provide intelligent insights, and enhance productivity for your business.
+                          This is an example of what we can build. We'll customize it completely to match your specific business needs and workflows.
                         </p>
                       </div>
                       <div className="pt-4">
-                        <Button className="w-full" onClick={() => navigate('/contact')}>Request Customization</Button>
+                        <Button className="w-full" onClick={() => navigate('/contact')}>Build Something Similar</Button>
                       </div>
                     </div>
                   </DialogContent>
                 </Dialog>
-                <Button onClick={() => navigate('/contact')} className="w-full sm:w-auto">Get This App</Button>
+                <Button onClick={() => navigate('/contact')} className="w-full sm:w-auto">Use as Inspiration</Button>
               </CardFooter>
             </Card>
           ))}
