@@ -65,7 +65,7 @@ export const faqData: FAQ[] = [
     id: "apps-1",
     category: "Applications & Services",
     question: "What types of applications can you build?",
-    answer: "We build applications across four main categories: Finance Apps (invoice generators, budget analyzers, financial forecasters), Customer Management (CRM systems, customer insights, feedback analyzers), Operations Tools (workflow optimizers, resource allocators, supply chain managers), and Marketing Solutions (content generators, campaign analyzers, market researchers).",
+    answer: "We build ANY type of custom business application you need. From simple task automation tools to complex enterprise systems, we create tailored solutions that match your exact requirements. Whether it's CRM systems, financial tools, inventory management, workflow automation, customer portals, or any other business application - if you can imagine it, we can build it. Everything is custom-coded from scratch specifically for your business.",
     tags: ["applications", "categories", "custom development"]
   },
   {

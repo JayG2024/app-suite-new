@@ -18,6 +18,11 @@ import {
 import SEO from "@/components/SEO";
 
 const PaymentTerms = () => {
+  const handleDownloadPDF = () => {
+    // For now, we'll use the HTML document that's generated
+    window.open('/documents/payment-terms.html', '_blank');
+  };
+
   return (
     <>
       <SEO 
@@ -548,7 +553,7 @@ const PaymentTerms = () => {
                       Calculate Financing
                     </Link>
                   </Button>
-                  <Button size="lg" variant="outline">
+                  <Button size="lg" variant="outline" onClick={handleDownloadPDF}>
                     <Download className="h-5 w-5 mr-2" />
                     Download PDF Terms
                   </Button>

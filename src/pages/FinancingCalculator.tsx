@@ -16,6 +16,7 @@ import {
   Info
 } from "lucide-react";
 import SEO from "@/components/SEO";
+import FinancingApplicationForm from "@/components/FinancingApplicationForm";
 
 const FinancingCalculator = () => {
   const [projectType, setProjectType] = useState('5000');
@@ -23,6 +24,7 @@ const FinancingCalculator = () => {
   const [financingTerm, setFinancingTerm] = useState('6');
   const [additionalAPIs, setAdditionalAPIs] = useState(0);
   const [apiType, setApiType] = useState('basic');
+  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false);
 
   // Project types with included APIs
   const projectTypes = {
@@ -238,7 +240,7 @@ const FinancingCalculator = () => {
 
             {/* Right Column - Summary */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-6">
+              <Card className="sticky top-24">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <DollarSign className="h-5 w-5" />
@@ -324,11 +326,13 @@ const FinancingCalculator = () => {
                   <Separator />
                   
                   <div className="space-y-3">
-                    <Button asChild className="w-full" size="lg">
-                      <Link to="/contact?type=custom-quote">
-                        Get Started
-                        <ArrowRight className="h-4 w-4 ml-2" />
-                      </Link>
+                    <Button 
+                      className="w-full" 
+                      size="lg"
+                      onClick={() => setIsApplicationFormOpen(true)}
+                    >
+                      Submit Application
+                      <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                     <Button asChild variant="outline" className="w-full">
                       <Link to="/payment-terms">
@@ -376,6 +380,25 @@ const FinancingCalculator = () => {
           </div>
         </div>
       </div>
+
+      {/* Financing Application Form */}
+      <FinancingApplicationForm
+        isOpen={isApplicationFormOpen}
+        onClose={() => setIsApplicationFormOpen(false)}
+        projectDetails={{
+          projectType: projectTypes[projectType].name,
+          basePrice,
+          apiCost,
+          totalProjectCost,
+          downPayment,
+          amountToFinance,
+          financingFee,
+          totalWithFinancing,
+          monthlyPayment,
+          financingTerm: parseInt(financingTerm),
+          needFinancing: needFinancing === 'yes',
+        }}
+      />
     </>
   );
 };
