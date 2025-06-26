@@ -48,6 +48,33 @@ const PaymentTerms = () => {
           </div>
         </div>
 
+        {/* Table of Contents */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-lg">Quick Navigation</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid md:grid-cols-4 gap-2">
+              <a href="#pricing" className="text-primary hover:underline flex items-center gap-2">
+                <ArrowRight className="h-4 w-4" />
+                Service Pricing
+              </a>
+              <a href="#payment-schedules" className="text-primary hover:underline flex items-center gap-2">
+                <ArrowRight className="h-4 w-4" />
+                Payment Options
+              </a>
+              <a href="#whats-included" className="text-primary hover:underline flex items-center gap-2">
+                <ArrowRight className="h-4 w-4" />
+                What's Included
+              </a>
+              <a href="#payment-methods" className="text-primary hover:underline flex items-center gap-2">
+                <ArrowRight className="h-4 w-4" />
+                Payment Methods
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Quick Summary */}
         <Card className="bg-primary/5 border-primary/20 mb-8">
           <CardHeader>
@@ -80,7 +107,7 @@ const PaymentTerms = () => {
         <div className="space-y-8">
 
           {/* 1. Service Packages & Pricing */}
-          <Card>
+          <Card id="pricing">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
@@ -93,7 +120,7 @@ const PaymentTerms = () => {
                 <div className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-2">Standard Application</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$5,000</div>
-                  <ul className="text-sm space-y-1">
+                  <ul className="text-base space-y-2">
                     <li>• Custom dashboard application</li>
                     <li>• User authentication & roles</li>
                     <li>• Database implementation</li>
@@ -105,7 +132,7 @@ const PaymentTerms = () => {
                 <div className="border rounded-lg p-4 border-primary bg-primary/5">
                   <h4 className="font-semibold mb-2">AI-Powered Solution</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$7,500</div>
-                  <ul className="text-sm space-y-1">
+                  <ul className="text-base space-y-2">
                     <li>• Everything in Standard</li>
                     <li>• GPT-4, Claude, Llama integration</li>
                     <li>• Voice & vision AI capabilities</li>
@@ -117,7 +144,7 @@ const PaymentTerms = () => {
                 <div className="border rounded-lg p-4">
                   <h4 className="font-semibold mb-2">Enterprise Solution</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$10,000</div>
-                  <ul className="text-sm space-y-1">
+                  <ul className="text-base space-y-2">
                     <li>• Everything in AI-Powered</li>
                     <li>• Multiple AI model orchestration</li>
                     <li>• Advanced security & compliance</li>
@@ -129,7 +156,7 @@ const PaymentTerms = () => {
 
               <div className="bg-muted/30 rounded-lg p-4">
                 <h4 className="font-semibold mb-2">Module-Based Add-Ons:</h4>
-                <div className="grid md:grid-cols-2 gap-2 text-sm">
+                <div className="grid md:grid-cols-2 gap-3 text-base">
                   <div>• Small Business Tools: $2,500 (includes 1 API)</div>
                   <div>• Feature Add-ons: $1,000 each</div>
                   <div>• Basic Data Sync API: $1,000 each</div>
@@ -144,7 +171,7 @@ const PaymentTerms = () => {
           </Card>
 
           {/* 2. Payment Schedules */}
-          <Card>
+          <Card id="payment-schedules">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
@@ -162,7 +189,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Split Payment</span>
                         <Badge variant="default">Recommended</Badge>
                       </div>
-                      <div className="space-y-2 text-sm">
+                      <div className="space-y-3 text-base">
                         <div>• <strong>50% Upfront:</strong> Due at contract signing</div>
                         <div>• <strong>50% Final:</strong> Due upon delivery</div>
                       </div>
@@ -172,7 +199,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Financing Available</span>
                         <Badge variant="secondary">Popular</Badge>
                       </div>
-                      <div className="space-y-2 text-sm">
+                      <div className="space-y-3 text-base">
                         <div>• <strong>50% Down:</strong> At signing</div>
                         <div>• <strong>Finance 50%:</strong> 6 or 12 months</div>
                         <div>• 10% fee (6mo) or 15% fee (12mo)</div>
@@ -183,7 +210,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Full Payment</span>
                         <Badge variant="outline">5% Discount</Badge>
                       </div>
-                      <div className="space-y-2 text-sm">
+                      <div className="space-y-3 text-base">
                         <div>• <strong>100% Upfront:</strong> 5% discount</div>
                         <div>• Standard: $4,750 total</div>
                         <div>• AI-Powered: $7,125 total</div>
@@ -202,7 +229,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Split Payment</span>
                         <Badge variant="default">Standard</Badge>
                       </div>
-                      <div className="space-y-1 text-sm">
+                      <div className="space-y-2 text-base">
                         <div>• 50% Upfront: $5,000+</div>
                         <div>• 50% Delivery: Balance</div>
                       </div>
@@ -212,7 +239,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Enterprise Financing</span>
                         <Badge variant="secondary">Flexible</Badge>
                       </div>
-                      <div className="space-y-1 text-sm">
+                      <div className="space-y-2 text-base">
                         <div>• <strong>$5,000 Down</strong></div>
                         <div>• Finance remaining balance</div>
                         <div>• 6, 12, or 24 month terms</div>
@@ -224,7 +251,7 @@ const PaymentTerms = () => {
                         <span className="font-medium">Full Payment</span>
                         <Badge variant="outline">5% Discount</Badge>
                       </div>
-                      <div className="space-y-1 text-sm">
+                      <div className="space-y-2 text-base">
                         <div>• 100% Upfront</div>
                         <div>• 5% discount on total</div>
                       </div>
@@ -238,7 +265,7 @@ const PaymentTerms = () => {
                   <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-amber-800 mb-1">Payment Terms</h4>
-                    <ul className="text-sm text-amber-700 space-y-1">
+                    <ul className="text-base text-amber-700 space-y-2">
                       <li>• All payments due within 5 business days of invoice</li>
                       <li>• Late payments subject to 1.5% monthly fee</li>
                       <li>• Development begins upon receipt of initial payment</li>
@@ -252,7 +279,7 @@ const PaymentTerms = () => {
           </Card>
 
           {/* 3. What's Included */}
-          <Card>
+          <Card id="whats-included">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5" />
@@ -263,7 +290,7 @@ const PaymentTerms = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-semibold mb-3">Development & Delivery</h4>
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-3">
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Complete source code ownership</li>
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Responsive web application</li>
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Database design & implementation</li>
@@ -274,7 +301,7 @@ const PaymentTerms = () => {
                 </div>
                 <div>
                   <h4 className="font-semibold mb-3">Support & Documentation</h4>
-                  <ul className="space-y-2 text-sm">
+                  <ul className="space-y-3">
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />30-day post-launch support</li>
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />User training & documentation</li>
                     <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Technical documentation</li>
@@ -354,7 +381,7 @@ const PaymentTerms = () => {
                     <div className="border rounded-lg p-4">
                       <h5 className="font-medium mb-2">Standard Apps</h5>
                       <div className="text-2xl font-bold text-primary mb-2">$199/month</div>
-                      <ul className="text-sm space-y-1">
+                      <ul className="text-base space-y-2">
                         <li>• Professional hosting & monitoring</li>
                         <li>• SSL certificate & security updates</li>
                         <li>• Daily backups & disaster recovery</li>
@@ -366,7 +393,7 @@ const PaymentTerms = () => {
                     <div className="border rounded-lg p-4 border-primary bg-primary/5">
                       <h5 className="font-medium mb-2">SaaS Applications</h5>
                       <div className="text-2xl font-bold text-primary mb-2">$499/month</div>
-                      <ul className="text-sm space-y-1">
+                      <ul className="text-base space-y-2">
                         <li>• Everything in Standard</li>
                         <li>• Multi-tenant infrastructure</li>
                         <li>• Auto-scaling & load balancing</li>
@@ -379,7 +406,7 @@ const PaymentTerms = () => {
 
                 <div className="bg-muted/30 rounded-lg p-4">
                   <h4 className="font-semibold mb-2">After First Year:</h4>
-                  <ul className="text-sm space-y-1">
+                  <ul className="text-base space-y-2">
                     <li>• Continue with our hosting at same rates</li>
                     <li>• Migrate to your own hosting ($2,500 migration assistance)</li>
                     <li>• Full technical documentation provided for migration</li>
@@ -405,7 +432,7 @@ const PaymentTerms = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <h5 className="font-medium mb-2">Feature Add-Ons - $1,000 each</h5>
-                      <ul className="text-sm space-y-1">
+                      <ul className="text-base space-y-2">
                         <li>• Email tracking & analytics</li>
                         <li>• Internal calendar sync</li>
                         <li>• Advanced search functionality</li>
@@ -416,7 +443,7 @@ const PaymentTerms = () => {
                     </div>
                     <div>
                       <h5 className="font-medium mb-2">API Integration Pricing</h5>
-                      <ul className="text-sm space-y-1">
+                      <ul className="text-base space-y-2">
                         <li>• Basic Data Sync API: $1,000</li>
                         <li>• Full Functional API: $2,500</li>
                         <li>• Advanced Modules: $2,500</li>
@@ -430,7 +457,7 @@ const PaymentTerms = () => {
 
                 <div className="bg-muted/30 rounded-lg p-4">
                   <h4 className="font-semibold mb-2">Important Notes:</h4>
-                  <ul className="text-sm space-y-1">
+                  <ul className="text-base space-y-2">
                     <li>• We only build new applications or enhance apps we previously developed</li>
                     <li>• No modifications to existing third-party software</li>
                     <li>• All pricing is fixed - no hourly billing</li>
@@ -442,7 +469,7 @@ const PaymentTerms = () => {
           </Card>
 
           {/* 7. Payment Methods */}
-          <Card>
+          <Card id="payment-methods">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
@@ -450,27 +477,32 @@ const PaymentTerms = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="border rounded-lg p-4 text-center">
                   <CreditCard className="h-8 w-8 mx-auto mb-3 text-primary" />
-                  <h4 className="font-semibold mb-2">ACH Transfer</h4>
-                  <p className="text-sm text-muted-foreground">Direct bank transfer (preferred)</p>
+                  <h4 className="font-semibold mb-2">Credit Card</h4>
+                  <p className="text-sm text-muted-foreground">Visa, MasterCard, Amex</p>
                 </div>
                 <div className="border rounded-lg p-4 text-center">
                   <Shield className="h-8 w-8 mx-auto mb-3 text-primary" />
+                  <h4 className="font-semibold mb-2">ACH Transfer</h4>
+                  <p className="text-sm text-muted-foreground">Direct bank transfer</p>
+                </div>
+                <div className="border rounded-lg p-4 text-center">
+                  <FileText className="h-8 w-8 mx-auto mb-3 text-primary" />
                   <h4 className="font-semibold mb-2">Wire Transfer</h4>
-                  <p className="text-sm text-muted-foreground">Secure international payments</p>
+                  <p className="text-sm text-muted-foreground">International payments</p>
                 </div>
                 <div className="border rounded-lg p-4 text-center">
                   <FileText className="h-8 w-8 mx-auto mb-3 text-primary" />
                   <h4 className="font-semibold mb-2">Business Check</h4>
-                  <p className="text-sm text-muted-foreground">Traditional payment method</p>
+                  <p className="text-sm text-muted-foreground">Traditional payment</p>
                 </div>
               </div>
               
               <div className="mt-6 bg-muted/30 rounded-lg p-4">
                 <h4 className="font-semibold mb-2">Payment Processing:</h4>
-                <ul className="text-sm space-y-1">
+                <ul className="text-base space-y-2">
                   <li>• Invoices sent via email with payment instructions</li>
                   <li>• Payment confirmation within 24 hours</li>
                   <li>• All transactions processed securely</li>
@@ -492,7 +524,7 @@ const PaymentTerms = () => {
               
               <div>
                 <h4 className="font-semibold mb-2">Refund Policy:</h4>
-                <ul className="text-sm space-y-1 ml-4">
+                <ul className="text-base space-y-2 ml-4">
                   <li>• Full refund if project cancelled within 48 hours of contract signing</li>
                   <li>• Partial refunds based on work completed after 48 hours</li>
                   <li>• No refund on final payment after delivery acceptance</li>
@@ -502,7 +534,7 @@ const PaymentTerms = () => {
 
               <div>
                 <h4 className="font-semibold mb-2">Project Changes:</h4>
-                <ul className="text-sm space-y-1 ml-4">
+                <ul className="text-base space-y-2 ml-4">
                   <li>• Minor changes included during development</li>
                   <li>• Major scope changes require written approval</li>
                   <li>• Additional features priced separately</li>
@@ -512,7 +544,7 @@ const PaymentTerms = () => {
 
               <div>
                 <h4 className="font-semibold mb-2">Intellectual Property:</h4>
-                <ul className="text-sm space-y-1 ml-4">
+                <ul className="text-base space-y-2 ml-4">
                   <li>• Client owns all custom code and assets upon final payment</li>
                   <li>• Third-party licenses remain with respective owners</li>
                   <li>• App Suite retains rights to development methodologies</li>
@@ -522,7 +554,7 @@ const PaymentTerms = () => {
 
               <div>
                 <h4 className="font-semibold mb-2">Support & Warranty:</h4>
-                <ul className="text-sm space-y-1 ml-4">
+                <ul className="text-base space-y-2 ml-4">
                   <li>• 30-day bug fix warranty included</li>
                   <li>• Extended support available for purchase</li>
                   <li>• Training and documentation provided</li>
