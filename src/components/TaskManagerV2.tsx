@@ -536,7 +536,7 @@ const TaskManagerV2 = () => {
   };
 
   const TaskForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-6">
       <div>
         <Label htmlFor="title">Title *</Label>
         <Input
@@ -796,14 +796,16 @@ const TaskManagerV2 = () => {
                   New Task
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
                 <DialogHeader>
                   <DialogTitle>Create New Task</DialogTitle>
                   <DialogDescription>
                     Add a new task to track your work
                   </DialogDescription>
                 </DialogHeader>
-                <TaskForm onSubmit={createTask} submitLabel="Create Task" />
+                <div className="mt-4">
+                  <TaskForm onSubmit={createTask} submitLabel="Create Task" />
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -1057,14 +1059,16 @@ const TaskManagerV2 = () => {
 
       {/* Edit Task Dialog */}
       <Dialog open={showEditTask} onOpenChange={setShowEditTask}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle>Edit Task</DialogTitle>
             <DialogDescription>
               Update task details
             </DialogDescription>
           </DialogHeader>
-          <TaskForm onSubmit={updateTask} submitLabel="Update Task" />
+          <div className="mt-4">
+            <TaskForm onSubmit={updateTask} submitLabel="Update Task" />
+          </div>
         </DialogContent>
       </Dialog>
     </div>

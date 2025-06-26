@@ -558,7 +558,7 @@ const ProjectTrackerV2 = () => {
   };
 
   const ProjectForm = useCallback(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="projectName">Project Name *</Label>
@@ -821,14 +821,16 @@ const ProjectTrackerV2 = () => {
                   New Project
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-2xl">
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
                 <DialogHeader>
                   <DialogTitle>Create New Project</DialogTitle>
                   <DialogDescription>
                     Set up a new project with client details and timeline
                   </DialogDescription>
                 </DialogHeader>
-                <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
+                <div className="mt-4">
+                  <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
+                </div>
               </DialogContent>
             </Dialog>
           </div>
@@ -987,14 +989,16 @@ const ProjectTrackerV2 = () => {
 
       {/* Edit Project Dialog */}
       <Dialog open={showEditProject} onOpenChange={setShowEditProject}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
               Update project details
             </DialogDescription>
           </DialogHeader>
-          <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
+          <div className="mt-4">
+            <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
+          </div>
         </DialogContent>
       </Dialog>
     </div>
