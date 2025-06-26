@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SEO from "@/components/SEO";
 import BusinessPlanRequestForm from "@/components/BusinessPlanRequestForm";
+import ProposalButton from "@/components/ProposalButton";
 import { 
   FileSignature, 
   Brain, 
@@ -140,6 +141,11 @@ const SolutionsWeveBuilt = () => {
 
   const handleRequestBusinessPlan = (productName: string) => {
     setSelectedProduct(productName);
+    setIsFormOpen(true);
+  };
+
+  const handlePurchaseBusinessConcept = () => {
+    setSelectedProduct('');
     setIsFormOpen(true);
   };
 
@@ -361,11 +367,11 @@ const SolutionsWeveBuilt = () => {
           Whether you want to purchase a proven business concept that we'll customize for you, or need a completely custom application built from scratch, we have the expertise to deliver.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg">
-            <a href="/contact?type=custom-app">Build My Custom App</a>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <a href="/contact?type=purchase-business">Purchase a Business Concept</a>
+          <ProposalButton size="lg">
+            Build My Custom App
+          </ProposalButton>
+          <Button variant="outline" size="lg" onClick={handlePurchaseBusinessConcept}>
+            Purchase a Business Concept
           </Button>
         </div>
       </div>
