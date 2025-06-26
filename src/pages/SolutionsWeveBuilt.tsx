@@ -76,7 +76,7 @@ const SolutionsWeveBuilt = () => {
       color: "bg-blue-500",
       marketSize: "$5.5B E-signature Market (25% growth)",
       revenueModel: "$29-299/month per user",
-      images: ["/Screen Shots/SignAI - 1.png", "/Screen Shots/SignAI -2.png", "/Screen Shots/SignAI -3.png", "/Screen Shots/SignAI - 4.png"]
+      // images: ["/Screen Shots/SignAI - 1.png", "/Screen Shots/SignAI -2.png", "/Screen Shots/SignAI -3.png", "/Screen Shots/SignAI - 4.png"] // Temporarily disabled
     },
     {
       id: "analytics-suite",
@@ -90,7 +90,7 @@ const SolutionsWeveBuilt = () => {
       color: "bg-purple-500",
       marketSize: "$25B Business Intelligence Market",
       revenueModel: "$49-199/month SaaS",
-      images: ["/WebAuditDash - Page1.png", "/WebAudit Dash - 3.png", "/WebAuditDash - 2.png"]
+      // images: ["/WebAuditDash - Page1.png", "/WebAudit Dash - 3.png", "/WebAuditDash - 2.png"] // Temporarily disabled
     },
     {
       id: "project-hub",
@@ -104,7 +104,7 @@ const SolutionsWeveBuilt = () => {
       color: "bg-green-500",
       marketSize: "$6.1B Project Management Market",
       revenueModel: "$19-99/month per user",
-      images: ["/placeholder.svg", "/placeholder.svg"]
+      // images: ["/placeholder.svg", "/placeholder.svg"] // Temporarily disabled
     },
     {
       id: "content-engine",
@@ -118,7 +118,7 @@ const SolutionsWeveBuilt = () => {
       color: "bg-orange-500",
       marketSize: "$16.6B Content Marketing Market",
       revenueModel: "$29-199/month SaaS",
-      images: ["/placeholder.svg", "/placeholder.svg"]
+      // images: ["/placeholder.svg", "/placeholder.svg"] // Temporarily disabled
     }
   ];
 
@@ -335,30 +335,7 @@ const SolutionsWeveBuilt = () => {
                     </div>
                   </div>
 
-                  {/* Screenshot Gallery */}
-                  {product.images && product.images.length > 0 && (
-                    <div>
-                      <h4 className="font-semibold mb-3 flex items-center gap-2 text-sm">
-                        <FileText className="h-3 w-3 text-primary" />
-                        Screenshots
-                      </h4>
-                      <div className="grid grid-cols-2 gap-2">
-                        {product.images.slice(0, 4).map((image, index) => (
-                          <div key={index} className="relative group cursor-pointer">
-                            <img 
-                              src={image} 
-                              alt={`${product.name} screenshot ${index + 1}`}
-                              className="w-full h-24 object-cover rounded-lg border border-border hover:border-primary/50 transition-colors"
-                              onClick={() => window.open(image, '_blank')}
-                            />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors rounded-lg flex items-center justify-center">
-                              <ExternalLink className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  {/* Screenshot Gallery - Temporarily removed until images are fixed */}
 
                   <div className="border-t pt-4">
                     <div className="text-xs text-muted-foreground space-y-1">
