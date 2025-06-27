@@ -240,8 +240,8 @@ const ProjectTrackerV2 = () => {
   };
 
   const createProject = async () => {
-    if (!projectForm.projectName || !projectForm.clientName) {
-      toast.error("Please fill in project name and client name");
+    if (!projectForm.projectName) {
+      toast.error("Please enter a project name");
       return;
     }
 
@@ -677,7 +677,7 @@ const ProjectTrackerV2 = () => {
   };
 
   const ProjectForm = useCallback(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-6">
+    <div className="space-y-4 pr-2">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="projectName">Project Name *</Label>
@@ -689,12 +689,12 @@ const ProjectTrackerV2 = () => {
           />
         </div>
         <div>
-          <Label htmlFor="clientName">Client Name *</Label>
+          <Label htmlFor="clientName">Client Name</Label>
           <Input
             id="clientName"
             value={projectForm.clientName}
             onChange={(e) => updateProjectForm('clientName', e.target.value)}
-            placeholder="Acme Corp"
+            placeholder="Acme Corp (optional)"
           />
         </div>
       </div>
@@ -782,7 +782,7 @@ const ProjectTrackerV2 = () => {
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="startDate">Start Date</Label>
+          <Label htmlFor="startDate">Start Date (optional)</Label>
           <Input
             id="startDate"
             type="date"
@@ -791,7 +791,7 @@ const ProjectTrackerV2 = () => {
           />
         </div>
         <div>
-          <Label htmlFor="deadline">Deadline</Label>
+          <Label htmlFor="deadline">Deadline (optional)</Label>
           <Input
             id="deadline"
             type="date"
@@ -953,14 +953,14 @@ const ProjectTrackerV2 = () => {
                     New Project
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[60]">
                 <DialogHeader>
                   <DialogTitle>Create New Project</DialogTitle>
                   <DialogDescription>
-                    Set up a new project with client details and timeline
+                    Quickly create a project - only the name is required
                   </DialogDescription>
                 </DialogHeader>
-                <div className="mt-4">
+                <div className="mt-4 overflow-y-auto max-h-[calc(90vh-120px)]">
                   <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
                 </div>
               </DialogContent>
@@ -1122,14 +1122,14 @@ const ProjectTrackerV2 = () => {
 
       {/* Edit Project Dialog */}
       <Dialog open={showEditProject} onOpenChange={setShowEditProject}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[60]">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
-              Update project details
+              Update project details - only the name is required
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="mt-4 overflow-y-auto max-h-[calc(90vh-120px)]">
             <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
           </div>
         </DialogContent>
