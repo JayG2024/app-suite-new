@@ -155,14 +155,6 @@ const HelpCenter = () => {
                       <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-muted-foreground mt-0.5" />
-                    <div>
-                      <p className="font-medium">Phone Support</p>
-                      <p className="text-sm text-muted-foreground">+1 (833) APP-SUIT</p>
-                      <p className="text-xs text-muted-foreground">Monday - Friday, 9 AM - 6 PM EST</p>
-                    </div>
-                  </div>
                   <div className="pt-4">
                     <Link to="/contact">
                       <Button className="w-full">

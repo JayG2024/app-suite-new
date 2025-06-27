@@ -44,7 +44,7 @@ const PaymentTerms = () => {
             Clear, transparent terms for App Suite custom software development services.
           </p>
           <div className="flex items-center justify-center gap-2 mt-4">
-            <Badge variant="secondary">Effective Date: January 1, 2025</Badge>
+            <Badge variant="secondary">Effective Date: June 1, 2025</Badge>
             <Badge variant="outline">Version 1.0</Badge>
           </div>
         </div>
@@ -606,8 +606,8 @@ const PaymentTerms = () => {
         {/* Footer Info */}
         <div className="mt-12 text-center text-sm text-muted-foreground">
           <p>App Suite - Custom Business Software Development</p>
-          <p>651 N. Broad St., Middletown, DE, USA | jason@jaydus.ai | (833) APP-SUIT</p>
-          <p className="mt-2">These terms are effective as of January 1, 2025 and supersede all previous agreements.</p>
+          <p>651 N. Broad St., Middletown, DE, USA | jason@jaydus.ai</p>
+          <p className="mt-2">These terms are effective as of June 1, 2025 and supersede all previous agreements.</p>
         </div>
       </div>
     </div>

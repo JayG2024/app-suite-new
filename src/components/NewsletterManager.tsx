@@ -257,7 +257,7 @@ This exclusive pricing is only available until [DATE]. Don't miss out on the opp
 
 [Claim Your Discount Now](https://app-suite-main.web.app/contact)
 
-Questions? Reply to this email or call (833) APP-SUIT.
+Questions? Reply to this email.
 
 Best regards,
 Jason Gordon & The App Suite Team`

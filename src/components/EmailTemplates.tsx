@@ -301,7 +301,6 @@ At App Suite, we've refined our development process to deliver custom business a
 • Project Manager: [PM_NAME]
 • Lead Developer: [DEV_NAME]
 • UI/UX Designer: [DESIGNER_NAME]
-• Direct Line: (833) APP-SUIT
 • Email: [PM_EMAIL]
 
 We're committed to delivering your custom business application on time and exactly as specified. Our 30-day support period ensures a smooth transition to your new system.

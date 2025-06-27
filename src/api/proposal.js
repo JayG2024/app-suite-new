@@ -129,7 +129,7 @@ export const createProposalEmail = (formData, proposalContent) => {
             <a href="#" style="background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">📅 Schedule Discovery Call</a>
           </div>
           
-          <p>Questions? Reply to this email or call us at <strong>(833) APP-SUIT</strong></p>
+          <p>Questions? Reply to this email</p>
           
           <p>Best regards,<br>
           Jason Gordon<br>

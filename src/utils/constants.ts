@@ -4,7 +4,7 @@ export const CALENDLY_DISCOVERY_CALL_URL = 'https://calendly.com/jason-jaydus/on
 
 export const CONTACT_INFO = {
   email: 'jason@jaydus.ai',
-  phone: '(833) APP-SUIT',
+  phone: '',
   address: '651 N. Broad St., Middletown, DE, USA'
 };
 

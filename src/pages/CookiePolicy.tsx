@@ -15,7 +15,7 @@ const CookiePolicy = () => {
         
         <div className="prose prose-lg max-w-none">
           <p className="text-lg text-muted-foreground text-center mb-12">
-            Last updated: April 25, 2025
+            Last updated: June 1, 2025
           </p>
 
           <Card className="p-8 mb-8">

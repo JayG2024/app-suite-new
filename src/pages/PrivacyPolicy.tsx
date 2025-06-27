@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
           
           <div className="prose prose-lg max-w-none">
             <p className="text-lg text-muted-foreground text-center mb-12">
-              Last updated: April 19, 2025
+              Last updated: June 1, 2025
             </p>
 
             <div className="bg-muted/30 rounded-lg p-6 mb-8">

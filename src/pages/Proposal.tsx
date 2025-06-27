@@ -1354,7 +1354,7 @@ const Proposal = () => {
               <Button size="lg" variant="secondary" asChild>
                 <a href="tel:+1833277784">
                   <Phone className="h-4 w-4 mr-2" />
-                  Call (833) APP-SUIT
+                  Call Us
                 </a>
               </Button>
             </div>

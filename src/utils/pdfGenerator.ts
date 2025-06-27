@@ -774,7 +774,7 @@ export const generateProposalHTML = (formData: ProposalData): string => {
       <p>Let's schedule a 30-minute discovery call to discuss your project and answer any questions.</p>
       <div style="margin: 20px 0;">
         <div style="font-size: 18px; margin-bottom: 15px;">
-          📧 <strong>Email:</strong> jason@jaydus.ai | 📱 <strong>Phone:</strong> (833) APP-SUIT
+          📧 <strong>Email:</strong> jason@jaydus.ai
         </div>
         <div style="font-size: 14px; color: #ccc;">
           🌐 <strong>Website:</strong> <a href="${APP_CONFIG.url}" style="color: #ccc;">${APP_CONFIG.domain}</a> | 

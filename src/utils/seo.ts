@@ -59,7 +59,7 @@ const getPageSEOData = (): PageSEO => ({
   },
   '/contact': {
     title: 'Contact App Suite - Get Your Custom Application Built',
-    description: 'Ready to stop renting software? Schedule a free 30-minute consultation. Discuss your needs, get a flat-rate quote, start building in days. Contact: (833) APP-SUIT or jason@jaydus.ai.',
+    description: 'Ready to stop renting software? Schedule a free 30-minute consultation. Discuss your needs, get a flat-rate quote, start building in days. Contact: jason@jaydus.ai.',
     keywords: 'contact app suite, free consultation, custom application quote, business software consultation, app development contact',
     ogTitle: 'Contact App Suite - Free Consultation Available',
     ogDescription: 'Get a free consultation for your custom business application. Professional support available 24/7.'
@@ -597,7 +597,6 @@ export function generateLocalBusinessSchema(): object {
       "postalCode": "19709",
       "addressCountry": "US"
     },
-    "telephone": "+1-833-APP-SUIT",
     "email": "jason@jaydus.ai",
     "url": "${APP_CONFIG.url}",
     "priceRange": "$5,000 - $10,000",
@@ -750,7 +749,6 @@ export function generateOrganizationSchema(): object {
     "description": "Leading provider of custom AI-powered business applications with flat-rate pricing and 2-week delivery",
     "foundingDate": "2023",
     "email": "jason@jaydus.ai",
-    "telephone": "+1-833-APP-SUIT",
     "address": {
       "@type": "PostalAddress",
       "addressCountry": "US"
@@ -852,7 +850,6 @@ export function generateContactPointSchema(): object {
   return {
     "@context": "https://schema.org",
     "@type": "ContactPoint",
-    "telephone": "+1-833-APP-SUIT",
     "contactType": "Customer Service",
     "email": "jason@jaydus.ai",
     "availableLanguage": "English",
@@ -1033,8 +1030,7 @@ export function generateActionSchema(): object {
         "@type": "ContactAction",
         "target": {
           "@type": "ContactPoint",
-          "telephone": "+1-833-APP-SUIT",
-          "email": "${APP_CONFIG.supportEmail}",
+                "email": "${APP_CONFIG.supportEmail}",
           "contactType": "sales"
         }
       }

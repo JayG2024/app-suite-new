@@ -119,7 +119,7 @@ export const generateProposalEmailHTML = (formData: ProposalData): string => {
     
     <div class="footer">
       <p><strong>App Suite</strong> - Building AI-powered applications that businesses own, not rent.</p>
-      <p>📧 jason@jaydus.ai | 📱 (833) APP-SUIT</p>
+      <p>📧 jason@jaydus.ai</p>
       <p>This proposal is valid for 30 days from today.</p>
     </div>
   </div>

@@ -29,7 +29,6 @@ export const getOrganizationSchema = () => ({
   },
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+1-833-APP-SUIT",
     "contactType": "sales",
     "email": "jason@jaydus.ai",
     "availableLanguage": "English"
