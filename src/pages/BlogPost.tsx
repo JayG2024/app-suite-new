@@ -8,6 +8,7 @@ import { APP_CONFIG } from "@/config/app";
 // Import white paper components
 import HiddenCostGeoBlockingAiSearchVisibility from "./blog/HiddenCostGeoBlockingAiSearchVisibility";
 import GenerativeEngineOptimizationGuide2025Full from "./blog/GenerativeEngineOptimizationGuide2025Full";
+import ModernVsTraditionalHostingInfrastructure from "./blog/ModernVsTraditionalHostingInfrastructure";
 import MarkdownWhitepaper from "@/components/MarkdownWhitepaper";
 
 // This would typically come from a CMS or API
@@ -19,6 +20,10 @@ const getBlogPost = (id: string) => {
   
   if (id === "hidden-cost-geo-blocking-ai-search-visibility") {
     return "whitepaper";
+  }
+  
+  if (id === "modern-vs-traditional-hosting-infrastructure") {
+    return "hosting-whitepaper";
   }
   
   // Legacy redirect for old URL
@@ -729,6 +734,10 @@ const BlogPost = () => {
   
   if (post === "whitepaper") {
     return <HiddenCostGeoBlockingAiSearchVisibility />;
+  }
+  
+  if (post === "hosting-whitepaper") {
+    return <ModernVsTraditionalHostingInfrastructure />;
   }
   
   // Handle legacy redirect for old white paper URL

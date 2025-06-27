@@ -32,7 +32,7 @@ const PaymentTerms = () => {
         keywords="payment terms, software development pricing, custom app costs, payment schedule, app suite terms"
       />
       <div className="py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         
         {/* Header */}
         <div className="text-center mb-12">
@@ -122,11 +122,11 @@ const PaymentTerms = () => {
                   <h4 className="font-semibold mb-2">Standard Application</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$5,000</div>
                   <ul className="text-base space-y-2">
-                    <li>• Custom dashboard application</li>
-                    <li>• User authentication & roles</li>
-                    <li>• Database implementation</li>
-                    <li>• Responsive design</li>
-                    <li>• First 2 API connections included</li>
+                    <li className="text-sm">• Custom dashboard</li>
+                    <li className="text-sm">• User auth & roles</li>
+                    <li className="text-sm">• Database setup</li>
+                    <li className="text-sm">• Responsive design</li>
+                    <li className="text-sm">• 2 API connections</li>
                   </ul>
                 </div>
                 
@@ -134,11 +134,11 @@ const PaymentTerms = () => {
                   <h4 className="font-semibold mb-2">AI-Powered Solution</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$7,500</div>
                   <ul className="text-base space-y-2">
-                    <li>• Everything in Standard</li>
-                    <li>• GPT-4, Claude, Llama integration</li>
-                    <li>• Voice & vision AI capabilities</li>
-                    <li>• Custom AI workflows</li>
-                    <li>• First 3 API connections included</li>
+                    <li className="text-sm">• Everything in Standard</li>
+                    <li className="text-sm">• AI model integration</li>
+                    <li className="text-sm">• Voice & vision AI</li>
+                    <li className="text-sm">• Custom workflows</li>
+                    <li className="text-sm">• 3 API connections</li>
                   </ul>
                 </div>
                 
@@ -146,27 +146,35 @@ const PaymentTerms = () => {
                   <h4 className="font-semibold mb-2">Enterprise Solution</h4>
                   <div className="text-2xl font-bold text-primary mb-2">$10,000</div>
                   <ul className="text-base space-y-2">
-                    <li>• Everything in AI-Powered</li>
-                    <li>• Multiple AI model orchestration</li>
-                    <li>• Advanced security & compliance</li>
-                    <li>• Multi-tenant architecture</li>
-                    <li>• First 3 API connections included</li>
+                    <li className="text-sm">• Everything in AI-Powered</li>
+                    <li className="text-sm">• Multi-AI orchestration</li>
+                    <li className="text-sm">• Enterprise security</li>
+                    <li className="text-sm">• Multi-tenant ready</li>
+                    <li className="text-sm">• 3 API connections</li>
                   </ul>
                 </div>
               </div>
 
-              <div className="bg-muted/30 rounded-lg p-4">
-                <h4 className="font-semibold mb-2">Module-Based Add-Ons:</h4>
-                <div className="grid md:grid-cols-2 gap-3 text-base">
-                  <div>• Small Business Tools: $2,500 (includes 1 API)</div>
-                  <div>• Feature Add-ons: $1,000 each</div>
-                  <div>• Basic Data Sync API: $1,000 each</div>
-                  <div>• Full Functional API Integration: $2,500 each</div>
-                  <div>• Advanced Modules: $2,500 each</div>
+              <div className="mt-6">
+                <h4 className="font-semibold mb-3">Available Add-Ons</h4>
+                <div className="grid md:grid-cols-4 gap-3">
+                  <div className="bg-muted/30 rounded-lg p-3 text-center">
+                    <div className="text-lg font-bold text-primary">$1,000</div>
+                    <div className="text-sm">Feature Add-ons</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center">
+                    <div className="text-lg font-bold text-primary">$1,000</div>
+                    <div className="text-sm">Basic API Sync</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center">
+                    <div className="text-lg font-bold text-primary">$2,500</div>
+                    <div className="text-sm">Full API Integration</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center">
+                    <div className="text-lg font-bold text-primary">$2,500</div>
+                    <div className="text-sm">Advanced Modules</div>
+                  </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Note: We only build new applications or modify apps we previously built. No modifications to existing third-party software.
-                </p>
               </div>
             </CardContent>
           </Card>
@@ -190,9 +198,9 @@ const PaymentTerms = () => {
                         <span className="font-medium">Split Payment</span>
                         <Badge variant="default">Recommended</Badge>
                       </div>
-                      <div className="space-y-3 text-base">
-                        <div>• <strong>50% Upfront:</strong> Due at contract signing</div>
-                        <div>• <strong>50% Final:</strong> Due upon delivery</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">50% at signing</div>
+                        <div className="font-medium">50% on delivery</div>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4">
@@ -200,10 +208,10 @@ const PaymentTerms = () => {
                         <span className="font-medium">Financing Available</span>
                         <Badge variant="secondary">Popular</Badge>
                       </div>
-                      <div className="space-y-3 text-base">
-                        <div>• <strong>50% Down:</strong> At signing</div>
-                        <div>• <strong>Finance 50%:</strong> 6 or 12 months</div>
-                        <div>• 10% fee (6mo) or 15% fee (12mo)</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">50% down payment</div>
+                        <div className="text-muted-foreground">6 months: +10% fee</div>
+                        <div className="text-muted-foreground">12 months: +15% fee</div>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4">
@@ -211,10 +219,9 @@ const PaymentTerms = () => {
                         <span className="font-medium">Full Payment</span>
                         <Badge variant="outline">5% Discount</Badge>
                       </div>
-                      <div className="space-y-3 text-base">
-                        <div>• <strong>100% Upfront:</strong> 5% discount</div>
-                        <div>• Standard: $4,750 total</div>
-                        <div>• AI-Powered: $7,125 total</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">Pay 100% upfront</div>
+                        <div className="text-green-600 font-medium">Save 5%</div>
                       </div>
                     </div>
                   </div>
@@ -230,9 +237,9 @@ const PaymentTerms = () => {
                         <span className="font-medium">Split Payment</span>
                         <Badge variant="default">Standard</Badge>
                       </div>
-                      <div className="space-y-2 text-base">
-                        <div>• 50% Upfront: $5,000+</div>
-                        <div>• 50% Delivery: Balance</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">50% upfront</div>
+                        <div className="font-medium">50% on delivery</div>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4">
@@ -240,11 +247,10 @@ const PaymentTerms = () => {
                         <span className="font-medium">Enterprise Financing</span>
                         <Badge variant="secondary">Flexible</Badge>
                       </div>
-                      <div className="space-y-2 text-base">
-                        <div>• <strong>$5,000 Down</strong></div>
-                        <div>• Finance remaining balance</div>
-                        <div>• 6, 12, or 24 month terms</div>
-                        <div>• Custom terms available</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">$5,000 minimum down</div>
+                        <div className="text-muted-foreground">6-24 month terms</div>
+                        <div className="text-muted-foreground">Custom terms available</div>
                       </div>
                     </div>
                     <div className="border rounded-lg p-4">
@@ -252,9 +258,9 @@ const PaymentTerms = () => {
                         <span className="font-medium">Full Payment</span>
                         <Badge variant="outline">5% Discount</Badge>
                       </div>
-                      <div className="space-y-2 text-base">
-                        <div>• 100% Upfront</div>
-                        <div>• 5% discount on total</div>
+                      <div className="space-y-2 text-sm">
+                        <div className="font-medium">Pay 100% upfront</div>
+                        <div className="text-green-600 font-medium">Save 5%</div>
                       </div>
                     </div>
                   </div>
@@ -292,23 +298,23 @@ const PaymentTerms = () => {
                 <div>
                   <h4 className="font-semibold mb-3">Development & Delivery</h4>
                   <ul className="space-y-3">
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Complete source code ownership</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Responsive web application</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Database design & implementation</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />User authentication system</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Deployment & hosting setup</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />SSL certificate & security</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Complete source code ownership</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Responsive web application</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Database design & implementation</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />User authentication system</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Deployment & hosting setup</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />SSL certificate & security</li>
                   </ul>
                 </div>
                 <div>
                   <h4 className="font-semibold mb-3">Support & Documentation</h4>
                   <ul className="space-y-3">
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />30-day post-launch support</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />User training & documentation</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Technical documentation</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Admin panel access</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />Email support during development</li>
-                    <li className="flex items-center"><CheckCircle className="h-4 w-4 text-green-500 mr-2" />No recurring fees or user limits</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />30-day post-launch support</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />User training & documentation</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Technical documentation</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Admin panel access</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />Email support during development</li>
+                    <li className="flex items-center text-sm"><CheckCircle className="h-3 w-3 text-green-500 mr-2 flex-shrink-0" />No recurring fees or user limits</li>
                   </ul>
                 </div>
               </div>
@@ -423,48 +429,48 @@ const PaymentTerms = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5" />
-                6. Future Add-Ons & Development
+                6. Future Enhancements
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-semibold mb-3">Module-Based Enhancement Pricing:</h4>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <h5 className="font-medium mb-2">Feature Add-Ons - $1,000 each</h5>
-                      <ul className="text-base space-y-2">
-                        <li>• Email tracking & analytics</li>
-                        <li>• Internal calendar sync</li>
-                        <li>• Advanced search functionality</li>
-                        <li>• Notification systems</li>
-                        <li>• File management tools</li>
-                        <li>• User onboarding flows</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h5 className="font-medium mb-2">API Integration Pricing</h5>
-                      <ul className="text-base space-y-2">
-                        <li>• Basic Data Sync API: $1,000</li>
-                        <li>• Full Functional API: $2,500</li>
-                        <li>• Advanced Modules: $2,500</li>
-                        <li>• Custom AI Training: $2,500</li>
-                        <li>• White-label Solutions: $2,500</li>
-                        <li>• Small Business Tools: $2,500</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-muted/30 rounded-lg p-4">
-                  <h4 className="font-semibold mb-2">Important Notes:</h4>
-                  <ul className="text-base space-y-2">
-                    <li>• We only build new applications or enhance apps we previously developed</li>
-                    <li>• No modifications to existing third-party software</li>
-                    <li>• All pricing is fixed - no hourly billing</li>
-                    <li>• Module pricing applies only to App Suite-built applications</li>
-                  </ul>
-                </div>
+              <div className="grid md:grid-cols-3 gap-4">
+                <Card className="border-0 shadow-sm">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">$1,000 Features</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm space-y-1">
+                    <div>• Email tracking</div>
+                    <div>• Calendar sync</div>
+                    <div>• Advanced search</div>
+                    <div>• Notifications</div>
+                    <div>• Basic API sync</div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-0 shadow-sm">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">$2,500 Modules</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm space-y-1">
+                    <div>• Full API integration</div>
+                    <div>• Custom AI training</div>
+                    <div>• White-label setup</div>
+                    <div>• Advanced modules</div>
+                    <div>• Business tool suites</div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-0 shadow-sm bg-amber-50">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base">Important</CardTitle>
+                  </CardHeader>
+                  <CardContent className="text-sm space-y-1">
+                    <div>• App Suite apps only</div>
+                    <div>• Fixed pricing always</div>
+                    <div>• No hourly billing</div>
+                    <div>• No third-party mods</div>
+                  </CardContent>
+                </Card>
               </div>
             </CardContent>
           </Card>
@@ -525,41 +531,41 @@ const PaymentTerms = () => {
               
               <div>
                 <h4 className="font-semibold mb-2">Refund Policy:</h4>
-                <ul className="text-base space-y-2 ml-4">
-                  <li>• Full refund if project cancelled within 48 hours of contract signing</li>
-                  <li>• Partial refunds based on work completed after 48 hours</li>
-                  <li>• No refund on final payment after delivery acceptance</li>
-                  <li>• Refunds processed within 10 business days</li>
+                <ul className="text-sm space-y-1 ml-4">
+                  <li>• Full refund within 48 hours</li>
+                  <li>• Partial refunds after 48 hours</li>
+                  <li>• No refund after delivery</li>
+                  <li>• 10 business day processing</li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2">Project Changes:</h4>
-                <ul className="text-base space-y-2 ml-4">
-                  <li>• Minor changes included during development</li>
-                  <li>• Major scope changes require written approval</li>
-                  <li>• Additional features priced separately</li>
-                  <li>• Timeline adjustments may apply for significant changes</li>
+                <ul className="text-sm space-y-1 ml-4">
+                  <li>• Minor changes included</li>
+                  <li>• Major changes need approval</li>
+                  <li>• Extra features priced separately</li>
+                  <li>• Timeline may adjust</li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2">Intellectual Property:</h4>
-                <ul className="text-base space-y-2 ml-4">
-                  <li>• Client owns all custom code and assets upon final payment</li>
-                  <li>• Third-party licenses remain with respective owners</li>
-                  <li>• App Suite retains rights to development methodologies</li>
-                  <li>• Source code delivered upon project completion</li>
+                <ul className="text-sm space-y-1 ml-4">
+                  <li>• You own all code after payment</li>
+                  <li>• Third-party licenses separate</li>
+                  <li>• We keep our methodologies</li>
+                  <li>• Source code delivered</li>
                 </ul>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2">Support & Warranty:</h4>
-                <ul className="text-base space-y-2 ml-4">
-                  <li>• 30-day bug fix warranty included</li>
-                  <li>• Extended support available for purchase</li>
-                  <li>• Training and documentation provided</li>
-                  <li>• Emergency support available during business hours</li>
+                <ul className="text-sm space-y-1 ml-4">
+                  <li>• 30-day bug fix warranty</li>
+                  <li>• Extended support available</li>
+                  <li>• Training included</li>
+                  <li>• Business hour support</li>
                 </ul>
               </div>
             </CardContent>
