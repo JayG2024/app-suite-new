@@ -39,7 +39,7 @@ import AdminPage from "./pages/AdminPage";
 import SystemStatus from "./pages/SystemStatus";
 import IconTest from "./components/IconTest";
 import Industries from "./pages/Industries";
-import CommandCenter from "./pages/CommandCenter";
+import CommandCenterV2 from "./pages/CommandCenterV2";
 import Examples from "./pages/Examples";
 import SolutionsWeveBuilt from "./pages/SolutionsWeveBuilt";
 import WebAuditDashboard from "./pages/portfolio/WebAuditDashboard";
@@ -69,7 +69,7 @@ import Podcast from "./pages/Podcast";
 // Admin route component that shows login form or dashboard
 function AdminRoute() {
   const { user } = useAuth();
-  return user ? <CommandCenter /> : <LoginForm />;
+  return user ? <CommandCenterV2 /> : <LoginForm />;
 }
 
 function App() {
