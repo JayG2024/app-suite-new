@@ -11,8 +11,8 @@ import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
-import ClientManager from "@/components/ClientManager";
-import SalesPipeline from "@/components/SalesPipeline";
+import ClientManagerV2 from "@/components/ClientManagerV2";
+import SalesPipelineV2 from "@/components/SalesPipelineV2";
 import MarketingHub from "@/components/MarketingHub";
 import FinancialDashboard from "@/components/FinancialDashboard";
 import TeamWorkspace from "@/components/TeamWorkspace";
@@ -20,6 +20,7 @@ import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
 import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import GmailInbox from "@/components/GmailInbox";
 import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard,
@@ -73,15 +74,16 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { id: 'overview', label: 'Overview', icon: LayoutDashboard, color: 'text-blue-600' },
+  { id: 'gmail', label: 'Gmail', icon: Mail, color: 'text-red-600' },
   { id: 'clients', label: 'Clients', icon: Users, color: 'text-green-600' },
   { id: 'projects', label: 'Projects', icon: Code, color: 'text-purple-600' },
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, color: 'text-orange-600' },
-  { id: 'sales', label: 'Sales Pipeline', icon: Target, color: 'text-red-600' },
+  { id: 'sales', label: 'Sales Pipeline', icon: Target, color: 'text-yellow-600' },
   { id: 'marketing', label: 'Marketing', icon: Megaphone, color: 'text-pink-600' },
   { id: 'finance', label: 'Finance', icon: DollarSign, color: 'text-emerald-600' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-indigo-600' },
   { id: 'team', label: 'Team', icon: Users, color: 'text-cyan-600' },
-  { id: 'templates', label: 'Email Templates', icon: Mail, color: 'text-gray-600' },
+  { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
 ];
 
 const CommandCenterV2 = () => {
@@ -172,14 +174,16 @@ const CommandCenterV2 = () => {
     switch(currentSection) {
       case 'overview':
         return <OverviewSection metrics={metrics} />;
+      case 'gmail':
+        return <GmailInbox />;
       case 'clients':
-        return <ClientManager />;
+        return <ClientManagerV2 />;
       case 'projects':
         return <ProjectTrackerV2 />;
       case 'tasks':
         return <TaskManagerV2 />;
       case 'sales':
-        return <SalesPipeline />;
+        return <SalesPipelineV2 />;
       case 'marketing':
         return <MarketingHub />;
       case 'finance':
