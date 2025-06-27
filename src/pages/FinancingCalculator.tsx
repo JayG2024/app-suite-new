@@ -239,14 +239,15 @@ const FinancingCalculator = () => {
             </div>
 
             {/* Right Column - Summary */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-24">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <DollarSign className="h-5 w-5" />
-                    Cost Summary
-                  </CardTitle>
-                </CardHeader>
+            <div className="lg:col-span-1 relative">
+              <div className="lg:sticky lg:top-20 z-10">
+                <Card className="shadow-lg border-2 bg-background/95 backdrop-blur">
+                  <CardHeader className="bg-primary/5 border-b">
+                    <CardTitle className="flex items-center gap-2">
+                      <DollarSign className="h-5 w-5 text-primary" />
+                      Cost Summary
+                    </CardTitle>
+                  </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <div className="flex justify-between">
@@ -342,6 +343,7 @@ const FinancingCalculator = () => {
                   </div>
                 </CardContent>
               </Card>
+              </div>
             </div>
           </div>
 

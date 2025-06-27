@@ -132,6 +132,7 @@ const ProjectTrackerV2 = () => {
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [filterType, setFilterType] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [importLoading, setImportLoading] = useState(false);
   
   const [projectForm, setProjectForm] = useState({
     projectName: '',
@@ -353,6 +354,124 @@ const ProjectTrackerV2 = () => {
     } catch (error) {
       console.error('Error deleting project:', error);
       toast.error('Failed to delete project');
+    }
+  };
+
+  const handleImportSampleProjects = async () => {
+    if (!confirm('This will create 5 sample projects with different statuses. Continue?')) {
+      return;
+    }
+
+    setImportLoading(true);
+
+    try {
+      // Make sure we have some clients first
+      if (clients.length === 0) {
+        toast.error('Please import clients first before creating projects');
+        setImportLoading(false);
+        return;
+      }
+
+      // Sample projects data
+      const sampleProjects = [
+        {
+          projectName: 'E-Commerce Platform Redesign',
+          client_id: clients[0]?.id || 1,
+          clientName: clients[0]?.name || 'Sample Client',
+          type: 'ai-enhanced' as const,
+          price: 7500,
+          description: 'Complete redesign of existing e-commerce platform with AI-powered product recommendations',
+          status: 'development' as const,
+          progress: 65,
+          startDate: '2025-06-15',
+          deadline: '2025-07-15',
+          technologies: ['React', 'Node.js', 'PostgreSQL', 'OpenAI API'],
+          deliverables: ['Frontend redesign', 'AI recommendation engine', 'Admin dashboard', 'API documentation']
+        },
+        {
+          projectName: 'Customer Support AI Bot',
+          client_id: clients[1]?.id || 2,
+          clientName: clients[1]?.name || 'Another Client',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'AI-powered customer support chatbot for automated responses',
+          status: 'testing' as const,
+          progress: 85,
+          startDate: '2025-06-01',
+          deadline: '2025-06-30',
+          technologies: ['Python', 'FastAPI', 'Claude API', 'React'],
+          deliverables: ['Chat interface', 'Admin panel', 'Training documentation']
+        },
+        {
+          projectName: 'Enterprise Resource Planning System',
+          client_id: clients[2]?.id || 3,
+          clientName: clients[2]?.name || 'Enterprise Client',
+          type: 'enterprise' as const,
+          price: 15000,
+          description: 'Custom ERP system for manufacturing company with inventory management',
+          status: 'planning' as const,
+          progress: 20,
+          startDate: '2025-06-25',
+          deadline: '2025-08-30',
+          technologies: ['Angular', 'Java Spring', 'Oracle DB', 'Docker'],
+          deliverables: ['Inventory module', 'HR module', 'Finance module', 'Reporting dashboard']
+        },
+        {
+          projectName: 'Mobile App Development',
+          client_id: clients[3]?.id || 4,
+          clientName: clients[3]?.name || 'Mobile Client',
+          type: 'ai-enhanced' as const,
+          price: 7500,
+          description: 'Cross-platform mobile app with AI-powered features',
+          status: 'deployed' as const,
+          progress: 100,
+          startDate: '2025-05-01',
+          deadline: '2025-06-15',
+          completionDate: '2025-06-10',
+          technologies: ['React Native', 'Firebase', 'TensorFlow Lite'],
+          deliverables: ['iOS app', 'Android app', 'Backend API', 'User manual']
+        },
+        {
+          projectName: 'Data Analytics Dashboard',
+          client_id: clients[4]?.id || 5,
+          clientName: clients[4]?.name || 'Analytics Client',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'Real-time analytics dashboard for business metrics',
+          status: 'design' as const,
+          progress: 35,
+          startDate: '2025-06-20',
+          deadline: '2025-07-20',
+          technologies: ['Vue.js', 'D3.js', 'Python', 'MongoDB'],
+          deliverables: ['Interactive dashboard', 'Data pipeline', 'API endpoints']
+        }
+      ];
+
+      // Create projects one by one
+      for (const projectData of sampleProjects) {
+        try {
+          await apiCall(API_ENDPOINTS.projects, {
+            method: 'POST',
+            body: JSON.stringify({
+              ...projectData,
+              assignedTo: users[0]?.id || null,
+              notes: 'Sample project created for demonstration purposes'
+            })
+          });
+        } catch (error) {
+          console.error('Failed to create project:', projectData.projectName, error);
+        }
+      }
+
+      // Reload projects
+      await loadProjects();
+      
+      toast.success('Sample projects created successfully!');
+    } catch (error) {
+      console.error('Error importing sample projects:', error);
+      toast.error('Failed to import sample projects');
+    } finally {
+      setImportLoading(false);
     }
   };
 
@@ -814,13 +933,26 @@ const ProjectTrackerV2 = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Project Management</CardTitle>
-            <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  New Project
-                </Button>
-              </DialogTrigger>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={handleImportSampleProjects}
+                disabled={importLoading}
+              >
+                {importLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2" />
+                ) : (
+                  <Activity className="h-4 w-4 mr-2" />
+                )}
+                Import Sample Projects
+              </Button>
+              <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    New Project
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
                 <DialogHeader>
                   <DialogTitle>Create New Project</DialogTitle>
@@ -833,6 +965,7 @@ const ProjectTrackerV2 = () => {
                 </div>
               </DialogContent>
             </Dialog>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
+import { clients as importedClientsData } from "@/data/clientData";
 import { 
   Users, 
   Plus, 
@@ -95,6 +96,7 @@ const ClientManager = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [aiSearchLoading, setAiSearchLoading] = useState(false);
   const [aiSearchQuery, setAiSearchQuery] = useState("");
+  const [importLoading, setImportLoading] = useState(false);
   
   const [formData, setFormData] = useState<ClientFormData>({
     name: '',
@@ -419,6 +421,75 @@ const ClientManager = () => {
     }));
   };
 
+  const handleImportClients = async () => {
+    if (!confirm(`This will import ${importedClientsData.length} clients from the pre-loaded data. Continue?`)) {
+      return;
+    }
+
+    setImportLoading(true);
+    let successCount = 0;
+    let errorCount = 0;
+
+    try {
+      // Process clients in batches to avoid overwhelming the API
+      const batchSize = 10;
+      for (let i = 0; i < importedClientsData.length; i += batchSize) {
+        const batch = importedClientsData.slice(i, i + batchSize);
+        
+        // Process each client in the batch
+        await Promise.all(
+          batch.map(async (client) => {
+            try {
+              // Determine client type based on existing data
+              let clientType = 'prospect';
+              if (client.company && ['PPOK', 'MyComputerCareer', 'Select Mat', 'Fireman Creative'].includes(client.company)) {
+                clientType = 'active';
+              }
+              
+              await apiCall(API_ENDPOINTS.clients, {
+                method: 'POST',
+                body: JSON.stringify({
+                  name: `${client.firstName} ${client.lastName}`.trim(),
+                  company: client.company || '',
+                  email: client.email,
+                  phone: client.phone || '',
+                  status: clientType === 'active' ? 'active' : 'new',
+                  source: 'import',
+                  notes: `Title: ${client.title || 'N/A'}\nLinkedIn: ${client.linkedin ? `linkedin.com/in/${client.linkedin}` : 'N/A'}\nImported: ${new Date().toLocaleDateString()}`,
+                  assigned_to: null,
+                  metadata: {
+                    firstName: client.firstName,
+                    lastName: client.lastName,
+                    title: client.title,
+                    linkedin: client.linkedin,
+                    dateAdded: client.dateAdded
+                  }
+                })
+              });
+              successCount++;
+            } catch (error) {
+              console.error(`Failed to import client ${client.email}:`, error);
+              errorCount++;
+            }
+          })
+        );
+        
+        // Show progress
+        toast.info(`Imported ${Math.min(i + batchSize, importedClientsData.length)} of ${importedClientsData.length} clients...`);
+      }
+
+      // Reload clients
+      await loadClients();
+      
+      toast.success(`Import completed! ${successCount} clients imported successfully${errorCount > 0 ? `, ${errorCount} failed` : ''}`);
+    } catch (error) {
+      console.error('Error importing clients:', error);
+      toast.error('Failed to import clients');
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   const resetForm = () => {
     setFormData({
       name: '',
@@ -500,13 +571,26 @@ const ClientManager = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Client Management</CardTitle>
-            <Dialog open={showAddClient} onOpenChange={setShowAddClient}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Client
-                </Button>
-              </DialogTrigger>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={handleImportClients}
+                disabled={importLoading}
+              >
+                {importLoading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                Import Clients
+              </Button>
+              <Dialog open={showAddClient} onOpenChange={setShowAddClient}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Client
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Add New Client</DialogTitle>
@@ -745,6 +829,7 @@ const ClientManager = () => {
                 </form>
               </DialogContent>
             </Dialog>
+            </div>
           </div>
         </CardHeader>
         
