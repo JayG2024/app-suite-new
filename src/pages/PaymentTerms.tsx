@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Download,
   CheckCircle,
+  CheckCircle2,
   ArrowRight,
   Zap,
   Calculator
@@ -429,48 +430,52 @@ const PaymentTerms = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Zap className="h-5 w-5" />
-                6. Future Enhancements
+                6. Enhance Your Application Later
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-3 gap-4">
-                <Card className="border-0 shadow-sm">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">$1,000 Features</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm space-y-1">
-                    <div>• Email tracking</div>
-                    <div>• Calendar sync</div>
-                    <div>• Advanced search</div>
-                    <div>• Notifications</div>
-                    <div>• Basic API sync</div>
-                  </CardContent>
-                </Card>
+              <div className="prose prose-sm max-w-none">
+                <p className="text-muted-foreground mb-6">
+                  Your application can grow with your business. Add new features anytime at transparent, fixed prices.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-semibold text-primary">$1k</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Essential Add-ons</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Email tracking, calendar integration, advanced search, push notifications, or basic API connections
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm font-semibold text-primary">$2.5k</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-1">Enterprise Features</h4>
+                      <p className="text-sm text-muted-foreground">
+                        Complex API integrations, custom AI model training, white-label configuration, or specialized business modules
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 
-                <Card className="border-0 shadow-sm">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">$2,500 Modules</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm space-y-1">
-                    <div>• Full API integration</div>
-                    <div>• Custom AI training</div>
-                    <div>• White-label setup</div>
-                    <div>• Advanced modules</div>
-                    <div>• Business tool suites</div>
-                  </CardContent>
-                </Card>
-                
-                <Card className="border-0 shadow-sm bg-amber-50">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-base">Important</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm space-y-1">
-                    <div>• App Suite apps only</div>
-                    <div>• Fixed pricing always</div>
-                    <div>• No hourly billing</div>
-                    <div>• No third-party mods</div>
-                  </CardContent>
-                </Card>
+                <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg p-6">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-primary" />
+                    Our Commitment
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    All enhancements are built exclusively by App Suite with the same quality standards as your original application. We maintain fixed pricing with no hourly billing or surprise costs.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -480,41 +485,53 @@ const PaymentTerms = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
-                7. Accepted Payment Methods
+                7. Simple, Secure Payment Options
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="border rounded-lg p-4 text-center">
-                  <CreditCard className="h-8 w-8 mx-auto mb-3 text-primary" />
-                  <h4 className="font-semibold mb-2">Credit Card</h4>
-                  <p className="text-sm text-muted-foreground">Visa, MasterCard, Amex</p>
+              <div className="prose prose-sm max-w-none mb-6">
+                <p className="text-muted-foreground">
+                  We accept all major payment methods for your convenience. All transactions are processed securely with immediate confirmation.
+                </p>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <CreditCard className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-sm">Credit Card</p>
+                    <p className="text-xs text-muted-foreground">All major cards</p>
+                  </div>
                 </div>
-                <div className="border rounded-lg p-4 text-center">
-                  <Shield className="h-8 w-8 mx-auto mb-3 text-primary" />
-                  <h4 className="font-semibold mb-2">ACH Transfer</h4>
-                  <p className="text-sm text-muted-foreground">Direct bank transfer</p>
+                
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <Shield className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-sm">ACH Transfer</p>
+                    <p className="text-xs text-muted-foreground">US banks</p>
+                  </div>
                 </div>
-                <div className="border rounded-lg p-4 text-center">
-                  <FileText className="h-8 w-8 mx-auto mb-3 text-primary" />
-                  <h4 className="font-semibold mb-2">Wire Transfer</h4>
-                  <p className="text-sm text-muted-foreground">International payments</p>
+                
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-sm">Wire Transfer</p>
+                    <p className="text-xs text-muted-foreground">International</p>
+                  </div>
                 </div>
-                <div className="border rounded-lg p-4 text-center">
-                  <FileText className="h-8 w-8 mx-auto mb-3 text-primary" />
-                  <h4 className="font-semibold mb-2">Business Check</h4>
-                  <p className="text-sm text-muted-foreground">Traditional payment</p>
+                
+                <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                  <FileText className="h-5 w-5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-sm">Business Check</p>
+                    <p className="text-xs text-muted-foreground">Traditional</p>
+                  </div>
                 </div>
               </div>
               
-              <div className="mt-6 bg-muted/30 rounded-lg p-4">
-                <h4 className="font-semibold mb-2">Payment Processing:</h4>
-                <ul className="text-base space-y-2">
-                  <li>• Invoices sent via email with payment instructions</li>
-                  <li>• Payment confirmation within 24 hours</li>
-                  <li>• All transactions processed securely</li>
-                  <li>• Receipts provided for all payments</li>
-                </ul>
+              <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <span>Secure processing • Instant receipts • 24-hour confirmation</span>
               </div>
             </CardContent>
           </Card>
@@ -524,49 +541,66 @@ const PaymentTerms = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                8. Terms & Conditions
+                8. Clear, Fair Terms
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent>
+              <div className="prose prose-sm max-w-none mb-6">
+                <p className="text-muted-foreground">
+                  We believe in transparency and fairness. Here's what you can expect when working with us.
+                </p>
+              </div>
               
-              <div>
-                <h4 className="font-semibold mb-2">Refund Policy:</h4>
-                <ul className="text-sm space-y-1 ml-4">
-                  <li>• Full refund within 48 hours</li>
-                  <li>• Partial refunds after 48 hours</li>
-                  <li>• No refund after delivery</li>
-                  <li>• 10 business day processing</li>
-                </ul>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-primary" />
+                      Satisfaction Guarantee
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Not happy? Get a full refund within 48 hours of starting your project. After that, we'll work out a fair partial refund based on work completed.
+                    </p>
+                  </div>
+                  
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <Zap className="h-4 w-4 text-primary" />
+                      Project Flexibility
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Minor tweaks and adjustments are always included. For bigger changes, we'll discuss the scope and any additional costs upfront.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-primary" />
+                      You Own Everything
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Once paid, the code is 100% yours. We'll provide all source files and documentation. No strings attached.
+                    </p>
+                  </div>
+                  
+                  <div className="rounded-lg border p-4">
+                    <h4 className="font-semibold mb-2 flex items-center gap-2">
+                      <Shield className="h-4 w-4 text-primary" />
+                      30-Day Warranty
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      We stand behind our work. Any bugs found within 30 days are fixed free of charge. Training and support during business hours included.
+                    </p>
+                  </div>
+                </div>
               </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Project Changes:</h4>
-                <ul className="text-sm space-y-1 ml-4">
-                  <li>• Minor changes included</li>
-                  <li>• Major changes need approval</li>
-                  <li>• Extra features priced separately</li>
-                  <li>• Timeline may adjust</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Intellectual Property:</h4>
-                <ul className="text-sm space-y-1 ml-4">
-                  <li>• You own all code after payment</li>
-                  <li>• Third-party licenses separate</li>
-                  <li>• We keep our methodologies</li>
-                  <li>• Source code delivered</li>
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="font-semibold mb-2">Support & Warranty:</h4>
-                <ul className="text-sm space-y-1 ml-4">
-                  <li>• 30-day bug fix warranty</li>
-                  <li>• Extended support available</li>
-                  <li>• Training included</li>
-                  <li>• Business hour support</li>
-                </ul>
+              
+              <div className="mt-6 p-4 bg-primary/5 rounded-lg">
+                <p className="text-sm text-center text-muted-foreground">
+                  <span className="font-medium">Questions about our terms?</span> We're happy to discuss and ensure you're comfortable before starting.
+                </p>
               </div>
             </CardContent>
           </Card>
