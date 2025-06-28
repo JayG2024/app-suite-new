@@ -1,11 +1,5 @@
 const { google } = require('googleapis');
-const { createClient } = require('@supabase/supabase-js');
 const { verifyToken } = require('./utils/auth');
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
 
 // Helper to parse email headers
 const getHeader = (headers, name) => {
@@ -74,17 +68,24 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Get Gmail connection
-    const { data: connection, error: connError } = await supabase
-      .from('gmail_connections')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-
-    if (connError || !connection) {
+    // Get Gmail connection from your database
+    // For now, we'll expect the tokens to be passed in headers
+    // In production, you would fetch from your database
+    const authHeader = event.headers['x-gmail-token'];
+    if (!authHeader) {
       return {
         statusCode: 404,
         body: JSON.stringify({ error: 'Gmail not connected' })
+      };
+    }
+
+    let connection;
+    try {
+      connection = JSON.parse(Buffer.from(authHeader, 'base64').toString());
+    } catch (err) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Invalid Gmail token' })
       };
     }
 
@@ -102,15 +103,21 @@ exports.handler = async (event, context) => {
     });
 
     // Auto-refresh token if needed
-    const newTokens = await oauth2Client.refreshAccessToken();
-    if (newTokens.credentials) {
-      await supabase
-        .from('gmail_connections')
-        .update({
-          access_token: newTokens.credentials.access_token,
-          token_expiry: new Date(newTokens.credentials.expiry_date).toISOString()
-        })
-        .eq('id', connection.id);
+    if (new Date(connection.token_expiry) < new Date()) {
+      try {
+        const newTokens = await oauth2Client.refreshAccessToken();
+        if (newTokens.credentials) {
+          // In production, update tokens in your database
+          connection.access_token = newTokens.credentials.access_token;
+          connection.token_expiry = new Date(newTokens.credentials.expiry_date).toISOString();
+        }
+      } catch (refreshError) {
+        console.error('Token refresh failed:', refreshError);
+        return {
+          statusCode: 401,
+          body: JSON.stringify({ error: 'Gmail token expired. Please reconnect.' })
+        };
+      }
     }
 
     // Initialize Gmail API

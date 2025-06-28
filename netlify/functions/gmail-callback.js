@@ -1,11 +1,5 @@
 const { google } = require('googleapis');
 const jwt = require('jsonwebtoken');
-const { createClient } = require('@supabase/supabase-js');
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
 
 exports.handler = async (event, context) => {
   // Only allow GET requests
@@ -61,29 +55,26 @@ exports.handler = async (event, context) => {
       }
     }
 
-    // Store or update Gmail connection
-    const { data, error: dbError } = await supabase
-      .from('gmail_connections')
-      .upsert({
-        user_id: userId || 1, // Default to user 1 for now
-        email: userInfo.email,
-        access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
-        token_expiry: new Date(tokens.expiry_date).toISOString()
-      }, {
-        onConflict: 'user_id'
-      });
+    // Store Gmail connection in your database
+    // For now, we'll store in localStorage via redirect params
+    // In production, you would call your database API here
+    
+    const connectionData = {
+      user_id: userId || 1,
+      email: userInfo.email,
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      token_expiry: new Date(tokens.expiry_date).toISOString()
+    };
 
-    if (dbError) {
-      console.error('Database error:', dbError);
-      throw new Error('Failed to save Gmail connection');
-    }
+    // Encode the connection data to pass via URL
+    const encodedData = Buffer.from(JSON.stringify(connectionData)).toString('base64');
 
-    // Redirect back to dashboard with success
+    // Redirect back to dashboard with connection data
     return {
       statusCode: 302,
       headers: {
-        Location: '/dashboard?gmail_connected=true&section=gmail'
+        Location: `/dashboard?gmail_connected=true&section=gmail&data=${encodedData}`
       }
     };
   } catch (error) {
