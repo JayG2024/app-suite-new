@@ -34,6 +34,30 @@ import {
   Save as SaveIcon
 } from "lucide-react";
 
+interface PainPoint {
+  issue: string;
+  impact: string;
+  frequency: string;
+  emotionalTone: string;
+}
+
+interface AIOpportunity {
+  task: string;
+  currentMethod: string;
+  aiSolution: string;
+  timeSaved: string;
+  additionalBenefit: string;
+}
+
+interface ClientProfile {
+  name: string;
+  company: string;
+  role: string;
+  industry: string;
+  companySize: string;
+  techSavviness: string;
+}
+
 interface ProjectScope {
   clientName: string;
   companyName: string;
@@ -53,8 +77,16 @@ interface CallAnalysis {
   summary: string;
   keyPoints: string[];
   clientNeeds: string[];
+  painPoints?: PainPoint[];
+  aiOpportunities?: AIOpportunity[];
   projectScope: ProjectScope;
   proposal: string;
+  additionalInsights?: {
+    clientProfile?: ClientProfile;
+    quickWins?: string[];
+    longTermVision?: string[];
+    communicationTips?: string;
+  };
 }
 
 const PACKAGE_DETAILS = {
@@ -134,7 +166,7 @@ const CallTranscriptAnalyzer = () => {
     setIsAnalyzing(true);
 
     try {
-      const response = await fetch('/.netlify/functions/analyze-transcript', {
+      const response = await fetch('/.netlify/functions/analyze-transcript-v2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -186,18 +218,50 @@ const CallTranscriptAnalyzer = () => {
     toast.success('Proposal copied to clipboard!');
   };
 
-  const downloadProposal = () => {
+  const downloadProposal = async () => {
     if (!analysis) return;
     
-    const blob = new Blob([analysis.proposal], { type: 'text/plain' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${analysis.projectScope.clientName}-proposal.txt`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    
-    toast.success('Proposal downloaded!');
+    try {
+      // Generate styled PDF
+      const response = await fetch('/.netlify/functions/generate-proposal-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          analysis,
+          branding: {
+            primaryColor: '#3b82f6',
+            secondaryColor: '#8b5cf6',
+            logo: '/logos/app-suite-logo.png'
+          }
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to generate PDF');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${analysis.projectScope.clientName}-proposal-${new Date().toISOString().split('T')[0]}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Professional proposal downloaded!');
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      // Fallback to text download
+      const blob = new Blob([analysis.proposal], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${analysis.projectScope.clientName}-proposal.txt`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+      toast.info('Downloaded as text file');
+    }
   };
 
   return (
@@ -319,8 +383,10 @@ const CallTranscriptAnalyzer = () => {
               </CardHeader>
               <CardContent>
                 <Tabs defaultValue="summary">
-                  <TabsList>
+                  <TabsList className="grid grid-cols-3 lg:grid-cols-6">
                     <TabsTrigger value="summary">Summary</TabsTrigger>
+                    <TabsTrigger value="painpoints">Pain Points</TabsTrigger>
+                    <TabsTrigger value="ai">AI Solutions</TabsTrigger>
                     <TabsTrigger value="scope">Project Scope</TabsTrigger>
                     <TabsTrigger value="features">Features</TabsTrigger>
                     <TabsTrigger value="pricing">Pricing</TabsTrigger>
@@ -356,6 +422,87 @@ const CallTranscriptAnalyzer = () => {
                         ))}
                       </div>
                     </div>
+                  </TabsContent>
+
+                  <TabsContent value="painpoints" className="space-y-4">
+                    {analysis.painPoints && analysis.painPoints.length > 0 ? (
+                      <div className="space-y-3">
+                        {analysis.painPoints.map((pain, i) => (
+                          <div key={i} className="p-4 border rounded-lg bg-red-50 border-red-200">
+                            <div className="flex items-start gap-3">
+                              <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+                              <div className="flex-1">
+                                <h5 className="font-medium text-red-900">{pain.issue}</h5>
+                                <p className="text-sm text-red-700 mt-1">{pain.impact}</p>
+                                <div className="flex gap-4 mt-2">
+                                  <Badge variant="outline" className="text-xs border-red-300 text-red-600">
+                                    {pain.frequency}
+                                  </Badge>
+                                  <Badge variant="outline" className="text-xs border-red-300 text-red-600">
+                                    {pain.emotionalTone}
+                                  </Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div>
+                        <h4 className="font-medium mb-2">Current Challenges</h4>
+                        <ul className="space-y-1">
+                          {analysis.projectScope.challenges.map((challenge, i) => (
+                            <li key={i} className="flex items-start gap-2 text-sm">
+                              <AlertCircle className="h-4 w-4 text-orange-600 mt-0.5" />
+                              <span>{challenge}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="ai" className="space-y-4">
+                    {analysis.aiOpportunities && analysis.aiOpportunities.length > 0 ? (
+                      <div className="space-y-4">
+                        {analysis.aiOpportunities.map((opp, i) => (
+                          <div key={i} className="p-4 border rounded-lg bg-purple-50 border-purple-200">
+                            <div className="flex items-start gap-3">
+                              <div className="p-2 bg-purple-100 rounded-lg">
+                                <Bot className="h-5 w-5 text-purple-600" />
+                              </div>
+                              <div className="flex-1">
+                                <h5 className="font-medium text-purple-900">{opp.task}</h5>
+                                <div className="mt-2 space-y-2">
+                                  <div className="text-sm">
+                                    <span className="text-gray-600">Current: </span>
+                                    <span className="text-gray-800">{opp.currentMethod}</span>
+                                  </div>
+                                  <div className="text-sm">
+                                    <span className="text-purple-600 font-medium">AI Solution: </span>
+                                    <span className="text-purple-800">{opp.aiSolution}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-4 mt-3">
+                                  <Badge className="bg-green-100 text-green-800">
+                                    <Clock className="h-3 w-3 mr-1" />
+                                    {opp.timeSaved}
+                                  </Badge>
+                                  <span className="text-sm text-purple-700">{opp.additionalBenefit}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div>
+                        <h4 className="font-medium mb-2">AI-Powered Solutions</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Our AI technology will transform how you work, saving time and reducing errors.
+                        </p>
+                      </div>
+                    )}
                   </TabsContent>
 
                   <TabsContent value="scope" className="space-y-4">
@@ -565,15 +712,27 @@ const CallTranscriptAnalyzer = () => {
       >
         {analysis && (
           <div className="p-6">
-            <div className="flex justify-end gap-2 mb-4">
-              <Button variant="outline" size="sm" onClick={copyProposal}>
-                <Copy className="h-4 w-4 mr-2" />
-                Copy
-              </Button>
-              <Button variant="outline" size="sm" onClick={downloadProposal}>
-                <Download className="h-4 w-4 mr-2" />
-                Download
-              </Button>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-4">
+                {analysis.additionalInsights?.clientProfile && (
+                  <div className="flex items-center gap-2 text-sm">
+                    <User className="h-4 w-4" />
+                    <span className="font-medium">{analysis.additionalInsights.clientProfile.name}</span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-muted-foreground">{analysis.additionalInsights.clientProfile.role}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" onClick={copyProposal}>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy
+                </Button>
+                <Button variant="outline" size="sm" onClick={downloadProposal}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF
+                </Button>
+              </div>
             </div>
 
             <div className="prose prose-sm max-w-none">
