@@ -47,7 +47,7 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { messages, model = 'claude-3-opus-20240229', temperature = 0.3, max_tokens = 4000 } = JSON.parse(event.body);
+    const { messages, model = 'claude-3-5-sonnet-20241022', temperature = 0.3, max_tokens = 4000 } = JSON.parse(event.body);
 
     if (!messages || !Array.isArray(messages)) {
       return {

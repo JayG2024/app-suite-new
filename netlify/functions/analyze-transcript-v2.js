@@ -85,10 +85,10 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // First pass: Deep analysis of the call (with timeout protection)
+    // First pass: Deep analysis of the call
     const analysisMessage = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307', // Use faster model for analysis
-      max_tokens: 2000, // Reduced for faster response
+      model: 'claude-3-5-sonnet-20241022', // Use latest Sonnet model for best quality
+      max_tokens: 4000,
       temperature: 0.3,
       system: ENHANCED_APP_SUITE_CONTEXT,
       messages: [{
@@ -181,8 +181,8 @@ Provide a comprehensive JSON analysis with:
 
     // Second pass: Generate conversational proposal
     const proposalMessage = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307', // Use faster model
-      max_tokens: 1500, // Reduced for faster response
+      model: 'claude-3-5-sonnet-20241022', // Use latest Sonnet model for best quality
+      max_tokens: 3000,
       temperature: 0.7,
       system: PROPOSAL_GENERATION_PROMPT,
       messages: [{

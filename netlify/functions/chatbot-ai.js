@@ -71,7 +71,7 @@ exports.handler = async (event, context) => {
 
     // Call Claude API
     const response = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: 'claude-3-5-sonnet-20241022', // Use latest Sonnet model
       max_tokens: 1000,
       temperature: 0.7,
       system: CHATBOT_SYSTEM_PROMPT,
