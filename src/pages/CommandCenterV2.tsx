@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +23,7 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import GmailInbox from "@/components/GmailInbox";
 import DeploymentManager from "@/components/DeploymentManager";
 import ASCDashboard from "@/components/ASCDashboard";
+import CallTranscriptAnalyzer from "@/components/CallTranscriptAnalyzer";
 import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard,
@@ -91,13 +92,19 @@ const menuItems: MenuItem[] = [
   { id: 'deployments', label: 'Deployments', icon: Rocket, color: 'text-purple-600' },
   { id: 'cloud-dev', label: 'ASC.AI', icon: CloudCog, color: 'text-green-600' },
   { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
+  { id: 'call-analyzer', label: 'Call Analyzer', icon: Phone, color: 'text-rose-600' },
 ];
 
-const CommandCenterV2 = () => {
+interface CommandCenterV2Props {
+  initialSection?: string;
+}
+
+const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { socket, connected } = useSocket();
   const { user, logout } = useAuth();
-  const [currentSection, setCurrentSection] = useState("overview");
+  const [currentSection, setCurrentSection] = useState(initialSection || "overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [metrics, setMetrics] = useState<DashboardMetrics>({
@@ -114,6 +121,23 @@ const CommandCenterV2 = () => {
     taskCompletionRate: 0
   });
   const [dashboardData, setDashboardData] = useState<any>(null);
+
+  // Sync current section with URL
+  useEffect(() => {
+    const pathSegments = location.pathname.split('/');
+    const section = pathSegments[2];
+    
+    if (section) {
+      // Handle special cases
+      if (section === 'asc-ai') {
+        setCurrentSection('cloud-dev');
+      } else {
+        setCurrentSection(section);
+      }
+    } else if (location.pathname === '/admin' || location.pathname === '/admin/') {
+      setCurrentSection('overview');
+    }
+  }, [location.pathname]);
 
   // Calculate metrics from database
   useEffect(() => {
@@ -205,6 +229,8 @@ const CommandCenterV2 = () => {
         return <ASCDashboard />;
       case 'templates':
         return <EmailTemplates />;
+      case 'call-analyzer':
+        return <CallTranscriptAnalyzer />;
       default:
         return <OverviewSection metrics={metrics} />;
     }
@@ -442,6 +468,8 @@ const CommandCenterV2 = () => {
                   currentSection === item.id && "bg-secondary"
                 )}
                 onClick={() => {
+                  const path = item.id === 'overview' ? '/admin' : `/admin/${item.id === 'cloud-dev' ? 'asc-ai' : item.id}`;
+                  navigate(path);
                   setCurrentSection(item.id);
                   setMobileMenuOpen(false);
                 }}

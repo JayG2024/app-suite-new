@@ -69,7 +69,7 @@ import Podcast from "./pages/Podcast";
 // Admin route component that shows login form or dashboard
 function AdminRoute() {
   const { user } = useAuth();
-  return user ? <CommandCenterV2 /> : <LoginForm />;
+  return user ? <Outlet /> : <LoginForm />;
 }
 
 function App() {
@@ -136,14 +136,33 @@ function App() {
           {/* Legacy redirects */}
           <Route path="examples" element={<Navigate to="/solutions-weve-built" replace />} />
           <Route path="portfolio" element={<Navigate to="/solutions-weve-built" replace />} />
-          <Route path="command-center" element={<Navigate to="/dashboard" replace />} />
-          <Route path="admin" element={<Navigate to="/dashboard" replace />} />
+          <Route path="command-center" element={<Navigate to="/admin" replace />} />
+          <Route path="dashboard" element={<Navigate to="/admin" replace />} />
+          <Route path="manage" element={<Navigate to="/admin" replace />} />
           <Route path="blog/the-hidden-cost-of-geo-blocking-and-ai-search-visibility" element={<Navigate to="/whitepapers/geo-blocking-ai-search" replace />} />
           
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="dashboard" element={<AdminRoute />} />
-        <Route path="manage" element={<AdminRoute />} />
+        
+        {/* Admin routes with authentication */}
+        <Route path="admin" element={<AdminRoute />}>
+          <Route index element={<CommandCenterV2 />} />
+          <Route path="overview" element={<CommandCenterV2 initialSection="overview" />} />
+          <Route path="gmail" element={<CommandCenterV2 initialSection="gmail" />} />
+          <Route path="clients" element={<CommandCenterV2 initialSection="clients" />} />
+          <Route path="projects" element={<CommandCenterV2 initialSection="projects" />} />
+          <Route path="tasks" element={<CommandCenterV2 initialSection="tasks" />} />
+          <Route path="sales" element={<CommandCenterV2 initialSection="sales" />} />
+          <Route path="marketing" element={<CommandCenterV2 initialSection="marketing" />} />
+          <Route path="finance" element={<CommandCenterV2 initialSection="finance" />} />
+          <Route path="analytics" element={<CommandCenterV2 initialSection="analytics" />} />
+          <Route path="team" element={<CommandCenterV2 initialSection="team" />} />
+          <Route path="deployments" element={<CommandCenterV2 initialSection="deployments" />} />
+          <Route path="asc-ai" element={<CommandCenterV2 initialSection="cloud-dev" />} />
+          <Route path="templates" element={<CommandCenterV2 initialSection="templates" />} />
+          <Route path="call-analyzer" element={<CommandCenterV2 initialSection="call-analyzer" />} />
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Route>
       </Routes>
       <Toaster position="top-right" />
         </AuthProvider>

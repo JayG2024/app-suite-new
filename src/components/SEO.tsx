@@ -21,6 +21,8 @@ interface SEOProps {
   keywords?: string;
   image?: string;
   noIndex?: boolean;
+  noindex?: boolean; // Support both cases
+  nofollow?: boolean;
   canonical?: string;
   structuredData?: object;
 }
@@ -31,6 +33,8 @@ export const SEO: React.FC<SEOProps> = ({
   keywords,
   image,
   noIndex = false,
+  noindex = false,
+  nofollow = false,
   canonical,
   structuredData
 }) => {
@@ -54,15 +58,17 @@ export const SEO: React.FC<SEOProps> = ({
     // Update page SEO
     updatePageSEO(seoData);
 
-    // Add noindex if specified
-    if (noIndex) {
+    // Add noindex/nofollow if specified
+    const shouldNoIndex = noIndex || noindex;
+    if (shouldNoIndex || nofollow) {
+      const robotsContent = `${shouldNoIndex ? 'noindex' : 'index'}, ${nofollow ? 'nofollow' : 'follow'}`;
       const robotsTag = document.querySelector('meta[name="robots"]') as HTMLMetaElement;
       if (robotsTag) {
-        robotsTag.setAttribute('content', 'noindex, nofollow');
+        robotsTag.setAttribute('content', robotsContent);
       } else {
         const newRobotsTag = document.createElement('meta');
         newRobotsTag.setAttribute('name', 'robots');
-        newRobotsTag.setAttribute('content', 'noindex, nofollow');
+        newRobotsTag.setAttribute('content', robotsContent);
         document.head.appendChild(newRobotsTag);
       }
     } else {
@@ -89,7 +95,7 @@ export const SEO: React.FC<SEOProps> = ({
       document.head.appendChild(schemaScript);
     });
 
-  }, [location.pathname, title, description, keywords, image, noIndex, canonical, structuredData]);
+  }, [location.pathname, title, description, keywords, image, noIndex, noindex, nofollow, canonical, structuredData]);
 
   return null; // This component doesn't render anything
 };
