@@ -22,7 +22,7 @@ import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import GmailInbox from "@/components/GmailInbox";
 import DeploymentManager from "@/components/DeploymentManager";
-import ASCDashboard from "@/components/ASCDashboard";
+import ASCDashboardV2 from "@/components/ASCDashboardV2";
 import CallTranscriptAnalyzer from "@/components/CallTranscriptAnalyzer";
 import { cn } from "@/lib/utils";
 import { 
@@ -226,7 +226,7 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
       case 'deployments':
         return <DeploymentManager />;
       case 'cloud-dev':
-        return <ASCDashboard />;
+        return <ASCDashboardV2 />;
       case 'templates':
         return <EmailTemplates />;
       case 'call-analyzer':
@@ -328,6 +328,14 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
             >
               <FileText className="h-4 w-4 mr-2" />
               Generate Proposal
+            </Button>
+            <Button 
+              className="w-full justify-start" 
+              variant="outline"
+              onClick={() => setCurrentSection('call-analyzer')}
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              Analyze Call Transcript
             </Button>
           </CardContent>
         </Card>
