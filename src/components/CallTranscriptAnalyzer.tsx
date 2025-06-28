@@ -201,7 +201,10 @@ const CallTranscriptAnalyzer = () => {
       toast.success('Call transcript analyzed successfully!');
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Failed to analyze transcript');
+      toast.error('Failed to analyze transcript. Please check your connection and try again.');
+      
+      // Don't redirect, just show error state
+      setAnalysis(null);
     } finally {
       setIsAnalyzing(false);
     }

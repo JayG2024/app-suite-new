@@ -65,19 +65,17 @@ const AIChatbot = () => {
     
     try {
       // Use OpenAI API endpoint
-      const response = await fetch('/.netlify/functions/openai-chat', {
+      const response = await fetch('/.netlify/functions/chatbot-ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          messages: messages.map(msg => ({
+          message: userMessage,
+          conversationHistory: messages.map(msg => ({
             role: msg.type === 'user' ? 'user' : 'assistant',
             content: msg.content
-          })).concat([{ role: 'user', content: userMessage }]),
-          context: 'customer_support',
-          temperature: 0.7,
-          maxTokens: 500
+          }))
         })
       });
 
@@ -85,11 +83,11 @@ const AIChatbot = () => {
         const data = await response.json();
         setIsTyping(false);
         
-        if (data.message) {
-          await streamResponse(data.message);
+        if (data.content) {
+          await streamResponse(data.content);
           return {
-            content: data.message,
-            suggestions: generateSmartSuggestions(userMessage, data.message)
+            content: data.content,
+            suggestions: data.suggestions || generateSmartSuggestions(userMessage, data.content)
           };
         }
       } else {
