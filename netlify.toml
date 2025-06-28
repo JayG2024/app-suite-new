@@ -7,6 +7,20 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Force HTTPS
+[[redirects]]
+  from = "http://app-suite.io/*"
+  to = "https://app-suite.io/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.app-suite.io/*"
+  to = "https://app-suite.io/:splat"
+  status = 301
+  force = true
+
+# Redirect www to non-www
 [[redirects]]
   from = "https://www.app-suite.io/*"
   to = "https://app-suite.io/:splat"

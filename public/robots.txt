@@ -21,7 +21,7 @@ User-agent: PerplexityBot
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.app-suite.io/sitemap.xml
+Sitemap: https://app-suite.io/sitemap.xml
 
 # Prevent indexing of sensitive directories
 Disallow: /admin/
