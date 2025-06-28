@@ -53,9 +53,23 @@ The tone should be:
 Include specific examples of how the solution addresses their exact pain points.`;
 
 exports.handler = async (event, context) => {
+  // Add CORS headers
+  const headers = {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type'
+  };
+
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers, body: '' };
+  }
+
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
+      headers,
       body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
@@ -66,14 +80,15 @@ exports.handler = async (event, context) => {
     if (!transcript) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ error: 'Transcript is required' })
       };
     }
 
-    // First pass: Deep analysis of the call
+    // First pass: Deep analysis of the call (with timeout protection)
     const analysisMessage = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
-      max_tokens: 4000,
+      model: 'claude-3-haiku-20240307', // Use faster model for analysis
+      max_tokens: 2000, // Reduced for faster response
       temperature: 0.3,
       system: ENHANCED_APP_SUITE_CONTEXT,
       messages: [{
@@ -166,8 +181,8 @@ Provide a comprehensive JSON analysis with:
 
     // Second pass: Generate conversational proposal
     const proposalMessage = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
-      max_tokens: 3000,
+      model: 'claude-3-haiku-20240307', // Use faster model
+      max_tokens: 1500, // Reduced for faster response
       temperature: 0.7,
       system: PROPOSAL_GENERATION_PROMPT,
       messages: [{
@@ -244,6 +259,7 @@ Make it personal, not generic.`
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify(result)
     };
 
@@ -254,12 +270,14 @@ Make it personal, not generic.`
     if (error.status === 401 || !process.env.ANTHROPIC_API_KEY) {
       return {
         statusCode: 200,
+        headers,
         body: JSON.stringify(generateEnhancedMockAnalysis(event.body))
       };
     }
 
     return {
       statusCode: 500,
+      headers,
       body: JSON.stringify({ 
         error: 'Failed to analyze transcript',
         details: error.message 
