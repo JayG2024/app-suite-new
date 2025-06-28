@@ -8,8 +8,15 @@
   NODE_VERSION = "20"
 
 [[redirects]]
-  from = "https://app-suite.io/*"
-  to = "https://www.app-suite.io/:splat"
+  from = "https://www.app-suite.io/*"
+  to = "https://app-suite.io/:splat"
+  status = 301
+  force = true
+  
+# Also redirect www subdomain at the root
+[[redirects]]
+  from = "https://www.app-suite.io"
+  to = "https://app-suite.io"
   status = 301
   force = true
 

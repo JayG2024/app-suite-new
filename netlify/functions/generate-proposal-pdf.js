@@ -308,7 +308,7 @@ exports.handler = async (event, context) => {
     doc.fillColor(colors.textLight)
        .fontSize(9)
        .font('Helvetica')
-       .text('App Suite • www.app-suite.io • Build Once, Use Forever', 72, doc.page.height - 50, {
+       .text('App Suite • app-suite.io • Build Once, Use Forever', 72, doc.page.height - 50, {
          align: 'center',
          width: doc.page.width - 144
        });

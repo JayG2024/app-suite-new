@@ -6,7 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Get site URL from environment or default
-const SITE_URL = process.env.VITE_SITE_URL || 'https://www.app-suite.io';
+const SITE_URL = process.env.VITE_SITE_URL || 'https://app-suite.io';
 
 // Generate robots.txt
 const robotsTxt = `
@@ -235,7 +235,7 @@ htmlFiles.forEach(file => {
     
     // Replace hardcoded URLs
     content = content.replace(/https:\/\/app-suite\.io/g, SITE_URL);
-    content = content.replace(/https:\/\/www\.app-suite\.io/g, SITE_URL);
+    content = content.replace(/https:\/\/app-suite\.io/g, SITE_URL);
     
     fs.writeFileSync(filePath, content);
     console.log(`   - ${file} (updated)`);

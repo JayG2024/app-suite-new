@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./version"; // Import version for cache debugging
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
+import RedirectHandler from "./components/RedirectHandler";
 import { SocketProvider } from "./contexts/SocketContext";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -78,6 +79,7 @@ function App() {
     <SocketProvider>
       <Router>
         <AuthProvider>
+          <RedirectHandler />
           <ScrollToTop />
           <Routes>
         <Route path="/" element={<Layout><Outlet /></Layout>}>

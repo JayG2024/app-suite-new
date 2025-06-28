@@ -152,7 +152,7 @@ We helped TechStart Inc. replace 5 different SaaS subscriptions with one custom 
 
 Ready to stop renting and start owning?
 
-Book a free consultation: www.app-suite.io/get-started
+Book a free consultation: app-suite.io/get-started
 
 Best regards,
 The App Suite Team
@@ -273,7 +273,7 @@ What if you could have software built EXACTLY for your business at a one-time fl
 
 Stop adapting your business to the software. Get software that adapts to YOU.
 
-Learn more → www.app-suite.io${hashtags}`;
+Learn more → app-suite.io${hashtags}`;
 }
 
 function generateConversionOptimization(data) {
