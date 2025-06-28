@@ -22,6 +22,7 @@ import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import GmailInbox from "@/components/GmailInbox";
 import DeploymentManager from "@/components/DeploymentManager";
+import ASCDashboard from "@/components/ASCDashboard";
 import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard,
@@ -49,7 +50,9 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   FileText,
-  Rocket
+  Rocket,
+  CloudCog,
+  Phone
 } from "lucide-react";
 
 interface DashboardMetrics {
@@ -86,6 +89,7 @@ const menuItems: MenuItem[] = [
   { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-indigo-600' },
   { id: 'team', label: 'Team', icon: Users, color: 'text-cyan-600' },
   { id: 'deployments', label: 'Deployments', icon: Rocket, color: 'text-purple-600' },
+  { id: 'cloud-dev', label: 'ASC.AI', icon: CloudCog, color: 'text-green-600' },
   { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
 ];
 
@@ -197,6 +201,8 @@ const CommandCenterV2 = () => {
         return <TeamWorkspaceV2 />;
       case 'deployments':
         return <DeploymentManager />;
+      case 'cloud-dev':
+        return <ASCDashboard />;
       case 'templates':
         return <EmailTemplates />;
       default:

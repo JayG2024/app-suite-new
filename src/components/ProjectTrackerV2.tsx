@@ -677,7 +677,7 @@ const ProjectTrackerV2 = () => {
   };
 
   const ProjectForm = useCallback(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4 pr-2">
+    <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="projectName">Project Name *</Label>
@@ -953,14 +953,14 @@ const ProjectTrackerV2 = () => {
                     New Project
                   </Button>
                 </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[60]">
+              <DialogContent className="max-w-4xl max-h-[90vh] z-[60]">
                 <DialogHeader>
                   <DialogTitle>Create New Project</DialogTitle>
                   <DialogDescription>
                     Quickly create a project - only the name is required
                   </DialogDescription>
                 </DialogHeader>
-                <div className="mt-4 overflow-y-auto max-h-[calc(90vh-120px)]">
+                <div className="mt-4 overflow-y-auto max-h-[calc(90vh-200px)]">
                   <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
                 </div>
               </DialogContent>
@@ -1122,14 +1122,14 @@ const ProjectTrackerV2 = () => {
 
       {/* Edit Project Dialog */}
       <Dialog open={showEditProject} onOpenChange={setShowEditProject}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto z-[60]">
+        <DialogContent className="max-w-4xl max-h-[90vh] z-[60]">
           <DialogHeader>
             <DialogTitle>Edit Project</DialogTitle>
             <DialogDescription>
               Update project details - only the name is required
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <div className="mt-4 overflow-y-auto max-h-[calc(90vh-200px)]">
             <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
           </div>
         </DialogContent>
