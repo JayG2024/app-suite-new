@@ -233,8 +233,41 @@ const ASCDashboardV2 = () => {
     };
     setChatMessages(prev => [...prev, loadingMessage]);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Call ASC.AI via secure Netlify function
+      const response = await fetch('/.netlify/functions/asc-generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            ...chatMessages.filter(m => m.role !== 'system').map(m => ({
+              role: m.role,
+              content: m.content
+            })),
+            { role: 'user', content: chatInput }
+          ],
+          temperature: 0.7,
+          max_tokens: 2000
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      
+      setChatMessages(prev => 
+        prev.map(msg => msg.id === loadingMessage.id 
+          ? { ...msg, content: data.content, isLoading: false }
+          : msg
+        )
+      );
+    } catch (error) {
+      console.error('ASC.AI error:', error);
+      // Fallback to local response
       const response = generateAIResponse(chatInput);
       setChatMessages(prev => 
         prev.map(msg => msg.id === loadingMessage.id 
@@ -242,7 +275,7 @@ const ASCDashboardV2 = () => {
           : msg
         )
       );
-    }, 1500);
+    }
   };
 
   const generateAIResponse = (input: string) => {

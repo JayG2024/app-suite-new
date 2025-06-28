@@ -25,15 +25,18 @@ export const useASCCodeGen = (options: UseASCCodeGenOptions = {}) => {
     setIsGenerating(true);
 
     try {
-      const response = await fetch('/.netlify/functions/asc-code-gen', {
+      const response = await fetch('/.netlify/functions/asc-generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          prompt,
-          context: options.context,
-          projectType: options.projectType || 'react'
+          messages: [
+            ...(options.context ? [{ role: 'user', content: `Context: ${options.context}` }] : []),
+            { role: 'user', content: prompt }
+          ],
+          temperature: 0.3,
+          max_tokens: 4000
         })
       });
 
@@ -42,7 +45,18 @@ export const useASCCodeGen = (options: UseASCCodeGenOptions = {}) => {
         throw new Error(error.error || 'Failed to generate code');
       }
 
-      const result = await response.json();
+      const data = await response.json();
+      
+      // Extract code from the response content
+      const content = data.content || '';
+      const codeMatch = content.match(/```(\w+)?\n([\s\S]*?)```/);
+      
+      const result: CodeGenerationResult = {
+        code: codeMatch ? codeMatch[2].trim() : content,
+        explanation: content,
+        model: 'claude-3-opus'
+      };
+      
       setLastResult(result);
       
       // Show success message with ASC branding

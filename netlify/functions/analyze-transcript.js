@@ -1,8 +1,8 @@
 const Anthropic = require('@anthropic-ai/sdk');
 
-// Initialize Claude with the provided API key
+// Initialize Claude with the API key from environment
 const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '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',
+  apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
 const APP_SUITE_CONTEXT = `You are an AI assistant for App Suite, a company that builds custom business applications. 
