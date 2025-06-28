@@ -19,17 +19,24 @@ ASC.AI (App Suite Code AI) is a secure, AI-powered development platform that hel
 
 ## Setup Instructions
 
-### 1. Set Up Anthropic API Key in Netlify
+### 1. Set Up API Keys in Netlify
 
 1. Go to your [Netlify Dashboard](https://app.netlify.com)
 2. Select your site
 3. Navigate to: **Site Configuration → Environment Variables**
-4. Add a new environment variable:
+4. Add the following environment variables:
+
+#### Anthropic API Key (for ASC.AI)
    - **Key**: `ANTHROPIC_API_KEY`
    - **Value**: Your Anthropic API key (starts with `sk-ant-api03-`)
    - **Scope**: Production (and optionally Deploy Previews)
 
-⚠️ **IMPORTANT**: Do NOT use `NEXT_PUBLIC_` or `VITE_` prefix for the API key. This would expose it to the client.
+#### Resend API Key (for Email Services)
+   - **Key**: `RESEND_API_KEY`
+   - **Value**: Your Resend API key (starts with `re_`)
+   - **Scope**: Production (and optionally Deploy Previews)
+
+⚠️ **IMPORTANT**: Do NOT use `NEXT_PUBLIC_` or `VITE_` prefix for these API keys. This would expose them to the client.
 
 ### 2. Deploy the Functions
 
@@ -95,7 +102,11 @@ Check the Netlify function logs:
 
 For local development, create a `.env` file:
 ```bash
-ANTHROPIC_API_KEY=your-key-here
+# AI Services
+ANTHROPIC_API_KEY=sk-ant-api03-xxxxxxxxxxxxxxxxxxxxx
+
+# Email Services
+RESEND_API_KEY=re_xxxxxxxxxxxxxx
 ```
 
 Then run:
