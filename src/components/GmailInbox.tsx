@@ -145,8 +145,20 @@ const GmailInbox = () => {
   };
 
   const connectGmail = async () => {
-    // In production, this would initiate OAuth flow
-    toast.info("Gmail integration coming soon! This will allow you to connect your Gmail account.");
+    try {
+      const response = await fetch('/.netlify/functions/gmail-auth');
+      const { authUrl } = await response.json();
+      
+      if (authUrl) {
+        // Redirect to Google OAuth
+        window.location.href = authUrl;
+      } else {
+        toast.error('Failed to generate authentication URL');
+      }
+    } catch (error) {
+      console.error('Gmail auth error:', error);
+      toast.error('Failed to connect Gmail. Please try again.');
+    }
   };
 
   const syncEmails = async () => {

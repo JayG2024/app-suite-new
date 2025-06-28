@@ -15,7 +15,7 @@ import ClientManagerV2 from "@/components/ClientManagerV2";
 import SalesPipelineV2 from "@/components/SalesPipelineV2";
 import MarketingHub from "@/components/MarketingHub";
 import FinancialDashboard from "@/components/FinancialDashboard";
-import TeamWorkspace from "@/components/TeamWorkspace";
+import TeamWorkspaceV2 from "@/components/TeamWorkspaceV2";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
 import FloatingAIAssistant from "@/components/FloatingAIAssistant";
@@ -191,7 +191,7 @@ const CommandCenterV2 = () => {
       case 'analytics':
         return <AnalyticsDashboard />;
       case 'team':
-        return <TeamWorkspace />;
+        return <TeamWorkspaceV2 />;
       case 'templates':
         return <EmailTemplates />;
       default:
