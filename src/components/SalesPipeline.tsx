@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Textarea } from "@/components/ui/textarea";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
@@ -419,18 +419,18 @@ const SalesPipeline = () => {
           </Badge>
         </div>
 
-        <Dialog open={showAddLead} onOpenChange={setShowAddLead}>
-          <DialogTrigger asChild>
+        <Sheet open={showAddLead} onOpenChange={setShowAddLead}>
+          <SheetTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
               Add Lead
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Lead</DialogTitle>
-              <DialogDescription>Enter the details for your new sales lead</DialogDescription>
-            </DialogHeader>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+            <SheetHeader>
+              <SheetTitle>Add New Lead</SheetTitle>
+              <SheetDescription>Enter the details for your new sales lead</SheetDescription>
+            </SheetHeader>
             <div className="space-y-4 mt-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -529,8 +529,8 @@ const SalesPipeline = () => {
                 <Button onClick={addLead}>Add Lead</Button>
               </div>
             </div>
-          </DialogContent>
-        </Dialog>
+          </SheetContent>
+        </Sheet>
       </div>
 
       {/* Pipeline Stages */}
@@ -675,13 +675,13 @@ const SalesPipeline = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Lead Dialog */}
-      <Dialog open={showEditLead} onOpenChange={setShowEditLead}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Lead</DialogTitle>
-            <DialogDescription>Update lead information</DialogDescription>
-          </DialogHeader>
+      {/* Edit Lead Sheet */}
+      <Sheet open={showEditLead} onOpenChange={setShowEditLead}>
+        <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+          <SheetHeader>
+            <SheetTitle>Edit Lead</SheetTitle>
+            <SheetDescription>Update lead information</SheetDescription>
+          </SheetHeader>
           <div className="space-y-4">
             <div>
               <Label htmlFor="edit-company">Company *</Label>
@@ -834,8 +834,8 @@ const SalesPipeline = () => {
               <Button onClick={updateLead}>Update Lead</Button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

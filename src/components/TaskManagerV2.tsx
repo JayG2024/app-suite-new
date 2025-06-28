@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
@@ -789,25 +789,25 @@ const TaskManagerV2 = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Task Management</CardTitle>
-            <Dialog open={showAddTask} onOpenChange={setShowAddTask}>
-              <DialogTrigger asChild>
+            <Sheet open={showAddTask} onOpenChange={setShowAddTask}>
+              <SheetTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
                   New Task
                 </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
-                <DialogHeader>
-                  <DialogTitle>Create New Task</DialogTitle>
-                  <DialogDescription>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Create New Task</SheetTitle>
+                  <SheetDescription>
                     Add a new task to track your work
-                  </DialogDescription>
-                </DialogHeader>
+                  </SheetDescription>
+                </SheetHeader>
                 <div className="mt-4">
                   <TaskForm onSubmit={createTask} submitLabel="Create Task" />
                 </div>
-              </DialogContent>
-            </Dialog>
+              </SheetContent>
+            </Sheet>
           </div>
         </CardHeader>
         <CardContent>
@@ -1057,20 +1057,20 @@ const TaskManagerV2 = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Task Dialog */}
-      <Dialog open={showEditTask} onOpenChange={setShowEditTask}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>Edit Task</DialogTitle>
-            <DialogDescription>
+      {/* Edit Task Sheet */}
+      <Sheet open={showEditTask} onOpenChange={setShowEditTask}>
+        <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Edit Task</SheetTitle>
+            <SheetDescription>
               Update task details
-            </DialogDescription>
-          </DialogHeader>
+            </SheetDescription>
+          </SheetHeader>
           <div className="mt-4">
             <TaskForm onSubmit={updateTask} submitLabel="Update Task" />
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

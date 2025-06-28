@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
@@ -946,25 +946,25 @@ const ProjectTrackerV2 = () => {
                 )}
                 Import Sample Projects
               </Button>
-              <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
-                <DialogTrigger asChild>
+              <Sheet open={showAddProject} onOpenChange={setShowAddProject}>
+                <SheetTrigger asChild>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
                     New Project
                   </Button>
-                </DialogTrigger>
-              <DialogContent className="max-w-4xl max-h-[90vh] z-[60]">
-                <DialogHeader>
-                  <DialogTitle>Create New Project</DialogTitle>
-                  <DialogDescription>
+                </SheetTrigger>
+              <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Create New Project</SheetTitle>
+                  <SheetDescription>
                     Quickly create a project - only the name is required
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="mt-4 overflow-y-auto max-h-[calc(90vh-200px)]">
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-4">
                   <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
                 </div>
-              </DialogContent>
-            </Dialog>
+              </SheetContent>
+            </Sheet>
             </div>
           </div>
         </CardHeader>
@@ -1120,20 +1120,20 @@ const ProjectTrackerV2 = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Project Dialog */}
-      <Dialog open={showEditProject} onOpenChange={setShowEditProject}>
-        <DialogContent className="max-w-4xl max-h-[90vh] z-[60]">
-          <DialogHeader>
-            <DialogTitle>Edit Project</DialogTitle>
-            <DialogDescription>
+      {/* Edit Project Sheet */}
+      <Sheet open={showEditProject} onOpenChange={setShowEditProject}>
+        <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Edit Project</SheetTitle>
+            <SheetDescription>
               Update project details - only the name is required
-            </DialogDescription>
-          </DialogHeader>
-          <div className="mt-4 overflow-y-auto max-h-[calc(90vh-200px)]">
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-4">
             <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };
