@@ -21,6 +21,7 @@ import TaskManagerV2 from "@/components/TaskManagerV2";
 import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import GmailInbox from "@/components/GmailInbox";
+import DeploymentManager from "@/components/DeploymentManager";
 import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard,
@@ -47,7 +48,8 @@ import {
   Clock,
   ArrowUpRight,
   ArrowDownRight,
-  FileText
+  FileText,
+  Rocket
 } from "lucide-react";
 
 interface DashboardMetrics {
@@ -83,6 +85,7 @@ const menuItems: MenuItem[] = [
   { id: 'finance', label: 'Finance', icon: DollarSign, color: 'text-emerald-600' },
   { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-indigo-600' },
   { id: 'team', label: 'Team', icon: Users, color: 'text-cyan-600' },
+  { id: 'deployments', label: 'Deployments', icon: Rocket, color: 'text-purple-600' },
   { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
 ];
 
@@ -192,6 +195,8 @@ const CommandCenterV2 = () => {
         return <AnalyticsDashboard />;
       case 'team':
         return <TeamWorkspaceV2 />;
+      case 'deployments':
+        return <DeploymentManager />;
       case 'templates':
         return <EmailTemplates />;
       default:
