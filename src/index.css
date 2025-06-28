@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import './styles/sheet-fix.css';
 
 @layer base {
   :root {

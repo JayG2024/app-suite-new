@@ -1,0 +1,31 @@
+/* Fix for Sheet component input issues */
+[data-radix-dialog-content] {
+  pointer-events: auto !important;
+}
+
+[data-radix-dialog-content] input,
+[data-radix-dialog-content] textarea,
+[data-radix-dialog-content] select,
+[data-radix-dialog-content] button {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Ensure inputs are interactive */
+.sheet-content input:not([disabled]),
+.sheet-content textarea:not([disabled]),
+.sheet-content select:not([disabled]) {
+  cursor: text !important;
+  pointer-events: auto !important;
+}
+
+/* Fix z-index issues */
+[role="dialog"] {
+  z-index: 50;
+}
+
+[data-radix-dialog-overlay] {
+  z-index: 50;
+}
