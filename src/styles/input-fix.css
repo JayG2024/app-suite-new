@@ -1,0 +1,39 @@
+/* Fix for input fields not accepting typing */
+input:not([disabled]),
+textarea:not([disabled]),
+select:not([disabled]) {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+}
+
+/* Ensure inputs in sheets/dialogs work */
+[role="dialog"] input:not([disabled]),
+[role="dialog"] textarea:not([disabled]),
+[role="dialog"] select:not([disabled]) {
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+}
+
+/* Fix for any overlay issues */
+.sheet-content input,
+.sheet-content textarea,
+.sheet-content select {
+  position: relative;
+  z-index: 100;
+}
+
+/* Remove any conflicting styles */
+* {
+  -webkit-touch-callout: default;
+}
+
+input, textarea {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}

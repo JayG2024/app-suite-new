@@ -515,6 +515,7 @@ const ProjectTrackerV2 = () => {
 
   // Optimized form field update functions
   const updateProjectForm = useCallback((field: string, value: any) => {
+    console.log('Updating field:', field, 'with value:', value);
     setProjectForm(prev => ({
       ...prev,
       [field]: value
@@ -676,25 +677,29 @@ const ProjectTrackerV2 = () => {
     );
   };
 
-  const ProjectForm = useCallback(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
+  const ProjectForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <Label htmlFor="projectName">Project Name *</Label>
           <Input
             id="projectName"
+            type="text"
             value={projectForm.projectName}
             onChange={(e) => updateProjectForm('projectName', e.target.value)}
             placeholder="Website Redesign"
+            autoComplete="off"
           />
         </div>
         <div>
           <Label htmlFor="clientName">Client Name</Label>
           <Input
             id="clientName"
+            type="text"
             value={projectForm.clientName}
             onChange={(e) => updateProjectForm('clientName', e.target.value)}
             placeholder="Acme Corp (optional)"
+            autoComplete="off"
           />
         </div>
       </div>
@@ -765,6 +770,7 @@ const ProjectTrackerV2 = () => {
             value={projectForm.price}
             onChange={(e) => updateProjectForm('price', parseInt(e.target.value) || 0)}
             min="0"
+            autoComplete="off"
           />
         </div>
         <div>
@@ -776,6 +782,7 @@ const ProjectTrackerV2 = () => {
             onChange={(e) => updateProjectForm('estimated_hours', parseInt(e.target.value) || 0)}
             min="0"
             placeholder="160"
+            autoComplete="off"
           />
         </div>
       </div>
@@ -876,7 +883,7 @@ const ProjectTrackerV2 = () => {
         <Button onClick={onSubmit}>{submitLabel}</Button>
       </div>
     </div>
-  ), [projectForm, clients, users, updateProjectForm, updateProjectFormMultiple]);
+  );
 
   if (loading) {
     return (
@@ -969,6 +976,17 @@ const ProjectTrackerV2 = () => {
           </div>
         </CardHeader>
         <CardContent>
+          {/* Test input outside of Sheet */}
+          <div className="mb-4 p-4 border rounded bg-yellow-50">
+            <p className="text-sm mb-2">Test Input (outside Sheet):</p>
+            <Input
+              type="text"
+              placeholder="Can you type here?"
+              onChange={(e) => console.log('Test input value:', e.target.value)}
+              className="w-full"
+            />
+          </div>
+          
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="flex-1">
               <Input
