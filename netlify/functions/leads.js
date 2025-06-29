@@ -54,31 +54,59 @@ export const handler = async (event, context) => {
       case 'POST':
         // Create new lead
         const newLead = JSON.parse(event.body);
-        const insertResult = await client.query(
-          `INSERT INTO leads (name, company, email, phone, status, value, source, notes, type, stage, probability, assigned_to)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-           RETURNING *`,
-          [
-            newLead.name,
-            newLead.company,
-            newLead.email,
-            newLead.phone,
-            newLead.status || newLead.stage || 'new',
-            newLead.value || 0,
-            newLead.source || 'direct',
-            newLead.notes,
-            newLead.type || 'standard',
-            newLead.stage || 'new',
-            newLead.probability || 10,
-            newLead.assigned_to || null
-          ]
-        );
         
-        return {
-          statusCode: 201,
-          headers,
-          body: JSON.stringify({ lead: insertResult.rows[0] })
-        };
+        try {
+          // Try with all columns first
+          const insertResult = await client.query(
+            `INSERT INTO leads (name, company, email, phone, status, value, source, notes, type, stage, probability, assigned_to)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+             RETURNING *`,
+            [
+              newLead.name,
+              newLead.company,
+              newLead.email,
+              newLead.phone,
+              newLead.status || newLead.stage || 'new',
+              newLead.value || 0,
+              newLead.source || 'direct',
+              newLead.notes,
+              newLead.type || 'standard',
+              newLead.stage || 'new',
+              newLead.probability || 10,
+              newLead.assigned_to || null
+            ]
+          );
+          
+          return {
+            statusCode: 201,
+            headers,
+            body: JSON.stringify({ lead: insertResult.rows[0] })
+          };
+        } catch (error) {
+          // If that fails, try with basic columns only
+          console.log('Full lead insert failed, trying basic columns:', error.message);
+          const insertResult = await client.query(
+            `INSERT INTO leads (name, company, email, phone, status, value, source, notes)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             RETURNING *`,
+            [
+              newLead.name,
+              newLead.company,
+              newLead.email,
+              newLead.phone,
+              newLead.status || 'new',
+              newLead.value || 0,
+              newLead.source || 'direct',
+              newLead.notes
+            ]
+          );
+          
+          return {
+            statusCode: 201,
+            headers,
+            body: JSON.stringify({ lead: insertResult.rows[0] })
+          };
+        }
 
       case 'PUT':
         // Update lead
