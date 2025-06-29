@@ -11,18 +11,18 @@ import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
-import ClientManagerV2 from "@/components/ClientManagerV2";
-import SalesPipelineV2 from "@/components/SalesPipelineV2";
-import MarketingHub from "@/components/MarketingHub";
-import FinancialDashboard from "@/components/FinancialDashboard";
-import TeamWorkspaceV2 from "@/components/TeamWorkspaceV2";
+import ClientManager from "@/components/ClientManager";
+import SalesPipeline from "@/components/SalesPipeline";
+import MarketingHubFixed from "@/components/MarketingHubFixed";
+import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
+import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
-import FloatingAIAssistant from "@/components/FloatingAIAssistant";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
-import GmailInbox from "@/components/GmailInbox";
-import DeploymentManager from "@/components/DeploymentManager";
-import ASCDashboardV2 from "@/components/ASCDashboardV2";
+// import FloatingAIAssistant from "@/components/FloatingAIAssistant";
+import AnalyticsDashboardFixed from "@/components/AnalyticsDashboardFixed";
+// import GmailInbox from "@/components/GmailInbox";
+// import DeploymentManager from "@/components/DeploymentManager";
+// import ASCDashboardV2 from "@/components/ASCDashboardV2";
 import CallTranscriptAnalyzer from "@/components/CallTranscriptAnalyzer";
 import { cn } from "@/lib/utils";
 import { 
@@ -206,27 +206,27 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
       case 'overview':
         return <OverviewSection metrics={metrics} />;
       case 'gmail':
-        return <GmailInbox />;
+        return <div className="text-center py-8">Gmail integration coming soon</div>;
       case 'clients':
-        return <ClientManagerV2 />;
+        return <ClientManager />;
       case 'projects':
         return <ProjectTrackerV2 />;
       case 'tasks':
         return <TaskManagerV2 />;
       case 'sales':
-        return <SalesPipelineV2 />;
+        return <SalesPipeline />;
       case 'marketing':
-        return <MarketingHub />;
+        return <MarketingHubFixed />;
       case 'finance':
-        return <FinancialDashboard />;
+        return <FinancialDashboardFixed />;
       case 'analytics':
-        return <AnalyticsDashboard />;
+        return <AnalyticsDashboardFixed />;
       case 'team':
-        return <TeamWorkspaceV2 />;
+        return <TeamWorkspaceFixed />;
       case 'deployments':
-        return <DeploymentManager />;
+        return <div className="text-center py-8">Deployment manager coming soon</div>;
       case 'cloud-dev':
-        return <ASCDashboardV2 />;
+        return <div className="text-center py-8">Cloud development tools coming soon</div>;
       case 'templates':
         return <EmailTemplates />;
       case 'call-analyzer':
