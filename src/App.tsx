@@ -42,6 +42,7 @@ import SystemStatus from "./pages/SystemStatus";
 import IconTest from "./components/IconTest";
 import Industries from "./pages/Industries";
 import CommandCenterV2 from "./pages/CommandCenterV2";
+import TestProjectForm from './components/TestProjectForm';
 import Examples from "./pages/Examples";
 import SolutionsWeveBuilt from "./pages/SolutionsWeveBuilt";
 import WebAuditDashboard from "./pages/portfolio/WebAuditDashboard";
@@ -120,6 +121,7 @@ function App() {
           <Route path="portfolio/webaudit-dashboard" element={<WebAuditDashboard />} />
           <Route path="proposal/:proposalId" element={<Proposal />} />
           <Route path="ai-brain" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+          <Route path="test-form" element={<TestProjectForm />} />
           <Route path="documentation" element={<Documentation />} />
           <Route path="documentation/quick-start" element={<QuickStart />} />
           <Route path="documentation/installation" element={<Installation />} />

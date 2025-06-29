@@ -71,7 +71,7 @@ const Contact = () => {
 
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Failed to send message. Please try again or email us directly at jason@jaydus.ai.");
+      toast.error("Failed to send message. Please try again or email us directly at support@app-suite.io.");
       
       setFormData({
         name: "",
@@ -101,7 +101,7 @@ const Contact = () => {
       icon: Mail,
       title: "Email Support",
       description: "Get help via email",
-      value: "jason@jaydus.ai",
+      value: "support@app-suite.io",
       action: "Send Email",
       primary: true
     },
@@ -119,7 +119,7 @@ const Contact = () => {
     <div>
       <SEO 
         title="Contact App Suite | Free Consultation for Custom Apps"
-        description="Ready to stop renting software? Schedule a free 30-minute consultation. Get flat-rate quote for your custom AI business application. Contact: jason@jaydus.ai"
+        description="Ready to stop renting software? Schedule a free 30-minute consultation. Get flat-rate quote for your custom AI business application. Contact: support@app-suite.io"
         keywords="contact app suite, free consultation, custom app quote, business software consultation, AI application development"
       />
       {/* Hero Section */}
@@ -156,7 +156,7 @@ const Contact = () => {
                     className="w-full"
                     onClick={() => {
                       if (method.title === "Email Support") {
-                        window.location.href = "mailto:jason@jaydus.ai";
+                        window.location.href = "mailto:support@app-suite.io";
                       } else if (method.title === "Schedule Demo") {
                         // Open Calendly in new tab
                         window.open('https://calendly.com/jason-jaydus', '_blank');
@@ -292,7 +292,7 @@ const Contact = () => {
                     <Mail className="h-5 w-5 text-muted-foreground mt-0.5" />
                     <div>
                       <p className="font-medium text-sm">Email</p>
-                      <p className="text-sm text-muted-foreground">jason@jaydus.ai</p>
+                      <p className="text-sm text-muted-foreground">support@app-suite.io</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">

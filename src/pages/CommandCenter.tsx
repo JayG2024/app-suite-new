@@ -14,13 +14,14 @@ import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
-import MarketingHub from "@/components/MarketingHub";
-import FinancialDashboard from "@/components/FinancialDashboard";
+import MarketingHubFixed from "@/components/MarketingHubFixed";
+import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
 import TeamWorkspace from "@/components/TeamWorkspace";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
 import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import SharedInbox from "@/components/admin/SharedInbox";
 import { 
   Brain, 
   Users, 
@@ -353,6 +354,7 @@ const CommandCenter = () => {
             <TabsTrigger value="finance">Finance</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="team">Team</TabsTrigger>
+            <TabsTrigger value="inbox">Inbox</TabsTrigger>
             <TabsTrigger value="templates">Templates</TabsTrigger>
           </TabsList>
 
@@ -489,11 +491,11 @@ const CommandCenter = () => {
           </TabsContent>
 
           <TabsContent value="marketing">
-            <MarketingHub />
+            <MarketingHubFixed />
           </TabsContent>
 
           <TabsContent value="finance">
-            <FinancialDashboard />
+            <FinancialDashboardFixed />
           </TabsContent>
 
           <TabsContent value="analytics">
@@ -502,6 +504,10 @@ const CommandCenter = () => {
 
           <TabsContent value="team">
             <TeamWorkspace />
+          </TabsContent>
+
+          <TabsContent value="inbox">
+            <SharedInbox />
           </TabsContent>
 
           <TabsContent value="templates">

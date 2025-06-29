@@ -3,9 +3,17 @@
 export const CALENDLY_DISCOVERY_CALL_URL = 'https://calendly.com/jason-jaydus/onboarding-call?back=1&month=2025-06';
 
 export const CONTACT_INFO = {
-  email: 'jason@jaydus.ai',
+  email: 'info@app-suite.io',
   phone: '',
   address: '651 N. Broad St., Middletown, DE, USA'
+};
+
+export const EMAIL_ALIASES = {
+  info: 'info@app-suite.io',
+  sales: 'sales@app-suite.io',
+  support: 'support@app-suite.io',
+  help: 'help@app-suite.io',
+  noreply: 'noreply@app-suite.io'
 };
 
 export const PRICING = {
