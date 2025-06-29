@@ -171,19 +171,14 @@ function App() {
         <Route path="admin" element={<AdminRoute />}>
           <Route index element={<CommandCenterV2 />} />
           <Route path="overview" element={<CommandCenterV2 initialSection="overview" />} />
-          <Route path="gmail" element={<CommandCenterV2 initialSection="gmail" />} />
           <Route path="clients" element={<CommandCenterV2 initialSection="clients" />} />
           <Route path="projects" element={<CommandCenterV2 initialSection="projects" />} />
           <Route path="tasks" element={<CommandCenterV2 initialSection="tasks" />} />
           <Route path="sales" element={<CommandCenterV2 initialSection="sales" />} />
-          <Route path="marketing" element={<CommandCenterV2 initialSection="marketing" />} />
-          <Route path="finance" element={<CommandCenterV2 initialSection="finance" />} />
-          <Route path="analytics" element={<CommandCenterV2 initialSection="analytics" />} />
           <Route path="team" element={<CommandCenterV2 initialSection="team" />} />
-          <Route path="deployments" element={<CommandCenterV2 initialSection="deployments" />} />
-          <Route path="asc-ai" element={<CommandCenterV2 initialSection="cloud-dev" />} />
           <Route path="templates" element={<CommandCenterV2 initialSection="templates" />} />
           <Route path="call-analyzer" element={<CommandCenterV2 initialSection="call-analyzer" />} />
+          <Route path="settings" element={<CommandCenterV2 initialSection="settings" />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
       </Routes>

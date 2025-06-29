@@ -13,12 +13,9 @@ import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
-import MarketingHubFixed from "@/components/MarketingHubFixed";
-import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
 import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
-import AnalyticsDashboardFixed from "@/components/AnalyticsDashboardFixed";
 // import GmailInbox from "@/components/GmailInbox";
 // import DeploymentManager from "@/components/DeploymentManager";
 // import ASCDashboardV2 from "@/components/ASCDashboardV2";
@@ -39,9 +36,7 @@ import {
   CheckSquare,
   LogOut,
   Building,
-  Megaphone,
   Settings,
-  HelpCircle,
   Menu,
   X,
   ChevronRight,
@@ -50,8 +45,6 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   FileText,
-  Rocket,
-  CloudCog,
   Phone
 } from "lucide-react";
 
@@ -78,20 +71,15 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { id: 'overview', label: 'Overview', icon: LayoutDashboard, color: 'text-blue-600' },
-  { id: 'gmail', label: 'Gmail', icon: Mail, color: 'text-red-600' },
+  { id: 'overview', label: 'Dashboard', icon: LayoutDashboard, color: 'text-blue-600' },
   { id: 'clients', label: 'Clients', icon: Users, color: 'text-green-600' },
   { id: 'projects', label: 'Projects', icon: Code, color: 'text-purple-600' },
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, color: 'text-orange-600' },
   { id: 'sales', label: 'Sales Pipeline', icon: Target, color: 'text-yellow-600' },
-  { id: 'marketing', label: 'Marketing', icon: Megaphone, color: 'text-pink-600' },
-  { id: 'finance', label: 'Finance', icon: DollarSign, color: 'text-emerald-600' },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-indigo-600' },
   { id: 'team', label: 'Team', icon: Users, color: 'text-cyan-600' },
-  { id: 'deployments', label: 'Deployments', icon: Rocket, color: 'text-purple-600' },
-  { id: 'cloud-dev', label: 'ASC.AI', icon: CloudCog, color: 'text-green-600' },
   { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
   { id: 'call-analyzer', label: 'Call Analyzer', icon: Phone, color: 'text-rose-600' },
+  { id: 'settings', label: 'Settings', icon: Settings, color: 'text-gray-600' },
 ];
 
 interface CommandCenterV2Props {
@@ -204,8 +192,6 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
     switch(currentSection) {
       case 'overview':
         return <OverviewSection metrics={metrics} />;
-      case 'gmail':
-        return <div className="text-center py-8">Gmail integration coming soon</div>;
       case 'clients':
         return <ClientManager />;
       case 'projects':
@@ -214,22 +200,14 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
         return <TaskManagerV2 />;
       case 'sales':
         return <SalesPipeline />;
-      case 'marketing':
-        return <MarketingHubFixed />;
-      case 'finance':
-        return <FinancialDashboardFixed />;
-      case 'analytics':
-        return <AnalyticsDashboardFixed />;
       case 'team':
         return <TeamWorkspaceFixed />;
-      case 'deployments':
-        return <div className="text-center py-8">Deployment manager coming soon</div>;
-      case 'cloud-dev':
-        return <div className="text-center py-8">Cloud development tools coming soon</div>;
       case 'templates':
         return <EmailTemplates />;
       case 'call-analyzer':
         return <CallTranscriptAnalyzer />;
+      case 'settings':
+        return <SettingsSection />;
       default:
         return <OverviewSection metrics={metrics} />;
     }
@@ -534,6 +512,64 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
+    </div>
+  );
+};
+
+// Simple Settings Section Component
+const SettingsSection = () => {
+  const { user } = useAuth();
+  
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Settings</h2>
+        <p className="text-muted-foreground">Manage your account and preferences</p>
+      </div>
+      
+      <div className="grid gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Information</CardTitle>
+            <CardDescription>Your account details and preferences</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <p className="text-muted-foreground">{user?.email || 'Not logged in'}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Role</label>
+              <p className="text-muted-foreground">{user?.role || 'User'}</p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Preferences</CardTitle>
+            <CardDescription>Customize your dashboard experience</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Email Notifications</p>
+                  <p className="text-sm text-muted-foreground">Receive updates about your projects</p>
+                </div>
+                <Button variant="outline" size="sm">Configure</Button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="font-medium">Theme</p>
+                  <p className="text-sm text-muted-foreground">Choose your preferred theme</p>
+                </div>
+                <Button variant="outline" size="sm">System</Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
