@@ -67,14 +67,6 @@ Login with your credentials
 5. Test PDF download
 ```
 
-### 4. Test Chatbot
-```
-1. Click chatbot icon (bottom right)
-2. Ask: "What does App Suite do?"
-3. Should get intelligent, contextual response
-4. Not generic hardcoded answers
-```
-
 ### 5. Test Email
 ```
 1. Go to: /admin/clients
@@ -82,17 +74,6 @@ Login with your credentials
 3. Check email delivery
 ```
 
-## 🚨 Known Issues & Solutions
-
-### White Page Issues
-If any section shows a white page:
-1. Check browser console for errors
-2. Check Netlify function logs
-3. Verify all environment variables are set
-
-
-### Deployment Page
-If you don't need deployments right now, we can hide it from the menu.
 
 ## 🔧 Environment Variables Required
 
