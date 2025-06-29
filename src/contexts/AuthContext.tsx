@@ -56,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('userData', JSON.stringify(data.user));
       
       setUser(data.user);
-      navigate('/dashboard');
+      navigate('/admin');
     } catch (error) {
       throw error;
     }
@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     setUser(null);
-    navigate('/dashboard');
+    navigate('/admin');
   };
 
   return (

@@ -51,17 +51,17 @@ export const handler = async (event, context) => {
     const hardcodedUsers = [
       {
         id: 1,
-        email: 'almir@jaydus.ai',
-        name: 'Almir',
+        email: 'jason@jaydus.ai',
+        name: 'Jason Gordon',
         role: 'admin',
-        password: await bcrypt.hash('admin123', 10)
+        password: await bcrypt.hash('Canada2024@@@@', 10)
       },
       {
         id: 2,
-        email: 'jason@jaydus.ai',
-        name: 'Jason',
+        email: 'almir@jaydus.ai',
+        name: 'Almir',
         role: 'admin',
-        password: await bcrypt.hash('admin123', 10)
+        password: await bcrypt.hash('Canada2024@@@@', 10)
       }
     ];
 

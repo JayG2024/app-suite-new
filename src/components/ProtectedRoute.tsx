@@ -18,8 +18,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!user) {
-    // Redirect to dashboard which will show login form
-    return <Navigate to="/dashboard" replace />;
+    // Redirect to admin which will show login form
+    return <Navigate to="/admin" replace />;
   }
 
   // Only allow Jason and Almir
