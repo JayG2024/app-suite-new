@@ -3,7 +3,6 @@
 ## 🔐 Login URL
 **Main Login**: `/admin`
 - This is the single entry point for the dashboard
-- Alternative URLs `/dashboard` and `/manage` redirect here
 
 ## 📍 Dashboard Section URLs
 
@@ -91,10 +90,6 @@ If any section shows a white page:
 2. Check Netlify function logs
 3. Verify all environment variables are set
 
-### Marketing Page
-The marketing hub component exists at:
-`/src/components/MarketingHub.tsx`
-If it's not loading, check for import errors.
 
 ### Deployment Page
 If you don't need deployments right now, we can hide it from the menu.

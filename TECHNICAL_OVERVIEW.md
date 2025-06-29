@@ -31,7 +31,6 @@ App Suite is a custom business application development platform that builds tail
 
 ### Third-Party Services
 - **Payment Processing**: Stripe
-- **Analytics**: Vercel Analytics
 - **Calendar Integration**: Google APIs
 - **Document Processing**: XLSX, jsPDF, html2canvas
 
@@ -61,7 +60,6 @@ appsuitenew/
 
 ### Key Features
 1. **Multi-tenant SaaS Architecture**: Supports multiple businesses with isolated data
-2. **Real-time Features**: WebSocket support (development only)
 3. **SEO Optimization**: Server-side rendering for crawlers via API routes
 4. **Progressive Web App**: Offline capability and mobile optimization
 5. **AI Integration**: OpenAI-powered content generation and automation
@@ -69,9 +67,9 @@ appsuitenew/
 ## Deployment Configuration
 
 ### Current Hosting
-- **Platform**: Vercel
+- **Platform**: Netlify
 - **Domain**: app-suite.io
-- **SSL**: Automatic HTTPS via Vercel
+- **SSL**: Automatic HTTPS via Netlify
 - **CDN**: Global edge network
 
 ### Build Configuration
@@ -89,9 +87,7 @@ appsuitenew/
 - `OPENAI_API_KEY` - OpenAI API access
 - `RESEND_API_KEY` - Email service
 - `STRIPE_SECRET_KEY` - Payment processing
-- `AWS_ACCESS_KEY_ID` - S3 storage
-- `AWS_SECRET_ACCESS_KEY` - S3 storage
-- `AWS_REGION` - S3 region
+
 
 ## Current Issues & Limitations
 
@@ -120,16 +116,7 @@ appsuitenew/
 3. Configure Nginx reverse proxy
 4. Implement WebSocket server for real-time features
 
-### For Alternative Platforms
-- **Railway.app**: Minimal changes needed, supports Node.js + PostgreSQL
-- **Render.com**: Similar to Vercel, good for full-stack apps
-- **Fly.io**: Better WebSocket support, global deployment
-- **AWS/GCP/Azure**: Requires more configuration but offers more control
 
-### For Cloudflare Pages
-- Frontend can be deployed as-is
-- API routes would need conversion to Cloudflare Workers
-- Database would need external hosting (e.g., Neon, Supabase)
 
 ## Performance Metrics
 - **Build Time**: ~4 seconds
