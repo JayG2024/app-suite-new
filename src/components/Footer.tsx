@@ -36,9 +36,6 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4">Solutions</h3>
             <ul className="space-y-2">
-              <li><Link to="/apps?type=small-business" className="text-sm text-muted-foreground hover:text-foreground">Small Business Tools</Link></li>
-              <li><Link to="/apps?type=business" className="text-sm text-muted-foreground hover:text-foreground">Business Applications</Link></li>
-              <li><Link to="/apps?type=enterprise" className="text-sm text-muted-foreground hover:text-foreground">Enterprise Applications</Link></li>
               <li><Link to="/roi-calculator" className="text-sm text-muted-foreground hover:text-foreground">ROI Calculator</Link></li>
               <li><Link to="/apps" className="text-sm text-muted-foreground hover:text-foreground">View All Examples</Link></li>
             </ul>

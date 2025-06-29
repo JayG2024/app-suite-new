@@ -93,7 +93,14 @@ const Header = () => {
               Payment Terms
             </Link>
             
-            {/* Solutions Mega Menu */}
+            <Link 
+              to="/roi-calculator" 
+              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
+            >
+              ROI Calculator
+            </Link>
+            
+            {/* Resources Mega Menu */}
             <div className="relative">
               <button
                 id="mega-menu-trigger"
@@ -101,7 +108,7 @@ const Header = () => {
                 onMouseEnter={() => setIsMegaMenuOpen(true)}
                 onClick={() => setIsMegaMenuOpen(!isMegaMenuOpen)}
               >
-                Solutions
+                Resources
                 <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", isMegaMenuOpen ? "rotate-180" : "")} />
               </button>
               
@@ -109,7 +116,7 @@ const Header = () => {
               <div
                 id="mega-menu"
                 className={cn(
-                  "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[800px] bg-background/95 backdrop-blur border rounded-lg shadow-2xl transition-all duration-300 ease-out",
+                  "absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-[600px] bg-background/95 backdrop-blur border rounded-lg shadow-2xl transition-all duration-300 ease-out",
                   isMegaMenuOpen 
                     ? "opacity-100 translate-y-0 pointer-events-auto" 
                     : "opacity-0 -translate-y-4 pointer-events-none"
@@ -118,71 +125,7 @@ const Header = () => {
                 onMouseLeave={() => setIsMegaMenuOpen(false)}
               >
                 <div className="p-8">
-                  <div className="grid grid-cols-3 gap-8">
-                    {/* Solutions Column */}
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-2 pb-2 border-b">
-                        <Sparkles className="h-5 w-5 text-primary" />
-                        <h3 className="font-semibold text-foreground">Solutions</h3>
-                      </div>
-                      <div className="space-y-3">
-                        <Link 
-                          to="/apps?type=small-business" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Zap className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Small Business Tools</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/apps?type=business" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Code className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Business Applications</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/apps?type=enterprise" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Users className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Enterprise Applications</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/roi-calculator" 
-                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
-                        >
-                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                            <Target className="h-3 w-3 text-primary" />
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">ROI Calculator</h4>
-                          </div>
-                        </Link>
-                        
-                        <Link 
-                          to="/apps" 
-                          className="group flex items-center gap-2 p-2 rounded-lg hover:bg-accent/30 transition-all duration-200 border border-primary/20"
-                        >
-                          <ArrowRight className="h-3 w-3 text-primary" />
-                          <span className="text-xs font-medium text-primary">View All Solutions</span>
-                        </Link>
-                      </div>
-                    </div>
+                  <div className="grid grid-cols-2 gap-8">
                     
                     {/* Resources Column */}
                     <div className="space-y-6">
@@ -394,57 +337,19 @@ const Header = () => {
               </ProposalButton>
             </div>
 
-            {/* Solutions Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <h3 className="font-medium text-foreground">Solutions</h3>
-              </div>
-              <div className="space-y-2 pl-2">
-                <Link 
-                  to="/apps?type=small-business"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Zap className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Small Business Tools</div>
-                    <div className="text-xs text-muted-foreground">Streamline your operations</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/apps?type=business"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Code className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Business Applications</div>
-                    <div className="text-xs text-muted-foreground">Custom business solutions</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/apps?type=enterprise"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Users className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium">Enterprise Applications</div>
-                    <div className="text-xs text-muted-foreground">Scale your enterprise</div>
-                  </div>
-                </Link>
-                <Link 
-                  to="/apps"
-                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200 border border-primary/20"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <ArrowRight className="h-4 w-4 text-primary" />
-                  <div>
-                    <div className="font-medium text-primary">View All Solutions</div>
-                  </div>
-                </Link>
-              </div>
+            {/* ROI Calculator Link */}
+            <div className="space-y-2">
+              <Link 
+                to="/roi-calculator"
+                className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Target className="h-4 w-4 text-primary" />
+                <div>
+                  <div className="font-medium">ROI Calculator</div>
+                  <div className="text-xs text-muted-foreground">Calculate your savings</div>
+                </div>
+              </Link>
             </div>
             
             {/* Resources Section */}
@@ -577,7 +482,7 @@ const Header = () => {
               </Button>
               <Button 
                 className="w-full justify-center group"
-                onClick={() => navigate('/contact')}
+                onClick={() => window.open('https://calendly.com/jason-jaydus', '_blank')}
               >
                 Schedule Demo
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />

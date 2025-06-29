@@ -106,14 +106,6 @@ const Contact = () => {
       primary: true
     },
     {
-      icon: MessageSquare,
-      title: "Live Chat",
-      description: "Chat with our team",
-      value: "Available 9 AM - 6 PM EST",
-      action: "Start Chat",
-      primary: false
-    },
-    {
       icon: Calendar,
       title: "Schedule Demo",
       description: "Book a personalized demo",
@@ -165,26 +157,9 @@ const Contact = () => {
                     onClick={() => {
                       if (method.title === "Email Support") {
                         window.location.href = "mailto:jason@jaydus.ai";
-                      } else if (method.title === "Live Chat") {
-                        // Open the AI chatbot instead of showing coming soon
-                        const chatButton = document.querySelector('[data-testid="ai-chatbot-trigger"]') as HTMLButtonElement;
-                        if (chatButton) {
-                          chatButton.click();
-                        } else {
-                          // Fallback to open chat
-                          window.dispatchEvent(new CustomEvent('open-ai-chat'));
-                        }
                       } else if (method.title === "Schedule Demo") {
-                        // Scroll to the contact form
-                        const contactForm = document.querySelector('#contact-form');
-                        if (contactForm) {
-                          contactForm.scrollIntoView({ behavior: 'smooth' });
-                          // Focus on the first input
-                          setTimeout(() => {
-                            const firstInput = contactForm.querySelector('input');
-                            if (firstInput) firstInput.focus();
-                          }, 500);
-                        }
+                        // Open Calendly in new tab
+                        window.open('https://calendly.com/jason-jaydus', '_blank');
                       }
                     }}
                   >

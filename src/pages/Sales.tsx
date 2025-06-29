@@ -28,10 +28,8 @@ const Sales = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button size="lg" asChild>
-                  <Link to="/contact">
+                <Button size="lg" onClick={() => window.open('https://calendly.com/jason-jaydus', '_blank')}>
                     Schedule Demo <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
                 </Button>
                 <Button size="lg" variant="outline" asChild>
                   <Link to="/apps">
@@ -468,10 +466,8 @@ const Sales = () => {
                   Get started with your custom AI-powered application today. Schedule a discovery call to discuss your business needs and see how we can help.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" variant="secondary" asChild>
-                    <Link to="/contact">
+                  <Button size="lg" variant="secondary" onClick={() => window.open('https://calendly.com/jason-jaydus', '_blank')}>
                       Schedule Demo
-                    </Link>
                   </Button>
                   <Button size="lg" variant="outline" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground/10" asChild>
                     <Link to="/apps">

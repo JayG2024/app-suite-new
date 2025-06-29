@@ -155,7 +155,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                onClick={() => navigate('/contact')}
+                onClick={() => window.open('https://calendly.com/jason-jaydus', '_blank')}
                 className="w-full sm:w-auto sm:min-w-[200px]"
               >
                 📞 Schedule Demo
