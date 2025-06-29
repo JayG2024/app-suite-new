@@ -15,7 +15,7 @@ postgresql://neondb_owner:npg_PNKhwVk18jzs@ep-morning-math-a46r9c11-pooler.us-ea
 
 ### VITE_SITE_URL
 ```
-https://www.app-suite.io
+https://app-suite.io
 ```
 
 ## Optional Variables (for email functionality):

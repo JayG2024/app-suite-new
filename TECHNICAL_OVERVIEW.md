@@ -70,7 +70,7 @@ appsuitenew/
 
 ### Current Hosting
 - **Platform**: Vercel
-- **Domain**: www.app-suite.io
+- **Domain**: app-suite.io
 - **SSL**: Automatic HTTPS via Vercel
 - **CDN**: Global edge network
 

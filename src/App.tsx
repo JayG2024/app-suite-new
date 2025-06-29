@@ -46,6 +46,7 @@ import Examples from "./pages/Examples";
 import SolutionsWeveBuilt from "./pages/SolutionsWeveBuilt";
 import WebAuditDashboard from "./pages/portfolio/WebAuditDashboard";
 import Proposal from "./pages/Proposal";
+import Sitemap from "./pages/Sitemap";
 
 // Documentation pages
 import Documentation from "./pages/Documentation";
@@ -115,6 +116,7 @@ function App() {
           <Route path="industries" element={<Industries />} />
           <Route path="examples" element={<Examples />} />
           <Route path="solutions-weve-built" element={<SolutionsWeveBuilt />} />
+          <Route path="sitemap" element={<Sitemap />} />
           <Route path="portfolio/webaudit-dashboard" element={<WebAuditDashboard />} />
           <Route path="proposal/:proposalId" element={<Proposal />} />
           <Route path="ai-brain" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />

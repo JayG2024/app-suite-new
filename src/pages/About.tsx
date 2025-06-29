@@ -34,7 +34,11 @@ const About = () => {
 
   return (
     <div>
-      <SEO />
+      <SEO 
+        title="About App Suite | Custom AI Application Experts Since 2023"
+        description="App Suite builds custom business applications you own completely. Founded by developers tired of SaaS subscriptions. $5K-$10K flat rates, 30-day delivery."
+        keywords="about app suite, custom software company, AI development team, flat rate development, business application experts"
+      />
       {/* Hero Section */}
       <section className="relative py-20 px-4 bg-gradient-to-br from-primary/5 to-primary/10">
         <div className="container mx-auto">

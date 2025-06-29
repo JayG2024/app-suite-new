@@ -125,7 +125,11 @@ const Contact = () => {
 
   return (
     <div>
-      <SEO />
+      <SEO 
+        title="Contact App Suite | Free Consultation for Custom Apps"
+        description="Ready to stop renting software? Schedule a free 30-minute consultation. Get flat-rate quote for your custom AI business application. Contact: jason@jaydus.ai"
+        keywords="contact app suite, free consultation, custom app quote, business software consultation, AI application development"
+      />
       {/* Hero Section */}
       <div className="bg-primary/5 py-16 px-4">
         <div className="container mx-auto text-center">

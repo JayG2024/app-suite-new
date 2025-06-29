@@ -39,7 +39,7 @@ TXT      send            "v=spf1 include:amazonses.com -all"    DNS only    1 hr
 2. Clear browser cache completely
 3. Test both URLs:
    - https://app-suite.io (should work)
-   - https://www.app-suite.io (should redirect to non-www)
+   - https://app-suite.io (non-www version - primary domain)
 
 ## Important Settings in Cloudflare
 
@@ -52,5 +52,5 @@ TXT      send            "v=spf1 include:amazonses.com -all"    DNS only    1 hr
 
 1. Go to Domain settings
 2. Ensure primary domain is set to `app-suite.io`
-3. `www.app-suite.io` should be listed as a domain alias
+3. `app-suite.io` should be configured properly
 4. Both should show "Netlify DNS" or "External DNS" with green checkmarks

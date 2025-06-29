@@ -28,7 +28,11 @@ const Index = () => {
 
   return (
     <div className="w-full">
-        <SEO />
+        <SEO 
+          title="Custom Business Apps $5K Flat Rate | AI-Powered Solutions"
+          description="Stop paying monthly SaaS fees. Get custom AI business applications built in 30 days for $5,000 flat rate. ChatGPT/Claude integration, you own the code."
+          keywords="custom business applications, AI software development, flat rate pricing, $5000 apps, business automation, ChatGPT integration, no monthly fees, own your software"
+        />
         <Hero />
         
         <Suspense fallback={<div className="h-96 flex items-center justify-center"><div className="animate-pulse text-muted-foreground">Loading AI capabilities...</div></div>}>

@@ -50,7 +50,7 @@ Once logged in, each section has its own unique URL:
 
 ### 1. Test Login
 ```
-Go to: https://www.app-suite.io/admin
+Go to: https://app-suite.io/admin
 Login with your credentials
 ```
 

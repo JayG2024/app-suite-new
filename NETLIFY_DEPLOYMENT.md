@@ -23,7 +23,7 @@ Add these in Netlify Dashboard → Site Settings → Environment Variables:
 VITE_OPENAI_API_KEY=your-openai-key
 VITE_RESEND_API_KEY=your-resend-key
 VITE_STRIPE_SECRET_KEY=your-stripe-key
-VITE_SITE_URL=https://www.app-suite.io
+VITE_SITE_URL=https://app-suite.io
 ```
 
 ## Important Notes
@@ -61,4 +61,4 @@ VITE_SITE_URL=https://www.app-suite.io
 - Build logs: Netlify Dashboard → Deploys tab
 - Analytics: Automatically included
 
-Your site will be live at `https://www.app-suite.io` (after domain configuration) within minutes!
+Your site will be live at `https://app-suite.io` (after domain configuration) within minutes!
