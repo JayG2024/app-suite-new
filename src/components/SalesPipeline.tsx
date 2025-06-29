@@ -426,7 +426,7 @@ const SalesPipeline = () => {
               Add Lead
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+          <SheetContent side="right" className="w-[400px] sm:w-[540px]" onInteractOutside={(e) => e.preventDefault()}>
             <SheetHeader>
               <SheetTitle>Add New Lead</SheetTitle>
               <SheetDescription>Enter the details for your new sales lead</SheetDescription>
@@ -677,7 +677,7 @@ const SalesPipeline = () => {
 
       {/* Edit Lead Sheet */}
       <Sheet open={showEditLead} onOpenChange={setShowEditLead}>
-        <SheetContent side="right" className="w-[400px] sm:w-[540px]">
+        <SheetContent side="right" className="w-[400px] sm:w-[540px]" onInteractOutside={(e) => e.preventDefault()}>
           <SheetHeader>
             <SheetTitle>Edit Lead</SheetTitle>
             <SheetDescription>Update lead information</SheetDescription>
