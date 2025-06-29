@@ -1,8 +1,8 @@
-const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+// Initialize Anthropic
+const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY
 });
 
 exports.handler = async (event, context) => {
@@ -65,19 +65,20 @@ Include in proposals:
         systemPrompt = `You are a helpful AI assistant for App Suite. Answer questions professionally and guide users to appropriate resources.`;
     }
 
-    // Create messages array with system prompt
-    const messagesWithSystem = [
-      { role: 'system', content: systemPrompt },
-      ...messages
-    ];
+    // Convert messages format for Anthropic
+    // Anthropic doesn't use 'system' in messages array, it's a separate parameter
+    const anthropicMessages = messages.map(msg => ({
+      role: msg.role === 'system' ? 'assistant' : msg.role,
+      content: msg.content
+    }));
 
-    // Call OpenAI API
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
-      messages: messagesWithSystem,
+    // Call Anthropic API
+    const completion = await anthropic.messages.create({
+      model: 'claude-3-5-sonnet-20241022',
+      system: systemPrompt,
+      messages: anthropicMessages,
       temperature: temperature,
-      max_tokens: maxTokens,
-      stream: false
+      max_tokens: maxTokens
     });
 
     return {
@@ -86,15 +87,19 @@ Include in proposals:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        message: completion.choices[0].message.content,
-        usage: completion.usage
+        message: completion.content[0].text,
+        usage: {
+          prompt_tokens: completion.usage.input_tokens,
+          completion_tokens: completion.usage.output_tokens,
+          total_tokens: completion.usage.input_tokens + completion.usage.output_tokens
+        }
       })
     };
   } catch (error) {
-    console.error('OpenAI API error:', error);
+    console.error('Anthropic API error:', error);
     
     // Return user-friendly error messages
-    if (error.code === 'insufficient_quota') {
+    if (error.status === 429) {
       return {
         statusCode: 503,
         body: JSON.stringify({ 
