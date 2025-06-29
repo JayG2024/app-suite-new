@@ -796,7 +796,7 @@ const TaskManagerV2 = () => {
                   New Task
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto">
+              <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
                 <SheetHeader>
                   <SheetTitle>Create New Task</SheetTitle>
                   <SheetDescription>
@@ -1059,7 +1059,7 @@ const TaskManagerV2 = () => {
 
       {/* Edit Task Sheet */}
       <Sheet open={showEditTask} onOpenChange={setShowEditTask}>
-        <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto">
+        <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
           <SheetHeader>
             <SheetTitle>Edit Task</SheetTitle>
             <SheetDescription>

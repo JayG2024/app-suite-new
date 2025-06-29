@@ -960,7 +960,7 @@ const ProjectTrackerV2 = () => {
                     New Project
                   </Button>
                 </SheetTrigger>
-              <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto">
+              <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
                 <SheetHeader>
                   <SheetTitle>Create New Project</SheetTitle>
                   <SheetDescription>
@@ -1140,7 +1140,7 @@ const ProjectTrackerV2 = () => {
 
       {/* Edit Project Sheet */}
       <Sheet open={showEditProject} onOpenChange={setShowEditProject}>
-        <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto">
+        <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
           <SheetHeader>
             <SheetTitle>Edit Project</SheetTitle>
             <SheetDescription>
