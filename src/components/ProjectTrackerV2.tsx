@@ -37,7 +37,8 @@ import {
   MoreVertical,
   Briefcase,
   Hash,
-  User
+  User,
+  Upload
 } from "lucide-react";
 import {
   DropdownMenu,
