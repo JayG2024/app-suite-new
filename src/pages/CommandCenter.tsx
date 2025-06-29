@@ -16,11 +16,11 @@ import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
 import MarketingHubFixed from "@/components/MarketingHubFixed";
 import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
-import TeamWorkspace from "@/components/TeamWorkspace";
+import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
-import FloatingAIAssistant from "@/components/FloatingAIAssistant";
-import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+// import FloatingAIAssistant from "@/components/FloatingAIAssistant";
+import AnalyticsDashboardFixed from "@/components/AnalyticsDashboardFixed";
 import SharedInbox from "@/components/admin/SharedInbox";
 import { 
   Brain, 
@@ -98,13 +98,49 @@ const CommandCenter = () => {
   useEffect(() => {
     const calculateMetrics = async () => {
       try {
-        // Fetch metrics from dashboard endpoint
-        const metricsData = await apiCall(API_ENDPOINTS.dashboard.metrics);
-        setMetrics(metricsData);
+        // Temporarily use mock data instead of API call
+        const mockMetrics = {
+          totalRevenue: 125000,
+          activeProjects: 8,
+          totalClients: 24,
+          monthlyGrowth: 12.5,
+          pipelineValue: 75000,
+          proposalsSent: 15,
+          conversionRate: 68,
+          averageProjectValue: 7500,
+          totalTasks: 156,
+          completedTasks: 124,
+          taskCompletionRate: 79
+        };
+        setMetrics(mockMetrics);
         
-        // Fetch leads for recent activity
-        const leadsData = await apiCall(API_ENDPOINTS.leads);
-        const leads = leadsData.leads || [];
+        // Skip the actual API call for now
+        // const metricsData = await apiCall(API_ENDPOINTS.dashboard.metrics);
+        // setMetrics(metricsData);
+        
+        // Mock leads data
+        const leads = [
+          {
+            id: 1,
+            name: "Tech Startup Inc",
+            company: "Tech Startup Inc",
+            status: "qualified",
+            value: 7500,
+            created_at: new Date().toISOString()
+          },
+          {
+            id: 2,
+            name: "E-commerce Plus",
+            company: "E-commerce Plus",
+            status: "closed-won",
+            value: 5000,
+            created_at: new Date(Date.now() - 86400000).toISOString()
+          }
+        ];
+        
+        // Skip the actual API call for now
+        // const leadsData = await apiCall(API_ENDPOINTS.leads);
+        // const leads = leadsData.leads || [];
           
           // Generate recent activity from leads
           const activities: RecentActivity[] = leads
@@ -499,11 +535,11 @@ const CommandCenter = () => {
           </TabsContent>
 
           <TabsContent value="analytics">
-            <AnalyticsDashboard />
+            <AnalyticsDashboardFixed />
           </TabsContent>
 
           <TabsContent value="team">
-            <TeamWorkspace />
+            <TeamWorkspaceFixed />
           </TabsContent>
 
           <TabsContent value="inbox">
@@ -515,11 +551,11 @@ const CommandCenter = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Floating AI Assistant - Available globally */}
-        <FloatingAIAssistant 
+        {/* Floating AI Assistant - Temporarily disabled */}
+        {/* <FloatingAIAssistant 
           dashboardData={dashboardData}
           currentTab={currentTab}
-        />
+        /> */}
       </div>
     </div>
   );
