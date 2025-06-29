@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import "./version"; // Import version for cache debugging
+import "./utils/clearCache"; // Cache clearing utility
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import RedirectHandler from "./components/RedirectHandler";

@@ -18,7 +18,6 @@ import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
 import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";
-// import FloatingAIAssistant from "@/components/FloatingAIAssistant";
 import AnalyticsDashboardFixed from "@/components/AnalyticsDashboardFixed";
 // import GmailInbox from "@/components/GmailInbox";
 // import DeploymentManager from "@/components/DeploymentManager";
@@ -526,11 +525,7 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
         </div>
       </div>
 
-      {/* Floating AI Assistant */}
-      <FloatingAIAssistant 
-        dashboardData={dashboardData}
-        currentTab={currentSection}
-      />
+      {/* Floating AI Assistant - Temporarily disabled */}
       
       {/* Mobile Overlay */}
       {mobileMenuOpen && (
