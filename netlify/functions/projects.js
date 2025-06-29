@@ -65,8 +65,8 @@ export const handler = async (event, context) => {
         // Create new project
         const newProject = JSON.parse(event.body);
         const insertResult = await client.query(
-          `INSERT INTO projects (name, client_id, status, progress, start_date, end_date, budget, description, assigned_to)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          `INSERT INTO projects (name, client_id, status, progress, start_date, end_date, budget, description, assigned_to, type, client_name, notes, estimated_hours, technologies, deliverables)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
            RETURNING *`,
           [
             newProject.name,
@@ -77,7 +77,13 @@ export const handler = async (event, context) => {
             newProject.end_date,
             newProject.budget,
             newProject.description,
-            newProject.assigned_to
+            newProject.assigned_to,
+            newProject.type || 'standard',
+            newProject.client_name,
+            newProject.notes,
+            newProject.estimated_hours || 0,
+            JSON.stringify(newProject.technologies || []),
+            JSON.stringify(newProject.deliverables || [])
           ]
         );
         
@@ -103,8 +109,9 @@ export const handler = async (event, context) => {
           `UPDATE projects 
            SET name = $1, client_id = $2, status = $3, progress = $4,
                start_date = $5, end_date = $6, budget = $7, description = $8,
-               updated_at = CURRENT_TIMESTAMP
-           WHERE id = $9
+               type = $9, client_name = $10, notes = $11, estimated_hours = $12,
+               technologies = $13, deliverables = $14, updated_at = CURRENT_TIMESTAMP
+           WHERE id = $15
            RETURNING *`,
           [
             updateData.name,
@@ -115,6 +122,12 @@ export const handler = async (event, context) => {
             updateData.end_date,
             updateData.budget,
             updateData.description,
+            updateData.type || 'standard',
+            updateData.client_name,
+            updateData.notes,
+            updateData.estimated_hours || 0,
+            JSON.stringify(updateData.technologies || []),
+            JSON.stringify(updateData.deliverables || []),
             updateId
           ]
         );
