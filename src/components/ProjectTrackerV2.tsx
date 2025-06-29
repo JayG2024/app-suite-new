@@ -475,6 +475,196 @@ const ProjectTrackerV2 = () => {
     }
   };
 
+  const handleImportRealProjects = async () => {
+    if (!confirm('This will add all the real client projects. Continue?')) return;
+    
+    setImportLoading(true);
+    try {
+      const realProjects = [
+        {
+          projectName: 'Sandra Ego - Website Application',
+          clientName: 'Sandra Ego',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'Website application development',
+          status: 'planning' as const,
+          progress: 10,
+          notes: 'Need to send proposal, waiting to confirm',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Jacqui - Slaters Website and App',
+          clientName: 'Jacqui (Slaters)',
+          type: 'enterprise' as const,
+          price: 10000,
+          description: 'Website and application development for Slaters',
+          status: 'development' as const,
+          progress: 25,
+          notes: 'Already accepted - website letter sent - start to build app',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Jacqui - Utah Great and Pave Website',
+          clientName: 'Jacqui (Utah Great and Pave)',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'Website development for Utah Great and Pave',
+          status: 'planning' as const,
+          progress: 5,
+          notes: 'We need to send proposal',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Carlos - ZipFixx Application',
+          clientName: 'Carlos',
+          type: 'ai-enhanced' as const,
+          price: 7500,
+          description: 'ZipFixx application development',
+          status: 'planning' as const,
+          progress: 15,
+          notes: 'Application development in planning phase',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Firman Creative - CHC Application',
+          clientName: 'Firman Creative',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'CHC application development',
+          status: 'development' as const,
+          progress: 20,
+          notes: 'Approved - in development',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Jonas Application',
+          clientName: 'Jonas',
+          type: 'standard' as const,
+          price: 5000,
+          description: 'Custom application development',
+          status: 'discovery' as const,
+          progress: 10,
+          notes: 'In discussion phase',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'PPOK Annual Renewal',
+          clientName: 'PPOK',
+          type: 'enterprise' as const,
+          price: 22500, // Average of 20-25k
+          description: 'Annual renewal and maintenance',
+          status: 'planning' as const,
+          progress: 0,
+          notes: 'Annual renewal $20,000 - $25,000',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Select Mat Annual Proposal',
+          clientName: 'Select Mat',
+          type: 'enterprise' as const,
+          price: 10000,
+          description: 'Annual service proposal',
+          status: 'planning' as const,
+          progress: 5,
+          notes: 'Annual proposal preparation',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'CustomApp Offer Application',
+          clientName: 'CustomApp',
+          type: 'enterprise' as const,
+          price: 20000,
+          description: 'Custom application development offer',
+          status: 'planning' as const,
+          progress: 0,
+          notes: 'Application development proposal',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'MyCC Custom Proposal',
+          clientName: 'MyCC',
+          type: 'ai-enhanced' as const,
+          price: 8000,
+          description: 'Custom proposal development',
+          status: 'planning' as const,
+          progress: 10,
+          notes: 'Custom proposal - budget around $8,000',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Silenti and Cooper Annual Proposal',
+          clientName: 'Silenti and Cooper',
+          type: 'enterprise' as const,
+          price: 12000,
+          description: 'Annual service proposal',
+          status: 'planning' as const,
+          progress: 5,
+          notes: 'Annual proposal preparation',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        },
+        {
+          projectName: 'Nicola - New Website',
+          clientName: 'Nicola',
+          type: 'standard' as const,
+          price: 4000,
+          description: 'New website development',
+          status: 'planning' as const,
+          progress: 0,
+          notes: 'New website project',
+          startDate: new Date().toISOString().split('T')[0],
+          deadline: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        }
+      ];
+
+      // Create projects one by one
+      for (const projectData of realProjects) {
+        try {
+          await apiCall(API_ENDPOINTS.projects, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: projectData.projectName,
+              client_name: projectData.clientName,
+              type: projectData.type,
+              status: projectData.status,
+              budget: projectData.price,
+              start_date: projectData.startDate,
+              end_date: projectData.deadline,
+              notes: projectData.notes,
+              description: projectData.description,
+              progress: projectData.progress,
+              estimated_hours: Math.floor(projectData.price / 100), // Rough estimate
+              technologies: [],
+              deliverables: []
+            })
+          });
+        } catch (error) {
+          console.error('Failed to create project:', projectData.projectName, error);
+        }
+      }
+
+      // Reload projects
+      await loadProjects();
+      
+      toast.success('Real projects imported successfully!');
+    } catch (error) {
+      console.error('Error importing real projects:', error);
+      toast.error('Failed to import real projects');
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   const openEditDialog = (project: Project) => {
     setSelectedProject(project);
     setProjectForm({
@@ -953,6 +1143,18 @@ const ProjectTrackerV2 = () => {
                 )}
                 Import Sample Projects
               </Button>
+              <Button
+                variant="outline"
+                onClick={handleImportRealProjects}
+                disabled={importLoading}
+              >
+                {importLoading ? (
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                Import Real Projects
+              </Button>
               <Sheet open={showAddProject} onOpenChange={setShowAddProject}>
                 <SheetTrigger asChild>
                   <Button>
@@ -976,17 +1178,6 @@ const ProjectTrackerV2 = () => {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Test input outside of Sheet */}
-          <div className="mb-4 p-4 border rounded bg-yellow-50">
-            <p className="text-sm mb-2">Test Input (outside Sheet):</p>
-            <Input
-              type="text"
-              placeholder="Can you type here?"
-              onChange={(e) => console.log('Test input value:', e.target.value)}
-              className="w-full"
-            />
-          </div>
-          
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="flex-1">
               <Input
