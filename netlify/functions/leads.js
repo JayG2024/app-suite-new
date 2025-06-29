@@ -55,18 +55,22 @@ export const handler = async (event, context) => {
         // Create new lead
         const newLead = JSON.parse(event.body);
         const insertResult = await client.query(
-          `INSERT INTO leads (name, company, email, phone, status, value, source, notes)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          `INSERT INTO leads (name, company, email, phone, status, value, source, notes, type, stage, probability, assigned_to)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
            RETURNING *`,
           [
             newLead.name,
             newLead.company,
             newLead.email,
             newLead.phone,
-            newLead.status || 'new',
+            newLead.status || newLead.stage || 'new',
             newLead.value || 0,
             newLead.source || 'direct',
-            newLead.notes
+            newLead.notes,
+            newLead.type || 'standard',
+            newLead.stage || 'new',
+            newLead.probability || 10,
+            newLead.assigned_to || null
           ]
         );
         
@@ -85,18 +89,26 @@ export const handler = async (event, context) => {
           `UPDATE leads 
            SET name = $1, company = $2, email = $3, phone = $4, 
                status = $5, value = $6, source = $7, notes = $8,
+               type = $9, stage = $10, probability = $11, assigned_to = $12,
+               next_action = $13, next_action_date = $14,
                updated_at = CURRENT_TIMESTAMP
-           WHERE id = $9
+           WHERE id = $15
            RETURNING *`,
           [
             updateData.name,
             updateData.company,
             updateData.email,
             updateData.phone,
-            updateData.status,
-            updateData.value,
+            updateData.status || updateData.stage,
+            updateData.value || 0,
             updateData.source,
             updateData.notes,
+            updateData.type || 'standard',
+            updateData.stage || updateData.status || 'new',
+            updateData.probability || 10,
+            updateData.assigned_to || null,
+            updateData.next_action || null,
+            updateData.next_action_date || null,
             updateId
           ]
         );

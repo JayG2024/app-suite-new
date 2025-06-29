@@ -241,15 +241,14 @@ const SalesPipeline = () => {
       await apiCall(API_ENDPOINTS.leads, {
         method: 'POST',
         body: JSON.stringify({
+          name: newLead.contact,  // Changed from contact to name
           company: newLead.company,
-          contact: newLead.contact,
           email: newLead.email,
           phone: newLead.phone,
-          type: newLead.type,
+          status: 'new',
+          value: 0,
           source: newLead.source,
-          notes: newLead.notes,
-          assigned_to: newLead.assignedTo ? parseInt(newLead.assignedTo) : null,
-          created_by: getCurrentUserId()
+          notes: newLead.notes
         })
       });
 
