@@ -256,7 +256,7 @@ const About = () => {
               <Button size="lg" onClick={() => navigate('/get-started')} className="font-semibold">
                 Get Started Today
               </Button>
-              <Button size="lg" variant="outline" onClick={() => navigate('/price-calculator')} className="font-semibold">
+              <Button size="lg" variant="outline" onClick={() => navigate('/financing-calculator')} className="font-semibold">
                 Calculate Your Price
               </Button>
             </div>

@@ -25,7 +25,7 @@ const FinancingCTA = ({ variant = "banner", className = "" }: FinancingCTAProps)
               <Button 
                 size="sm" 
                 variant="secondary"
-                onClick={() => navigate('/price-calculator')}
+                onClick={() => navigate('/financing-calculator')}
               >
                 Get Quote
               </Button>

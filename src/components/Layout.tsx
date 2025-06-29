@@ -33,8 +33,8 @@ const Layout = ({ children }: LayoutProps) => {
             <Footer />
           </div>
         </div>
-        {/* Show compact financing CTA on all pages except pricing calculator and payment terms */}
-        {!location.pathname.includes('/price-calculator') && 
+        {/* Show compact financing CTA on all pages except financing calculator and payment terms */}
+        {!location.pathname.includes('/financing-calculator') && 
          !location.pathname.includes('/payment-terms') && 
          !location.pathname.includes('/contact') && (
           <FinancingCTA variant="compact" />

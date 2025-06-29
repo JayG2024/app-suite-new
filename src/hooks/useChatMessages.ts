@@ -182,7 +182,7 @@ Always aim to understand the user's specific business needs before recommending 
         setShowContactForm(true);
         response = "I'd be happy to schedule a demo for you! Please fill out this quick form, and our team will contact you to arrange a personalized demonstration.";
       } else if (option.toLowerCase().includes("pricing")) {
-        response = "Our AI-powered business applications start at $5,000 per application with full customization included. We also offer mini tools starting at $2,500. You can use our [Price Calculator](/price-calculator) or I can help you [schedule a consultation](/contact).";
+        response = "Our AI-powered business applications start at $5,000 per application with full customization included. We also offer mini tools starting at $2,500. You can use our [Financing Calculator](/financing-calculator) or I can help you [schedule a consultation](/contact).";
       } else {
         response = getFallbackResponse(option);
       }

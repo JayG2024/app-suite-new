@@ -162,7 +162,7 @@ We understand that cash flow matters. That's why we offer:
 - No prepayment penalties
 - Ownership transfers immediately
 
-Calculate your monthly payment: ${APP_CONFIG.url}/price-calculator
+Calculate your monthly payment: ${APP_CONFIG.url}/financing-calculator
 
 Looking forward to building something amazing for your business!
 

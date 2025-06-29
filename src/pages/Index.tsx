@@ -105,7 +105,7 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-green-600 hover:bg-green-700 text-white"
-                onClick={() => navigate('/price-calculator')}
+                onClick={() => navigate('/financing-calculator')}
               >
                 💳 Price Your App with Financing
               </Button>
@@ -147,10 +147,10 @@ const Index = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                onClick={() => navigate('/price-calculator')}
+                onClick={() => navigate('/financing-calculator')}
                 className="w-full sm:w-auto sm:min-w-[200px]"
               >
-                💰 Price Calculator
+                💰 Financing Calculator
               </Button>
               <Button 
                 size="lg" 
