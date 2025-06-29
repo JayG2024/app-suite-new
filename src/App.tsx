@@ -1,4 +1,5 @@
 
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import "./version"; // Import version for cache debugging
@@ -38,15 +39,16 @@ import PriceCalculator from "./pages/PriceCalculator";
 import FinancingCalculator from "./pages/FinancingCalculator";
 import TechnologyPartners from "./pages/TechnologyPartners";
 import NewsletterPage from "./pages/NewsletterPage";
-import AdminPage from "./pages/AdminPage";
-import SystemStatus from "./pages/SystemStatus";
-import IconTest from "./components/IconTest";
-import Industries from "./pages/Industries";
-import CommandCenterV2 from "./pages/CommandCenterV2";
-import TestProjectForm from './components/TestProjectForm';
-import Examples from "./pages/Examples";
-import SolutionsWeveBuilt from "./pages/SolutionsWeveBuilt";
-import WebAuditDashboard from "./pages/portfolio/WebAuditDashboard";
+// Lazy load heavy pages for code splitting
+const AdminPage = React.lazy(() => import("./pages/AdminPage"));
+const SystemStatus = React.lazy(() => import("./pages/SystemStatus"));
+const IconTest = React.lazy(() => import("./components/IconTest"));
+const Industries = React.lazy(() => import("./pages/Industries"));
+const CommandCenterV2 = React.lazy(() => import("./pages/CommandCenterV2"));
+const TestProjectForm = React.lazy(() => import('./components/TestProjectForm'));
+const Examples = React.lazy(() => import("./pages/Examples"));
+const SolutionsWeveBuilt = React.lazy(() => import("./pages/SolutionsWeveBuilt"));
+const WebAuditDashboard = React.lazy(() => import("./pages/portfolio/WebAuditDashboard"));
 import Proposal from "./pages/Proposal";
 import Sitemap from "./pages/Sitemap";
 
@@ -71,10 +73,23 @@ import Resources from "./pages/Resources";
 import GeoBlockingImpact from "./pages/infographics/GeoBlockingImpact";
 import Podcast from "./pages/Podcast";
 
+// Loading component for lazy loaded routes
+const PageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
+
 // Admin route component that shows login form or dashboard
 function AdminRoute() {
   const { user } = useAuth();
-  return user ? <Outlet /> : <LoginForm />;
+  return user ? (
+    <Suspense fallback={<PageLoader />}>
+      <Outlet />
+    </Suspense>
+  ) : (
+    <LoginForm />
+  );
 }
 
 function App() {
@@ -113,16 +128,16 @@ function App() {
           <Route path="financing-calculator" element={<FinancingCalculator />} />
           <Route path="technology-partners" element={<TechnologyPartners />} />
           <Route path="newsletter" element={<NewsletterPage />} />
-          <Route path="icon-test" element={<IconTest />} />
-          <Route path="system-status" element={<SystemStatus />} />
-          <Route path="industries" element={<Industries />} />
-          <Route path="examples" element={<Examples />} />
-          <Route path="solutions-weve-built" element={<SolutionsWeveBuilt />} />
+          <Route path="icon-test" element={<Suspense fallback={<PageLoader />}><IconTest /></Suspense>} />
+          <Route path="system-status" element={<Suspense fallback={<PageLoader />}><SystemStatus /></Suspense>} />
+          <Route path="industries" element={<Suspense fallback={<PageLoader />}><Industries /></Suspense>} />
+          <Route path="examples" element={<Suspense fallback={<PageLoader />}><Examples /></Suspense>} />
+          <Route path="solutions-weve-built" element={<Suspense fallback={<PageLoader />}><SolutionsWeveBuilt /></Suspense>} />
           <Route path="sitemap" element={<Sitemap />} />
-          <Route path="portfolio/webaudit-dashboard" element={<WebAuditDashboard />} />
+          <Route path="portfolio/webaudit-dashboard" element={<Suspense fallback={<PageLoader />}><WebAuditDashboard /></Suspense>} />
           <Route path="proposal/:proposalId" element={<Proposal />} />
-          <Route path="ai-brain" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
-          <Route path="test-form" element={<TestProjectForm />} />
+          <Route path="ai-brain" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><AdminPage /></Suspense></ProtectedRoute>} />
+          <Route path="test-form" element={<Suspense fallback={<PageLoader />}><TestProjectForm /></Suspense>} />
           <Route path="documentation" element={<Documentation />} />
           <Route path="documentation/quick-start" element={<QuickStart />} />
           <Route path="documentation/installation" element={<Installation />} />
