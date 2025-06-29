@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface User {
   id: number;
@@ -20,7 +19,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Check for existing session
@@ -56,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('userData', JSON.stringify(data.user));
       
       setUser(data.user);
-      navigate('/admin');
+      // Navigation handled by login form component
     } catch (error) {
       throw error;
     }
@@ -66,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     setUser(null);
-    navigate('/admin');
+    // Navigation handled by components that call logout
   };
 
   return (

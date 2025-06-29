@@ -186,6 +186,7 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
 
   const handleLogout = () => {
     logout();
+    navigate('/');
   };
 
   const renderContent = () => {

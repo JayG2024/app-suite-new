@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Lock, Mail, Loader2, KeyRound } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -10,6 +11,7 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   // Authorized emails
   const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai'];
@@ -28,6 +30,7 @@ export default function LoginForm() {
 
     try {
       await login(email, password);
+      navigate('/admin');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
