@@ -1,7 +1,6 @@
 
 import { useLocation } from "react-router-dom";
 import { ReactNode } from "react";
-import ChatSidebar from "./ChatSidebar";
 import Header from "./Header";
 import Footer from "./Footer";
 import SEO from "./SEO";
@@ -21,15 +20,10 @@ const Layout = ({ children }: LayoutProps) => {
   // And auth pages
   const isAuthPage = location.pathname === "/auth";
 
-  // Disable chat sidebar by default for security/privacy
-  // Can be enabled later with proper authentication
-  const shouldShowSidebar = false;
-
   return (
     <SidebarProvider>
       <SEO />
       <div className="flex min-h-screen w-full max-w-full">
-        {shouldShowSidebar && <ChatSidebar />}
         <div className="flex-1 w-full overflow-x-hidden">
           <div className="min-h-screen flex flex-col">
             <Header />
