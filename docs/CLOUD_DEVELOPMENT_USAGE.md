@@ -93,14 +93,13 @@ Example prompts:
 
 From the terminal:
 ```bash
-# Deploy to Netlify
+# Deploy to Netlify (recommended)
 netlify deploy
+netlify deploy --prod  # Deploy to production
 
-# Deploy to Vercel
-vercel
-
-# Deploy to Railway
-railway up
+# Other deployment options
+vercel                 # Deploy to Vercel
+railway up            # Deploy to Railway
 ```
 
 ### Using Deployment Manager
