@@ -570,18 +570,9 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
                 )}
               </Button>
             ))}
-            
-            <div className="pt-4 mt-4 border-t">
-              <Button variant="ghost" className="w-full justify-start">
-                <Settings className="h-4 w-4 mr-3" />
-                Settings
-              </Button>
-              <Button variant="ghost" className="w-full justify-start">
-                {/* <HelpCircle className="h-4 w-4 mr-3" /> */}
-                Help & Support
-              </Button>
-              {/* Sentry Test Button - Remove in production */}
-              {import.meta.env.DEV && (
+            {/* Sentry Test Button - Remove in production */}
+            {import.meta.env.DEV && (
+              <div className="pt-4 mt-4 border-t">
                 <Button 
                   variant="ghost" 
                   className="w-full justify-start text-red-600"
@@ -591,8 +582,8 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
                 >
                   Test Sentry Error
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </ScrollArea>
       </div>
