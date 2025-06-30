@@ -19,6 +19,9 @@ export const initSentry = () => {
       // Performance Monitoring
       tracesSampleRate: 0.1, // 10% of transactions
       
+      // Trace propagation for distributed tracing
+      tracePropagationTargets: ["localhost", "app-suite.io", /^https:\/\/app-suite\.io/]
+      
       // Release tracking
       release: `app-suite@${import.meta.env.VITE_APP_VERSION || '1.0.0'}`,
       
