@@ -326,7 +326,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Revenue"
-          value={`$${metrics.totalRevenue.toLocaleString()}`}
+          value={`$${(metrics.totalRevenue || 0).toLocaleString()}`}
           change="+12.5%"
           trend="up"
           icon={DollarSign}
@@ -334,7 +334,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
         />
         <StatCard
           title="Active Projects"
-          value={metrics.activeProjects.toString()}
+          value={(metrics.activeProjects || 0).toString()}
           change="+3"
           trend="up"
           icon={Code}
@@ -342,7 +342,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
         />
         <StatCard
           title="Pipeline Value"
-          value={`$${metrics.pipelineValue.toLocaleString()}`}
+          value={`$${(metrics.pipelineValue || 0).toLocaleString()}`}
           change="+8.2%"
           trend="up"
           icon={Target}
@@ -350,7 +350,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
         />
         <StatCard
           title="Total Clients"
-          value={metrics.totalClients.toString()}
+          value={(metrics.totalClients || 0).toString()}
           change="+5"
           trend="up"
           icon={Users}
