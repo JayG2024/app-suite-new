@@ -256,9 +256,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
         case 'projects':
           try {
             console.log('Attempting to render ProjectTrackerV2...');
-            // Temporarily use simple version while debugging ProjectTrackerV2
-            return <ProjectTrackerSimple />;
-            // return <ProjectTrackerV2 />;
+            return <ProjectTrackerV2 />;
           } catch (error) {
             console.error('Error rendering Projects section:', error);
             console.error('Stack trace:', error?.stack);
