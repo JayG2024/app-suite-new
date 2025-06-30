@@ -190,28 +190,128 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
     navigate('/');
   };
 
+  // Error section component for detailed error display
+  const ErrorSection = ({ section, error }: { section: string; error: any }) => (
+    <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+      <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+        Error Loading {section} Section
+      </h3>
+      <p className="text-red-700 dark:text-red-300 mb-4">
+        The {section} section encountered an error and could not be loaded.
+      </p>
+      <details className="mb-4">
+        <summary className="cursor-pointer text-sm font-medium text-red-600 dark:text-red-400 hover:underline">
+          View Error Details
+        </summary>
+        <div className="mt-2 p-4 bg-red-100 dark:bg-red-900/30 rounded text-xs font-mono overflow-auto">
+          <p className="font-bold mb-2">Error Message:</p>
+          <p className="mb-4">{error?.message || 'Unknown error'}</p>
+          <p className="font-bold mb-2">Stack Trace:</p>
+          <pre className="whitespace-pre-wrap">{error?.stack || 'No stack trace available'}</pre>
+          <p className="font-bold mt-4 mb-2">Component:</p>
+          <p>{section}</p>
+          <p className="font-bold mt-4 mb-2">Time:</p>
+          <p>{new Date().toISOString()}</p>
+        </div>
+      </details>
+      <div className="flex gap-2">
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => window.location.reload()}
+          className="text-red-600 border-red-600 hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/30"
+        >
+          Refresh Page
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => setCurrentSection('overview')}
+          className="text-red-600 border-red-600 hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/30"
+        >
+          Go to Overview
+        </Button>
+      </div>
+    </div>
+  );
+
   const renderContent = () => {
-    switch(currentSection) {
-      case 'overview':
-        return <OverviewSection metrics={metrics} />;
-      case 'clients':
-        return <ClientManager />;
-      case 'projects':
-        return <ProjectTrackerV2 />;
-      case 'tasks':
-        return <TaskManagerV2 />;
-      case 'sales':
-        return <SalesPipeline />;
-      case 'team':
-        return <TeamWorkspaceFixed />;
-      case 'templates':
-        return <EmailTemplates />;
-      case 'call-analyzer':
-        return <CallTranscriptAnalyzer />;
-      case 'settings':
-        return <SettingsSection />;
-      default:
-        return <OverviewSection metrics={metrics} />;
+    try {
+      switch(currentSection) {
+        case 'overview':
+          try {
+            return <OverviewSection metrics={metrics} />;
+          } catch (error) {
+            console.error('Error rendering Overview section:', error);
+            return <ErrorSection section="Overview" error={error} />;
+          }
+        case 'clients':
+          try {
+            return <ClientManager />;
+          } catch (error) {
+            console.error('Error rendering Clients section:', error);
+            return <ErrorSection section="Clients" error={error} />;
+          }
+        case 'projects':
+          try {
+            return <ProjectTrackerV2 />;
+          } catch (error) {
+            console.error('Error rendering Projects section:', error);
+            return <ErrorSection section="Projects" error={error} />;
+          }
+        case 'tasks':
+          try {
+            return <TaskManagerV2 />;
+          } catch (error) {
+            console.error('Error rendering Tasks section:', error);
+            return <ErrorSection section="Tasks" error={error} />;
+          }
+        case 'sales':
+          try {
+            return <SalesPipeline />;
+          } catch (error) {
+            console.error('Error rendering Sales section:', error);
+            return <ErrorSection section="Sales" error={error} />;
+          }
+        case 'team':
+          try {
+            return <TeamWorkspaceFixed />;
+          } catch (error) {
+            console.error('Error rendering Team section:', error);
+            return <ErrorSection section="Team" error={error} />;
+          }
+        case 'templates':
+          try {
+            return <EmailTemplates />;
+          } catch (error) {
+            console.error('Error rendering Templates section:', error);
+            return <ErrorSection section="Email Templates" error={error} />;
+          }
+        case 'call-analyzer':
+          try {
+            return <CallTranscriptAnalyzer />;
+          } catch (error) {
+            console.error('Error rendering Call Analyzer section:', error);
+            return <ErrorSection section="Call Analyzer" error={error} />;
+          }
+        case 'settings':
+          try {
+            return <SettingsSection />;
+          } catch (error) {
+            console.error('Error rendering Settings section:', error);
+            return <ErrorSection section="Settings" error={error} />;
+          }
+        default:
+          try {
+            return <OverviewSection metrics={metrics} />;
+          } catch (error) {
+            console.error('Error rendering default Overview section:', error);
+            return <ErrorSection section="Overview" error={error} />;
+          }
+      }
+    } catch (error) {
+      console.error('Error in renderContent:', error);
+      return <ErrorSection section={currentSection} error={error} />;
     }
   };
 
@@ -477,7 +577,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
                 Settings
               </Button>
               <Button variant="ghost" className="w-full justify-start">
-                <HelpCircle className="h-4 w-4 mr-3" />
+                {/* <HelpCircle className="h-4 w-4 mr-3" /> */}
                 Help & Support
               </Button>
             </div>

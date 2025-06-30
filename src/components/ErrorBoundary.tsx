@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
+import * as Sentry from '@sentry/react';
 
 interface Props {
   children: ReactNode;
@@ -25,13 +26,17 @@ class ErrorBoundary extends Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     this.setState({ error, errorInfo });
     
-    // Log error to an error reporting service
+    // Log error to console
     console.error('Uncaught error:', error, errorInfo);
     
-    // In production, you would send this to your error tracking service
-    if (process.env.NODE_ENV === 'production') {
-      // Example: sendToErrorTrackingService(error, errorInfo);
-      // This is where you'd integrate with services like Sentry, LogRocket, etc.
+    // Send to Sentry in production
+    if (import.meta.env.PROD) {
+      Sentry.withScope((scope) => {
+        scope.setContext('errorBoundary', {
+          componentStack: errorInfo.componentStack,
+        });
+        Sentry.captureException(error);
+      });
     }
   }
 
