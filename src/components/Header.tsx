@@ -7,6 +7,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { CacheClearer } from "./CacheClearer";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -262,6 +263,7 @@ const Header = () => {
           </nav>
           
           <div className="flex items-center gap-3">
+            <CacheClearer />
             <Button variant="outline" asChild>
               <Link to="/roi-calculator">ROI Calculator</Link>
             </Button>

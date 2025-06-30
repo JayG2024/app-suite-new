@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet-fixed";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
@@ -730,21 +729,6 @@ const ProjectTrackerV2 = () => {
     });
   };
 
-  // Optimized form field update functions
-  const updateProjectForm = useCallback((field: string, value: any) => {
-    console.log('Updating field:', field, 'with value:', value);
-    setProjectForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  }, []);
-
-  const updateProjectFormMultiple = useCallback((updates: Record<string, any>) => {
-    setProjectForm(prev => ({
-      ...prev,
-      ...updates
-    }));
-  }, []);
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -908,17 +892,7 @@ const ProjectTrackerV2 = () => {
     );
   };
 
-  const ProjectForm = React.memo(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => {
-    // Use local state to handle input changes to prevent focus loss
-    const handleInputChange = React.useCallback((field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      updateProjectForm(field, e.target.value);
-    }, []);
-
-    const handleSelectChange = React.useCallback((field: string) => (value: string) => {
-      updateProjectForm(field, value);
-    }, []);
-
-    return (
+  const ProjectForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -927,7 +901,7 @@ const ProjectTrackerV2 = () => {
               id="projectName"
               type="text"
               value={projectForm.projectName}
-              onChange={handleInputChange('projectName')}
+              onChange={(e) => setProjectForm({...projectForm, projectName: e.target.value})}
               placeholder="Website Redesign"
               autoComplete="off"
             />
@@ -938,7 +912,7 @@ const ProjectTrackerV2 = () => {
               id="clientName"
               type="text"
               value={projectForm.clientName}
-              onChange={handleInputChange('clientName')}
+              onChange={(e) => setProjectForm({...projectForm, clientName: e.target.value})}
               placeholder="Acme Corp (optional)"
               autoComplete="off"
             />
@@ -952,16 +926,17 @@ const ProjectTrackerV2 = () => {
             value={projectForm.client_id}
             onValueChange={(value) => {
               if (value === 'new') {
-                handleSelectChange('client_id')(value);
+                setProjectForm({...projectForm, client_id: value});
               } else {
                 const client = clients.find(c => c.id.toString() === value);
                 if (client) {
-                  updateProjectFormMultiple({ 
+                  setProjectForm({ 
+                    ...projectForm,
                     client_id: value, 
                     clientName: client.name 
                   });
                 } else {
-                  handleSelectChange('client_id')(value);
+                  setProjectForm({...projectForm, client_id: value});
                 }
               }
             }}
@@ -984,7 +959,8 @@ const ProjectTrackerV2 = () => {
           <Select
             value={projectForm.type}
             onValueChange={(value) => {
-              updateProjectFormMultiple({
+              setProjectForm({
+                ...projectForm,
                 type: value as any,
                 price: value === 'standard' ? 5000 : value === 'ai-enhanced' ? 7500 : 10000
               });
@@ -1009,7 +985,7 @@ const ProjectTrackerV2 = () => {
             id="price"
             type="number"
             value={projectForm.price}
-            onChange={(e) => updateProjectForm('price', parseInt(e.target.value) || 0)}
+            onChange={(e) => setProjectForm({...projectForm, price: parseInt(e.target.value) || 0})}
             min="0"
             autoComplete="off"
           />
@@ -1020,7 +996,7 @@ const ProjectTrackerV2 = () => {
             id="estimated_hours"
             type="number"
             value={projectForm.estimated_hours}
-            onChange={(e) => updateProjectForm('estimated_hours', parseInt(e.target.value) || 0)}
+            onChange={(e) => setProjectForm({...projectForm, estimated_hours: parseInt(e.target.value) || 0})}
             min="0"
             placeholder="160"
             autoComplete="off"
@@ -1035,7 +1011,7 @@ const ProjectTrackerV2 = () => {
             id="startDate"
             type="date"
             value={projectForm.startDate}
-            onChange={handleInputChange('startDate')}
+            onChange={(e) => setProjectForm({...projectForm, startDate: e.target.value})}
           />
         </div>
         <div>
@@ -1044,7 +1020,7 @@ const ProjectTrackerV2 = () => {
             id="deadline"
             type="date"
             value={projectForm.deadline}
-            onChange={handleInputChange('deadline')}
+            onChange={(e) => setProjectForm({...projectForm, deadline: e.target.value})}
           />
         </div>
       </div>
@@ -1053,7 +1029,7 @@ const ProjectTrackerV2 = () => {
         <Label htmlFor="assignTo">Assign To</Label>
         <Select 
           value={projectForm.assignedTo} 
-          onValueChange={handleSelectChange('assignedTo')}
+          onValueChange={(value) => setProjectForm({...projectForm, assignedTo: value})}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select team member" />
@@ -1074,7 +1050,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="description"
           value={projectForm.description}
-          onChange={handleInputChange('description')}
+          onChange={(e) => setProjectForm({...projectForm, description: e.target.value})}
           placeholder="Detailed project description..."
           rows={3}
         />
@@ -1085,7 +1061,7 @@ const ProjectTrackerV2 = () => {
         <Input
           id="technologies"
           value={projectForm.technologies}
-          onChange={handleInputChange('technologies')}
+          onChange={(e) => setProjectForm({...projectForm, technologies: e.target.value})}
           placeholder="React, Node.js, PostgreSQL"
         />
       </div>
@@ -1095,7 +1071,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="deliverables"
           value={projectForm.deliverables}
-          onChange={handleInputChange('deliverables')}
+          onChange={(e) => setProjectForm({...projectForm, deliverables: e.target.value})}
           placeholder="Website design, API development, Documentation"
           rows={2}
         />
@@ -1107,7 +1083,7 @@ const ProjectTrackerV2 = () => {
           id="notes"
           placeholder="Project notes and requirements..." 
           value={projectForm.notes}
-          onChange={handleInputChange('notes')}
+          onChange={(e) => setProjectForm({...projectForm, notes: e.target.value})}
           rows={3}
         />
       </div>
@@ -1125,7 +1101,7 @@ const ProjectTrackerV2 = () => {
       </div>
     </div>
     );
-  });
+  };
 
   if (loading) {
     return (
@@ -1207,30 +1183,10 @@ const ProjectTrackerV2 = () => {
                 )}
                 Import Real Projects
               </Button>
-              <Sheet open={showAddProject} onOpenChange={setShowAddProject}>
-                <SheetTrigger asChild>
-                  <Button>
-                    <Plus className="h-4 w-4 mr-2" />
-                    New Project
-                  </Button>
-                </SheetTrigger>
-              <SheetContent 
-                side="right" 
-                className="w-[600px] sm:w-[700px] overflow-y-auto" 
-                onInteractOutside={(e) => e.preventDefault()}
-                onOpenAutoFocus={(e) => e.preventDefault()}
-              >
-                <SheetHeader>
-                  <SheetTitle>Create New Project</SheetTitle>
-                  <SheetDescription>
-                    Quickly create a project - only the name is required
-                  </SheetDescription>
-                </SheetHeader>
-                <div className="mt-4">
-                  <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
-                </div>
-              </SheetContent>
-            </Sheet>
+              <Button onClick={() => setShowAddProject(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Project
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -1386,25 +1342,35 @@ const ProjectTrackerV2 = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Project Sheet */}
-      <Sheet open={showEditProject} onOpenChange={setShowEditProject}>
-        <SheetContent 
-          side="right" 
-          className="w-[600px] sm:w-[700px] overflow-y-auto" 
-          onInteractOutside={(e) => e.preventDefault()}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-        >
-          <SheetHeader>
-            <SheetTitle>Edit Project</SheetTitle>
-            <SheetDescription>
+      {/* Add Project Dialog */}
+      <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
+        <DialogContent className="max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create New Project</DialogTitle>
+            <DialogDescription>
+              Quickly create a project - only the name is required
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Project Dialog */}
+      <Dialog open={showEditProject} onOpenChange={setShowEditProject}>
+        <DialogContent className="max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Project</DialogTitle>
+            <DialogDescription>
               Update project details - only the name is required
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
           <div className="mt-4">
             <ProjectForm onSubmit={updateProject} submitLabel="Update Project" />
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
 
       {/* Full-Screen Project Details Dialog */}
       <Dialog open={showProjectDetails} onOpenChange={setShowProjectDetails}>

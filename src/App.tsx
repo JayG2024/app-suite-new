@@ -1,10 +1,11 @@
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import "./version"; // Import version for cache debugging
 import "./utils/clearCache"; // Cache clearing utility
+import { hardcoreCachePurge, purgeAndReload } from "@/utils/hardcoreCachePurge";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import RedirectHandler from "./components/RedirectHandler";
@@ -44,6 +45,7 @@ import NewsletterPage from "./pages/NewsletterPage";
 // Lazy load heavy pages for code splitting
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
 const SystemStatus = React.lazy(() => import("./pages/SystemStatus"));
+const SystemTools = React.lazy(() => import("./pages/SystemTools"));
 const AdminDebug = React.lazy(() => import("./pages/AdminDebug"));
 const IconTest = React.lazy(() => import("./components/IconTest"));
 const Industries = React.lazy(() => import("./pages/Industries"));
@@ -114,6 +116,37 @@ function AdminRoute() {
 }
 
 function App() {
+  // Setup hardcore cache purge keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + Shift + Delete for hardcore cache purge
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'Delete') {
+        e.preventDefault();
+        
+        toast.promise(
+          hardcoreCachePurge({
+            preserveAuth: true,
+            showProgress: (msg) => console.log(msg)
+          }),
+          {
+            loading: 'Purging all caches...',
+            success: (result) => {
+              if (result.errors.length > 0) {
+                return `Cache purged with ${result.errors.length} errors`;
+              }
+              setTimeout(() => forceHardReload(), 1000);
+              return 'Cache purged successfully! Reloading...';
+            },
+            error: 'Failed to purge cache'
+          }
+        );
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <SocketProvider>
       <Router>
@@ -151,6 +184,7 @@ function App() {
           <Route path="newsletter" element={<NewsletterPage />} />
           <Route path="icon-test" element={<Suspense fallback={<PageLoader />}><IconTest /></Suspense>} />
           <Route path="system-status" element={<Suspense fallback={<PageLoader />}><SystemStatus /></Suspense>} />
+          <Route path="system-tools" element={<Suspense fallback={<PageLoader />}><SystemTools /></Suspense>} />
           <Route path="industries" element={<Suspense fallback={<PageLoader />}><Industries /></Suspense>} />
           <Route path="examples" element={<Suspense fallback={<PageLoader />}><Examples /></Suspense>} />
           <Route path="solutions-weve-built" element={<Suspense fallback={<PageLoader />}><SolutionsWeveBuilt /></Suspense>} />
