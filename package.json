@@ -7,6 +7,7 @@
     "dev": "node scripts/generate-static-files.js && vite",
     "prebuild": "node scripts/generate-static-files.js",
     "build": "vite build",
+    "postbuild": "node prerender.config.js",
     "preview": "vite preview",
     "generate-static": "node scripts/generate-static-files.js"
   },
@@ -79,6 +80,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
+    "@prerenderer/prerenderer": "^1.2.5",
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
     "@tailwindcss/typography": "^0.5.16",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",

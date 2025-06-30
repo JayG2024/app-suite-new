@@ -131,3 +131,14 @@
   for = "/*.css"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Enable prerendering for all pages
+[[plugins]]
+  package = "@netlify/plugin-csp-nonce"
+
+# Prerender configuration for better bot support
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = true

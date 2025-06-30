@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowLeft, Download, Share2, Clock, Calendar, BarChart3, AlertTriangle, CheckCircle, TrendingUp, Headphones, FileImage, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,6 +8,43 @@ import SEO from "@/components/SEO";
 import { toast } from "sonner";
 
 const HiddenCostGeoBlockingAiSearchVisibility = () => {
+  // Add structured data for better bot understanding
+  React.useEffect(() => {
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "The Hidden Cost of Geo-Blocking: How Geographic Restrictions May Be Hurting Your AI Search Visibility",
+      "description": "Research reveals 95% of AI crawlers are blocked by geographic restrictions. Learn why geo-blocking may hurt your AI search visibility.",
+      "datePublished": "2025-06-15",
+      "dateModified": "2025-06-30",
+      "author": {
+        "@type": "Organization",
+        "name": "App Suite by Jaydus Inc."
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "App Suite",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://app-suite.io/logo.png"
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://app-suite.io/blog/hidden-cost-geo-blocking-ai-search-visibility"
+      },
+      "articleBody": "95% of AI crawlers blocked by geo-restrictions. 15% of searches now show AI overviews. 300% growth in AI-powered search engines. This white paper explores the hidden costs of geo-blocking on AI search visibility."
+    };
+    
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
   const keyFindings = [
     "95% of AI crawlers blocked by geo-restrictions",
     "15% of searches now show AI overviews", 
