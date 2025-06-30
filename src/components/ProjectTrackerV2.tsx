@@ -156,7 +156,7 @@ const ProjectTrackerV2 = () => {
     active: projects.filter(p => ['development', 'design', 'testing'].includes(p.status)).length,
     completed: projects.filter(p => p.status === 'deployed').length,
     planning: projects.filter(p => ['planning', 'discovery'].includes(p.status)).length,
-    revenue: projects.reduce((sum, p) => sum + (p.actualPrice || p.price), 0),
+    revenue: projects.reduce((sum, p) => sum + (p.actualPrice || p.price || 0), 0),
     avgProgress: projects.length > 0 ? 
       Math.round(projects.reduce((sum, p) => sum + p.progress, 0) / projects.length) : 0
   };
@@ -673,7 +673,7 @@ const ProjectTrackerV2 = () => {
       clientName: project.clientName,
       client_id: project.client_id?.toString() || '',
       type: project.type,
-      price: project.actualPrice || project.price,
+      price: project.actualPrice || project.price || 0,
       startDate: project.startDate,
       deadline: project.deadline,
       assignedTo: project.assignedTo?.toString() || '',
@@ -819,7 +819,7 @@ const ProjectTrackerV2 = () => {
               {project.status}
             </Badge>
             {isOverdue && <Badge variant="destructive">Overdue</Badge>}
-            <Badge variant="outline">${(project.actualPrice || project.price).toLocaleString()}</Badge>
+            <Badge variant="outline">${(project.actualPrice || project.price || 0).toLocaleString()}</Badge>
           </div>
         </CardHeader>
         <CardContent>
@@ -1271,7 +1271,7 @@ const ProjectTrackerV2 = () => {
                           <span className="text-sm">{project.progress}%</span>
                         </div>
                       </td>
-                      <td className="py-3">${(project.actualPrice || project.price).toLocaleString()}</td>
+                      <td className="py-3">${(project.actualPrice || project.price || 0).toLocaleString()}</td>
                       <td className="py-3">{format(new Date(project.deadline), 'MMM d, yyyy')}</td>
                       <td className="py-3">
                         <DropdownMenu>
