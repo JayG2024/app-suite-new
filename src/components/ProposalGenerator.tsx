@@ -168,7 +168,7 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
       localStorage.setItem(`proposal_${proposalId}`, JSON.stringify(proposalData));
       localStorage.setItem('lastProposal', JSON.stringify(proposalData));
       
-      // Create lead for Command Center
+      // Create lead for Admin Dashboard
       const leadData = {
         id: `LEAD-${Date.now()}`,
         company: formData.companyName,
@@ -192,12 +192,12 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
         proposalId: proposalData.id
       };
 
-      // Store lead in localStorage for Command Center
+      // Store lead in localStorage for Admin Dashboard
       const existingLeads = JSON.parse(localStorage.getItem('app_suite_leads') || '[]');
       existingLeads.push(leadData);
       localStorage.setItem('app_suite_leads', JSON.stringify(existingLeads));
 
-      // Send to Command Center API
+      // Send to Admin Dashboard API
       try {
         const leadResponse = await fetch('/.netlify/functions/leads', {
           method: 'POST',
@@ -208,10 +208,10 @@ const ProposalGenerator = ({ isOpen, onClose }: ProposalGeneratorProps) => {
         });
         
         if (leadResponse.ok) {
-          console.log('Lead successfully created in Command Center');
+          console.log('Lead successfully created in Admin Dashboard');
         }
       } catch (apiError) {
-        console.error('Error sending to Command Center:', apiError);
+        console.error('Error sending to Admin Dashboard:', apiError);
       }
 
       // Send professional proposal email via Resend

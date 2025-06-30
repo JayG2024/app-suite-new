@@ -1,17 +1,25 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function AdminSimple() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  // Debug logging
+  useEffect(() => {
+    console.log('AdminSimple mounted, user:', user);
+  }, [user]);
   
   const handleLogout = () => {
     logout();
     navigate('/');
   };
   
-  return (
+  // Add try-catch for debugging
+  try {
+    return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Simple Admin Page</h1>

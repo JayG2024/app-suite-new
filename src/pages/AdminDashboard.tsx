@@ -82,11 +82,11 @@ const menuItems: MenuItem[] = [
   { id: 'settings', label: 'Settings', icon: Settings, color: 'text-gray-600' },
 ];
 
-interface CommandCenterV2Props {
+interface AdminDashboardProps {
   initialSection?: string;
 }
 
-const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
+const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { socket, connected } = useSocket();
@@ -396,8 +396,8 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title="Command Center - App Suite" 
-        description="App Suite internal command center for business operations"
+        title="Admin Dashboard - App Suite" 
+        description="App Suite internal admin dashboard for business operations"
         noindex={true}
       />
       
@@ -417,7 +417,7 @@ const CommandCenterV2 = ({ initialSection }: CommandCenterV2Props) => {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-sm">AI</span>
               </div>
-              <span className="font-bold text-lg">Command Center</span>
+              <span className="font-bold text-lg">Admin Dashboard</span>
             </div>
           </div>
           
@@ -575,4 +575,4 @@ const SettingsSection = () => {
   );
 };
 
-export default CommandCenterV2;
+export default AdminDashboard;

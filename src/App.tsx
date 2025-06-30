@@ -2,6 +2,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
+import { Button } from "@/components/ui/button";
 import "./version"; // Import version for cache debugging
 import "./utils/clearCache"; // Cache clearing utility
 import Layout from "./components/Layout";
@@ -46,7 +47,8 @@ const SystemStatus = React.lazy(() => import("./pages/SystemStatus"));
 const AdminDebug = React.lazy(() => import("./pages/AdminDebug"));
 const IconTest = React.lazy(() => import("./components/IconTest"));
 const Industries = React.lazy(() => import("./pages/Industries"));
-const CommandCenterV2 = React.lazy(() => import("./pages/CommandCenterV2"));
+// Import AdminDashboard directly without lazy loading for testing
+import AdminDashboard from "./pages/AdminDashboard";
 const AdminSimple = React.lazy(() => import("./pages/AdminSimple"));
 const TestProjectForm = React.lazy(() => import('./components/TestProjectForm'));
 const Examples = React.lazy(() => import("./pages/Examples"));
@@ -189,16 +191,28 @@ function App() {
         
         {/* Admin routes with authentication */}
         <Route path="admin" element={<AdminRoute />}>
-          <Route index element={<ErrorBoundary><AdminSimple /></ErrorBoundary>} />
-          <Route path="overview" element={<ErrorBoundary><CommandCenterV2 initialSection="overview" /></ErrorBoundary>} />
-          <Route path="clients" element={<ErrorBoundary><CommandCenterV2 initialSection="clients" /></ErrorBoundary>} />
-          <Route path="projects" element={<ErrorBoundary><CommandCenterV2 initialSection="projects" /></ErrorBoundary>} />
-          <Route path="tasks" element={<ErrorBoundary><CommandCenterV2 initialSection="tasks" /></ErrorBoundary>} />
-          <Route path="sales" element={<ErrorBoundary><CommandCenterV2 initialSection="sales" /></ErrorBoundary>} />
-          <Route path="team" element={<ErrorBoundary><CommandCenterV2 initialSection="team" /></ErrorBoundary>} />
-          <Route path="templates" element={<ErrorBoundary><CommandCenterV2 initialSection="templates" /></ErrorBoundary>} />
-          <Route path="call-analyzer" element={<ErrorBoundary><CommandCenterV2 initialSection="call-analyzer" /></ErrorBoundary>} />
-          <Route path="settings" element={<ErrorBoundary><CommandCenterV2 initialSection="settings" /></ErrorBoundary>} />
+          <Route index element={
+            <ErrorBoundary fallback={
+              <div className="p-8">
+                <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Admin Dashboard</h1>
+                <p>There was an error loading the dashboard. Please try refreshing the page.</p>
+                <Button onClick={() => window.location.reload()} className="mt-4">
+                  Refresh Page
+                </Button>
+              </div>
+            }>
+              <AdminDashboard />
+            </ErrorBoundary>
+          } />
+          <Route path="overview" element={<ErrorBoundary><AdminDashboard initialSection="overview" /></ErrorBoundary>} />
+          <Route path="clients" element={<ErrorBoundary><AdminDashboard initialSection="clients" /></ErrorBoundary>} />
+          <Route path="projects" element={<ErrorBoundary><AdminDashboard initialSection="projects" /></ErrorBoundary>} />
+          <Route path="tasks" element={<ErrorBoundary><AdminDashboard initialSection="tasks" /></ErrorBoundary>} />
+          <Route path="sales" element={<ErrorBoundary><AdminDashboard initialSection="sales" /></ErrorBoundary>} />
+          <Route path="team" element={<ErrorBoundary><AdminDashboard initialSection="team" /></ErrorBoundary>} />
+          <Route path="templates" element={<ErrorBoundary><AdminDashboard initialSection="templates" /></ErrorBoundary>} />
+          <Route path="call-analyzer" element={<ErrorBoundary><AdminDashboard initialSection="call-analyzer" /></ErrorBoundary>} />
+          <Route path="settings" element={<ErrorBoundary><AdminDashboard initialSection="settings" /></ErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
       </Routes>

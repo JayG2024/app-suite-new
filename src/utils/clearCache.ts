@@ -2,10 +2,15 @@
 export const clearAllCaches = async () => {
   console.log('Clearing all caches...');
   
-  // Clear localStorage
+  // Clear localStorage (but preserve auth tokens)
   try {
+    const authToken = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
     localStorage.clear();
-    console.log('✓ localStorage cleared');
+    // Restore auth tokens
+    if (authToken) localStorage.setItem('authToken', authToken);
+    if (userData) localStorage.setItem('userData', userData);
+    console.log('✓ localStorage cleared (auth preserved)');
   } catch (e) {
     console.error('Failed to clear localStorage:', e);
   }
