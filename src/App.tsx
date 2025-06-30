@@ -7,6 +7,7 @@ import "./utils/clearCache"; // Cache clearing utility
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import RedirectHandler from "./components/RedirectHandler";
+import ErrorBoundary from "./components/ErrorBoundary";
 import { SocketProvider } from "./contexts/SocketContext";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -42,6 +43,7 @@ import NewsletterPage from "./pages/NewsletterPage";
 // Lazy load heavy pages for code splitting
 const AdminPage = React.lazy(() => import("./pages/AdminPage"));
 const SystemStatus = React.lazy(() => import("./pages/SystemStatus"));
+const AdminDebug = React.lazy(() => import("./pages/AdminDebug"));
 const IconTest = React.lazy(() => import("./components/IconTest"));
 const Industries = React.lazy(() => import("./pages/Industries"));
 const CommandCenterV2 = React.lazy(() => import("./pages/CommandCenterV2"));
@@ -82,13 +84,23 @@ const PageLoader = () => (
 
 // Admin route component that shows login form or dashboard
 function AdminRoute() {
-  const { user } = useAuth();
-  return user ? (
+  const { user, isLoading } = useAuth();
+  
+  // Show loader while checking auth status
+  if (isLoading) {
+    return <PageLoader />;
+  }
+  
+  // Show login form if not authenticated
+  if (!user) {
+    return <LoginForm />;
+  }
+  
+  // Show admin content if authenticated
+  return (
     <Suspense fallback={<PageLoader />}>
       <Outlet />
     </Suspense>
-  ) : (
-    <LoginForm />
   );
 }
 
@@ -138,6 +150,7 @@ function App() {
           <Route path="proposal/:proposalId" element={<Proposal />} />
           <Route path="ai-brain" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><AdminPage /></Suspense></ProtectedRoute>} />
           <Route path="test-form" element={<Suspense fallback={<PageLoader />}><TestProjectForm /></Suspense>} />
+          <Route path="admin-debug" element={<Suspense fallback={<PageLoader />}><AdminDebug /></Suspense>} />
           <Route path="documentation" element={<Documentation />} />
           <Route path="documentation/quick-start" element={<QuickStart />} />
           <Route path="documentation/installation" element={<Installation />} />
@@ -169,16 +182,16 @@ function App() {
         
         {/* Admin routes with authentication */}
         <Route path="admin" element={<AdminRoute />}>
-          <Route index element={<CommandCenterV2 />} />
-          <Route path="overview" element={<CommandCenterV2 initialSection="overview" />} />
-          <Route path="clients" element={<CommandCenterV2 initialSection="clients" />} />
-          <Route path="projects" element={<CommandCenterV2 initialSection="projects" />} />
-          <Route path="tasks" element={<CommandCenterV2 initialSection="tasks" />} />
-          <Route path="sales" element={<CommandCenterV2 initialSection="sales" />} />
-          <Route path="team" element={<CommandCenterV2 initialSection="team" />} />
-          <Route path="templates" element={<CommandCenterV2 initialSection="templates" />} />
-          <Route path="call-analyzer" element={<CommandCenterV2 initialSection="call-analyzer" />} />
-          <Route path="settings" element={<CommandCenterV2 initialSection="settings" />} />
+          <Route index element={<ErrorBoundary><CommandCenterV2 /></ErrorBoundary>} />
+          <Route path="overview" element={<ErrorBoundary><CommandCenterV2 initialSection="overview" /></ErrorBoundary>} />
+          <Route path="clients" element={<ErrorBoundary><CommandCenterV2 initialSection="clients" /></ErrorBoundary>} />
+          <Route path="projects" element={<ErrorBoundary><CommandCenterV2 initialSection="projects" /></ErrorBoundary>} />
+          <Route path="tasks" element={<ErrorBoundary><CommandCenterV2 initialSection="tasks" /></ErrorBoundary>} />
+          <Route path="sales" element={<ErrorBoundary><CommandCenterV2 initialSection="sales" /></ErrorBoundary>} />
+          <Route path="team" element={<ErrorBoundary><CommandCenterV2 initialSection="team" /></ErrorBoundary>} />
+          <Route path="templates" element={<ErrorBoundary><CommandCenterV2 initialSection="templates" /></ErrorBoundary>} />
+          <Route path="call-analyzer" element={<ErrorBoundary><CommandCenterV2 initialSection="call-analyzer" /></ErrorBoundary>} />
+          <Route path="settings" element={<ErrorBoundary><CommandCenterV2 initialSection="settings" /></ErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
         </Route>
       </Routes>
