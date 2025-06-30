@@ -135,6 +135,18 @@ const ProjectTrackerV2 = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [importLoading, setImportLoading] = useState(false);
   
+  // Helper function to safely format dates
+  const safeFormatDate = (date: any, formatStr: string, defaultValue = 'Not set') => {
+    if (!date) return defaultValue;
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return defaultValue;
+    try {
+      return format(parsedDate, formatStr);
+    } catch {
+      return defaultValue;
+    }
+  };
+  
   const [projectForm, setProjectForm] = useState({
     projectName: '',
     clientName: '',
@@ -180,14 +192,27 @@ const ProjectTrackerV2 = () => {
   const loadProjects = async () => {
     try {
       const data = await apiCall(API_ENDPOINTS.projects);
-      const projectsData = (data.projects || []).map((p: any) => ({
-        ...p,
-        id: p.id.toString(),
-        clientName: p.client_name || p.clientName || 'Unknown Client',
-        projectName: p.name || p.projectName || 'Untitled Project',
-        assignedToName: p.assigned_to_name || p.assignedToName,
-        tasks: p.tasks || { total: p.total_tasks || 0, completed: p.completed_tasks || 0 }
-      }));
+      const projectsData = (data.projects || []).map((p: any) => {
+        // Validate dates
+        const startDate = p.start_date || p.startDate;
+        const deadline = p.end_date || p.deadline;
+        const validStartDate = startDate && !isNaN(new Date(startDate).getTime()) ? startDate : null;
+        const validDeadline = deadline && !isNaN(new Date(deadline).getTime()) ? deadline : null;
+        
+        return {
+          ...p,
+          id: p.id.toString(),
+          clientName: p.client_name || p.clientName || 'Unknown Client',
+          projectName: p.name || p.projectName || 'Untitled Project',
+          assignedToName: p.assigned_to_name || p.assignedToName,
+          tasks: p.tasks || { total: p.total_tasks || 0, completed: p.completed_tasks || 0 },
+          startDate: validStartDate,
+          deadline: validDeadline,
+          progress: p.progress || 0,
+          price: p.budget || p.price || 0,
+          actualPrice: p.actual_price || p.actualPrice
+        };
+      });
       setProjects(projectsData);
     } catch (error) {
       console.error('Error loading projects:', error);
@@ -756,7 +781,10 @@ const ProjectTrackerV2 = () => {
   };
 
   const ProjectCard = ({ project }: { project: Project }) => {
-    const isOverdue = new Date(project.deadline) < new Date() && project.status !== 'deployed';
+    const isOverdue = project.deadline && 
+                      !isNaN(new Date(project.deadline).getTime()) && 
+                      new Date(project.deadline) < new Date() && 
+                      project.status !== 'deployed';
     
     return (
       <Card className={`hover:shadow-lg transition-all cursor-pointer ${isOverdue ? 'border-red-200' : ''}`}>
@@ -835,11 +863,11 @@ const ProjectTrackerV2 = () => {
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>Start: {format(new Date(project.startDate), 'MMM d')}</span>
+                <span>Start: {safeFormatDate(project.startDate, 'MMM d')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>Due: {format(new Date(project.deadline), 'MMM d')}</span>
+                <span>Due: {safeFormatDate(project.deadline, 'MMM d')}</span>
               </div>
             </div>
 
@@ -1272,7 +1300,7 @@ const ProjectTrackerV2 = () => {
                         </div>
                       </td>
                       <td className="py-3">${(project.actualPrice || project.price || 0).toLocaleString()}</td>
-                      <td className="py-3">{format(new Date(project.deadline), 'MMM d, yyyy')}</td>
+                      <td className="py-3">{safeFormatDate(project.deadline, 'MMM d, yyyy')}</td>
                       <td className="py-3">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
