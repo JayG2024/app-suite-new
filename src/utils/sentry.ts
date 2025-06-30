@@ -77,7 +77,6 @@ export const initSentry = () => {
         return event;
       },
     });
-  }
 };
 
 // Helper to capture exceptions with context
