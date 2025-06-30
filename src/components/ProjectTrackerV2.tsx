@@ -1100,8 +1100,7 @@ const ProjectTrackerV2 = () => {
         <Button onClick={onSubmit}>{submitLabel}</Button>
       </div>
     </div>
-    );
-  };
+  );
 
   if (loading) {
     return (
