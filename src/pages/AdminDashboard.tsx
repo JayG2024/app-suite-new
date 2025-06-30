@@ -45,7 +45,8 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   FileText,
-  Phone
+  Phone,
+  HelpCircle
 } from "lucide-react";
 
 interface DashboardMetrics {
