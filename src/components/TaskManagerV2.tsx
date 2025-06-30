@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet-fixed";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
@@ -31,7 +31,9 @@ import {
   MoreVertical,
   ChevronRight,
   Flag,
-  ArrowRight
+  ArrowRight,
+  Bot,
+  Loader2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -535,24 +537,118 @@ const TaskManagerV2 = () => {
     );
   };
 
-  const TaskForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-6">
-      <div>
-        <Label htmlFor="title">Title *</Label>
-        <Input
-          id="title"
-          value={taskForm.title}
-          onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
-          placeholder="Task title"
-        />
-      </div>
+  const TaskForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => {
+    const [localAiQuery, setLocalAiQuery] = useState('');
+    const [localAiLoading, setLocalAiLoading] = useState(false);
+
+    const handleAiGenerate = async () => {
+      if (!localAiQuery.trim()) {
+        toast.error('Please enter a task description');
+        return;
+      }
+
+      setLocalAiLoading(true);
+      try {
+        const prompt = `Generate a detailed task based on this description: "${localAiQuery}". 
+        Format the response as JSON with these fields:
+        - title: A clear, concise task title (max 60 chars)
+        - description: Detailed task description with specific requirements
+        - priority: low, medium, or high based on the description
+        - estimated_hours: Realistic time estimate in hours
+        - tags: Array of relevant tags (max 3)
+        
+        Make it professional and actionable.`;
+
+        const response = await fetch('/.netlify/functions/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            message: prompt,
+            context: 'task_generation'
+          })
+        });
+
+        if (!response.ok) throw new Error('Failed to generate task');
+        
+        const data = await response.json();
+        const result = JSON.parse(data.response);
+        
+        setTaskForm(prev => ({
+          ...prev,
+          title: result.title || localAiQuery.substring(0, 60),
+          description: result.description || localAiQuery,
+          priority: result.priority || 'medium',
+          estimated_hours: result.estimated_hours || 1,
+          tags: (result.tags || []).join(', ')
+        }));
+        
+        setLocalAiQuery('');
+        toast.success('Task details generated!');
+      } catch (error) {
+        console.error('AI generation error:', error);
+        toast.error('Failed to generate task details');
+      } finally {
+        setLocalAiLoading(false);
+      }
+    };
+
+    return (
+      <div className="space-y-4">
+        {/* AI Task Generator */}
+        <div className="border rounded-lg p-4 bg-gradient-to-r from-blue-50 to-purple-50">
+          <div className="flex items-center gap-2 mb-3">
+            <Bot className="h-5 w-5 text-blue-600" />
+            <Label className="text-base font-semibold text-blue-700">Generate Task with AI</Label>
+          </div>
+          <p className="text-sm text-gray-600 mb-3">
+            Describe what needs to be done and AI will create a detailed task for you.
+          </p>
+          <div className="flex gap-2">
+            <Input
+              value={localAiQuery}
+              onChange={(e) => setLocalAiQuery(e.target.value)}
+              placeholder="e.g., Create landing page for new product launch"
+              className="flex-1"
+              onKeyPress={(e) => e.key === 'Enter' && handleAiGenerate()}
+            />
+            <Button
+              type="button"
+              onClick={handleAiGenerate}
+              disabled={localAiLoading}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {localAiLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Bot className="h-4 w-4 mr-2" />
+                  Generate
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="title">Title *</Label>
+          <Input
+            id="title"
+            value={taskForm.title}
+            onChange={(e) => setTaskForm(prev => ({ ...prev, title: e.target.value }))}
+            placeholder="Task title"
+            required
+          />
+        </div>
       
       <div>
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
           value={taskForm.description}
-          onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+          onChange={(e) => setTaskForm(prev => ({ ...prev, description: e.target.value }))}
           placeholder="Task description"
           rows={3}
         />
@@ -563,7 +659,7 @@ const TaskManagerV2 = () => {
           <Label htmlFor="project">Project</Label>
           <Select
             value={taskForm.project_id}
-            onValueChange={(value) => setTaskForm({ ...taskForm, project_id: value })}
+            onValueChange={(value) => setTaskForm(prev => ({ ...prev, project_id: value }))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select project" />
@@ -583,7 +679,7 @@ const TaskManagerV2 = () => {
           <Label htmlFor="assignee">Assignee</Label>
           <Select
             value={taskForm.assigned_to}
-            onValueChange={(value) => setTaskForm({ ...taskForm, assigned_to: value })}
+            onValueChange={(value) => setTaskForm(prev => ({ ...prev, assigned_to: value }))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select assignee" />
@@ -605,7 +701,7 @@ const TaskManagerV2 = () => {
           <Label htmlFor="status">Status</Label>
           <Select
             value={taskForm.status}
-            onValueChange={(value) => setTaskForm({ ...taskForm, status: value as any })}
+            onValueChange={(value) => setTaskForm(prev => ({ ...prev, status: value as any }))}
           >
             <SelectTrigger>
               <SelectValue />
@@ -623,7 +719,7 @@ const TaskManagerV2 = () => {
           <Label htmlFor="priority">Priority</Label>
           <Select
             value={taskForm.priority}
-            onValueChange={(value) => setTaskForm({ ...taskForm, priority: value as any })}
+            onValueChange={(value) => setTaskForm(prev => ({ ...prev, priority: value as any }))}
           >
             <SelectTrigger>
               <SelectValue />
@@ -645,7 +741,7 @@ const TaskManagerV2 = () => {
             id="due_date"
             type="date"
             value={taskForm.due_date}
-            onChange={(e) => setTaskForm({ ...taskForm, due_date: e.target.value })}
+            onChange={(e) => setTaskForm(prev => ({ ...prev, due_date: e.target.value }))}
           />
         </div>
         
@@ -657,7 +753,7 @@ const TaskManagerV2 = () => {
             min="0"
             step="0.5"
             value={taskForm.estimated_hours}
-            onChange={(e) => setTaskForm({ ...taskForm, estimated_hours: parseFloat(e.target.value) || 0 })}
+            onChange={(e) => setTaskForm(prev => ({ ...prev, estimated_hours: parseFloat(e.target.value) || 0 }))}
           />
         </div>
       </div>
@@ -667,7 +763,7 @@ const TaskManagerV2 = () => {
         <Input
           id="tags"
           value={taskForm.tags}
-          onChange={(e) => setTaskForm({ ...taskForm, tags: e.target.value })}
+          onChange={(e) => setTaskForm(prev => ({ ...prev, tags: e.target.value }))}
           placeholder="bug, feature, urgent"
         />
       </div>
@@ -680,9 +776,11 @@ const TaskManagerV2 = () => {
               <Input
                 value={item.text}
                 onChange={(e) => {
-                  const newChecklist = [...taskForm.checklist];
-                  newChecklist[index].text = e.target.value;
-                  setTaskForm({ ...taskForm, checklist: newChecklist });
+                  setTaskForm(prev => {
+                    const newChecklist = [...prev.checklist];
+                    newChecklist[index].text = e.target.value;
+                    return { ...prev, checklist: newChecklist };
+                  });
                 }}
                 placeholder="Checklist item"
               />
@@ -691,8 +789,10 @@ const TaskManagerV2 = () => {
                 variant="ghost"
                 size="icon"
                 onClick={() => {
-                  const newChecklist = taskForm.checklist.filter((_, i) => i !== index);
-                  setTaskForm({ ...taskForm, checklist: newChecklist });
+                  setTaskForm(prev => ({
+                    ...prev,
+                    checklist: prev.checklist.filter((_, i) => i !== index)
+                  }));
                 }}
               >
                 <Trash2 className="h-4 w-4" />
@@ -704,12 +804,14 @@ const TaskManagerV2 = () => {
             variant="outline"
             size="sm"
             onClick={() => {
-              const newChecklist = [...taskForm.checklist, {
-                id: Date.now().toString(),
-                text: '',
-                completed: false
-              }];
-              setTaskForm({ ...taskForm, checklist: newChecklist });
+              setTaskForm(prev => ({
+                ...prev,
+                checklist: [...prev.checklist, {
+                  id: Date.now().toString(),
+                  text: '',
+                  completed: false
+                }]
+              }));
             }}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -732,7 +834,8 @@ const TaskManagerV2 = () => {
         </Button>
       </div>
     </div>
-  );
+    );
+  };
 
   if (loading) {
     return (
@@ -789,25 +892,25 @@ const TaskManagerV2 = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle>Task Management</CardTitle>
-            <Sheet open={showAddTask} onOpenChange={setShowAddTask}>
-              <SheetTrigger asChild>
+            <Dialog open={showAddTask} onOpenChange={setShowAddTask}>
+              <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
                   New Task
                 </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
-                <SheetHeader>
-                  <SheetTitle>Create New Task</SheetTitle>
-                  <SheetDescription>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Create New Task</DialogTitle>
+                  <DialogDescription>
                     Add a new task to track your work
-                  </SheetDescription>
-                </SheetHeader>
+                  </DialogDescription>
+                </DialogHeader>
                 <div className="mt-4">
                   <TaskForm onSubmit={createTask} submitLabel="Create Task" />
                 </div>
-              </SheetContent>
-            </Sheet>
+              </DialogContent>
+            </Dialog>
           </div>
         </CardHeader>
         <CardContent>
@@ -1057,20 +1160,20 @@ const TaskManagerV2 = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Task Sheet */}
-      <Sheet open={showEditTask} onOpenChange={setShowEditTask}>
-        <SheetContent side="right" className="w-[500px] sm:w-[600px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
-          <SheetHeader>
-            <SheetTitle>Edit Task</SheetTitle>
-            <SheetDescription>
+      {/* Edit Task Dialog */}
+      <Dialog open={showEditTask} onOpenChange={setShowEditTask}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Task</DialogTitle>
+            <DialogDescription>
               Update task details
-            </SheetDescription>
-          </SheetHeader>
+            </DialogDescription>
+          </DialogHeader>
           <div className="mt-4">
             <TaskForm onSubmit={updateTask} submitLabel="Update Task" />
           </div>
-        </SheetContent>
-      </Sheet>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
