@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { format } from "date-fns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface Project {
   id: string;
@@ -787,7 +788,13 @@ const ProjectTrackerV2 = () => {
                       project.status !== 'deployed';
     
     return (
-      <Card className={`hover:shadow-lg transition-all cursor-pointer ${isOverdue ? 'border-red-200' : ''}`}>
+      <Card 
+        className={`hover:shadow-lg transition-all cursor-pointer ${isOverdue ? 'border-red-200' : ''}`}
+        onClick={() => {
+          setSelectedProject(project);
+          setShowProjectDetails(true);
+        }}
+      >
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex-1">
@@ -802,7 +809,12 @@ const ProjectTrackerV2 = () => {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -896,32 +908,42 @@ const ProjectTrackerV2 = () => {
     );
   };
 
-  const ProjectForm = ({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="projectName">Project Name *</Label>
-          <Input
-            id="projectName"
-            type="text"
-            value={projectForm.projectName}
-            onChange={(e) => updateProjectForm('projectName', e.target.value)}
-            placeholder="Website Redesign"
-            autoComplete="off"
-          />
+  const ProjectForm = React.memo(({ onSubmit, submitLabel }: { onSubmit: () => void; submitLabel: string }) => {
+    // Use local state to handle input changes to prevent focus loss
+    const handleInputChange = React.useCallback((field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      updateProjectForm(field, e.target.value);
+    }, []);
+
+    const handleSelectChange = React.useCallback((field: string) => (value: string) => {
+      updateProjectForm(field, value);
+    }, []);
+
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="projectName">Project Name *</Label>
+            <Input
+              id="projectName"
+              type="text"
+              value={projectForm.projectName}
+              onChange={handleInputChange('projectName')}
+              placeholder="Website Redesign"
+              autoComplete="off"
+            />
+          </div>
+          <div>
+            <Label htmlFor="clientName">Client Name</Label>
+            <Input
+              id="clientName"
+              type="text"
+              value={projectForm.clientName}
+              onChange={handleInputChange('clientName')}
+              placeholder="Acme Corp (optional)"
+              autoComplete="off"
+            />
+          </div>
         </div>
-        <div>
-          <Label htmlFor="clientName">Client Name</Label>
-          <Input
-            id="clientName"
-            type="text"
-            value={projectForm.clientName}
-            onChange={(e) => updateProjectForm('clientName', e.target.value)}
-            placeholder="Acme Corp (optional)"
-            autoComplete="off"
-          />
-        </div>
-      </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -930,7 +952,7 @@ const ProjectTrackerV2 = () => {
             value={projectForm.client_id}
             onValueChange={(value) => {
               if (value === 'new') {
-                updateProjectForm('client_id', value);
+                handleSelectChange('client_id')(value);
               } else {
                 const client = clients.find(c => c.id.toString() === value);
                 if (client) {
@@ -939,7 +961,7 @@ const ProjectTrackerV2 = () => {
                     clientName: client.name 
                   });
                 } else {
-                  updateProjectForm('client_id', value);
+                  handleSelectChange('client_id')(value);
                 }
               }
             }}
@@ -1013,7 +1035,7 @@ const ProjectTrackerV2 = () => {
             id="startDate"
             type="date"
             value={projectForm.startDate}
-            onChange={(e) => updateProjectForm('startDate', e.target.value)}
+            onChange={handleInputChange('startDate')}
           />
         </div>
         <div>
@@ -1022,7 +1044,7 @@ const ProjectTrackerV2 = () => {
             id="deadline"
             type="date"
             value={projectForm.deadline}
-            onChange={(e) => updateProjectForm('deadline', e.target.value)}
+            onChange={handleInputChange('deadline')}
           />
         </div>
       </div>
@@ -1031,7 +1053,7 @@ const ProjectTrackerV2 = () => {
         <Label htmlFor="assignTo">Assign To</Label>
         <Select 
           value={projectForm.assignedTo} 
-          onValueChange={(value) => updateProjectForm('assignedTo', value)}
+          onValueChange={handleSelectChange('assignedTo')}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select team member" />
@@ -1052,7 +1074,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="description"
           value={projectForm.description}
-          onChange={(e) => updateProjectForm('description', e.target.value)}
+          onChange={handleInputChange('description')}
           placeholder="Detailed project description..."
           rows={3}
         />
@@ -1063,7 +1085,7 @@ const ProjectTrackerV2 = () => {
         <Input
           id="technologies"
           value={projectForm.technologies}
-          onChange={(e) => updateProjectForm('technologies', e.target.value)}
+          onChange={handleInputChange('technologies')}
           placeholder="React, Node.js, PostgreSQL"
         />
       </div>
@@ -1073,7 +1095,7 @@ const ProjectTrackerV2 = () => {
         <Textarea
           id="deliverables"
           value={projectForm.deliverables}
-          onChange={(e) => updateProjectForm('deliverables', e.target.value)}
+          onChange={handleInputChange('deliverables')}
           placeholder="Website design, API development, Documentation"
           rows={2}
         />
@@ -1085,7 +1107,7 @@ const ProjectTrackerV2 = () => {
           id="notes"
           placeholder="Project notes and requirements..." 
           value={projectForm.notes}
-          onChange={(e) => updateProjectForm('notes', e.target.value)}
+          onChange={handleInputChange('notes')}
           rows={3}
         />
       </div>
@@ -1102,7 +1124,8 @@ const ProjectTrackerV2 = () => {
         <Button onClick={onSubmit}>{submitLabel}</Button>
       </div>
     </div>
-  );
+    );
+  });
 
   if (loading) {
     return (
@@ -1191,7 +1214,12 @@ const ProjectTrackerV2 = () => {
                     New Project
                   </Button>
                 </SheetTrigger>
-              <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
+              <SheetContent 
+                side="right" 
+                className="w-[600px] sm:w-[700px] overflow-y-auto" 
+                onInteractOutside={(e) => e.preventDefault()}
+                onOpenAutoFocus={(e) => e.preventDefault()}
+              >
                 <SheetHeader>
                   <SheetTitle>Create New Project</SheetTitle>
                   <SheetDescription>
@@ -1360,7 +1388,12 @@ const ProjectTrackerV2 = () => {
 
       {/* Edit Project Sheet */}
       <Sheet open={showEditProject} onOpenChange={setShowEditProject}>
-        <SheetContent side="right" className="w-[600px] sm:w-[700px] overflow-y-auto" onInteractOutside={(e) => e.preventDefault()}>
+        <SheetContent 
+          side="right" 
+          className="w-[600px] sm:w-[700px] overflow-y-auto" 
+          onInteractOutside={(e) => e.preventDefault()}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <SheetHeader>
             <SheetTitle>Edit Project</SheetTitle>
             <SheetDescription>
@@ -1372,6 +1405,282 @@ const ProjectTrackerV2 = () => {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* Full-Screen Project Details Dialog */}
+      <Dialog open={showProjectDetails} onOpenChange={setShowProjectDetails}>
+        <DialogContent className="max-w-[90vw] w-full h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-3">
+              {selectedProject && getTypeIcon(selectedProject.type)}
+              {selectedProject?.projectName}
+            </DialogTitle>
+            <DialogDescription>
+              Full project details and management
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedProject && (
+            <div className="mt-6 space-y-6">
+              {/* Project Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Project Information</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Client</Label>
+                      <p className="font-medium">{selectedProject.clientName}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Type</Label>
+                      <p className="font-medium capitalize">{selectedProject.type}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Budget</Label>
+                      <p className="font-medium">${(selectedProject.actualPrice || selectedProject.price || 0).toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Status</Label>
+                      <Badge className={getStatusColor(selectedProject.status)}>
+                        {selectedProject.status}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Timeline</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Start Date</Label>
+                      <p className="font-medium">{safeFormatDate(selectedProject.startDate, 'MMMM d, yyyy')}</p>
+                    </div>
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Deadline</Label>
+                      <p className="font-medium">{safeFormatDate(selectedProject.deadline, 'MMMM d, yyyy')}</p>
+                    </div>
+                    {selectedProject.completionDate && (
+                      <div>
+                        <Label className="text-sm text-muted-foreground">Completed</Label>
+                        <p className="font-medium">{safeFormatDate(selectedProject.completionDate, 'MMMM d, yyyy')}</p>
+                      </div>
+                    )}
+                    <div>
+                      <Label className="text-sm text-muted-foreground">Progress</Label>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Progress value={selectedProject.progress} className="flex-1" />
+                        <span className="text-sm font-medium">{selectedProject.progress}%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Tabs for Different Sections */}
+              <Tabs defaultValue="overview" className="w-full">
+                <TabsList className="grid w-full grid-cols-5">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="tasks">Tasks</TabsTrigger>
+                  <TabsTrigger value="documents">Documents</TabsTrigger>
+                  <TabsTrigger value="notes">Notes</TabsTrigger>
+                  <TabsTrigger value="activity">Activity</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="overview" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Project Description</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-muted-foreground">
+                        {selectedProject.description || 'No description provided.'}
+                      </p>
+                      
+                      {selectedProject.technologies && selectedProject.technologies.length > 0 && (
+                        <div className="mt-6">
+                          <Label className="text-sm font-medium mb-2">Technologies</Label>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {selectedProject.technologies.map((tech, index) => (
+                              <Badge key={index} variant="secondary">{tech}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedProject.deliverables && selectedProject.deliverables.length > 0 && (
+                        <div className="mt-6">
+                          <Label className="text-sm font-medium mb-2">Deliverables</Label>
+                          <ul className="list-disc list-inside space-y-1 mt-2">
+                            {selectedProject.deliverables.map((deliverable, index) => (
+                              <li key={index} className="text-sm text-muted-foreground">{deliverable}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="tasks" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Project Tasks</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {selectedProject.tasks ? (
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
+                            <div>
+                              <p className="font-medium">Total Tasks</p>
+                              <p className="text-2xl font-bold">{selectedProject.tasks.total}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Completed</p>
+                              <p className="text-2xl font-bold text-green-600">{selectedProject.tasks.completed}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium">Remaining</p>
+                              <p className="text-2xl font-bold text-orange-600">
+                                {selectedProject.tasks.total - selectedProject.tasks.completed}
+                              </p>
+                            </div>
+                          </div>
+                          <Button className="w-full">
+                            <CheckSquare className="h-4 w-4 mr-2" />
+                            Manage Tasks
+                          </Button>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No tasks added yet.</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="documents" className="mt-6">
+                  <Card>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <CardTitle>Project Documents</CardTitle>
+                      <Button size="sm">
+                        <Upload className="h-4 w-4 mr-2" />
+                        Upload Document
+                      </Button>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="border-2 border-dashed border-muted rounded-lg p-8 text-center">
+                        <Upload className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground mb-4">
+                          No documents uploaded yet. Click the button above or drag and drop files here.
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          Supported formats: PDF, DOC, DOCX, XLS, XLSX, PNG, JPG
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="notes" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Project Notes</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <Textarea
+                        placeholder="Add project notes, requirements, or any important information..."
+                        className="min-h-[200px]"
+                        value={selectedProject.notes || ''}
+                        onChange={(e) => {
+                          // Update notes locally for preview
+                          setSelectedProject({
+                            ...selectedProject,
+                            notes: e.target.value
+                          });
+                        }}
+                      />
+                      <Button 
+                        className="mt-4"
+                        onClick={async () => {
+                          // Save notes to database
+                          try {
+                            await apiCall(`${API_ENDPOINTS.projects}?id=${selectedProject.id}`, {
+                              method: 'PUT',
+                              body: JSON.stringify({ notes: selectedProject.notes })
+                            });
+                            toast.success('Notes saved successfully');
+                            loadProjects(); // Refresh projects
+                          } catch (error) {
+                            toast.error('Failed to save notes');
+                          }
+                        }}
+                      >
+                        Save Notes
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                <TabsContent value="activity" className="mt-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Recent Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {selectedProject.activities && selectedProject.activities.length > 0 ? (
+                        <div className="space-y-4">
+                          {selectedProject.activities.map((activity, index) => (
+                            <div key={index} className="flex items-start gap-3 pb-4 border-b last:border-0">
+                              <Activity className="h-5 w-5 text-muted-foreground mt-0.5" />
+                              <div className="flex-1">
+                                <p className="text-sm font-medium">{activity.activity_description}</p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {activity.user_name} • {safeFormatDate(activity.created_at, 'MMM d, yyyy h:mm a')}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground">No activity recorded yet.</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between items-center pt-6 border-t">
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowProjectDetails(false);
+                      openEditDialog(selectedProject);
+                    }}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Project
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => deleteProject(selectedProject.id)}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+                <Button variant="default" onClick={() => setShowProjectDetails(false)}>
+                  Close
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
