@@ -71,6 +71,13 @@
   status = 301
   force = true
 
+# Redirect old payment terms HTML to PDF
+[[redirects]]
+  from = "/documents/payment-terms.html"
+  to = "/.netlify/functions/payment-terms-pdf"
+  status = 301
+  force = true
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
@@ -83,7 +90,7 @@
 
 [functions]
   node_bundler = "esbuild"
-  external_node_modules = ["@sendgrid/mail", "nodemailer"]
+  external_node_modules = ["@sendgrid/mail", "nodemailer", "@sparticuz/chromium", "puppeteer-core"]
   
 [[headers]]
   for = "/*"

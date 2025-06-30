@@ -21,8 +21,8 @@ import { CALENDLY_DISCOVERY_CALL_URL } from "@/utils/constants";
 
 const PaymentTerms = () => {
   const handleDownloadPDF = () => {
-    // For now, we'll use the HTML document that's generated
-    window.open('/documents/payment-terms.html', '_blank');
+    // Download the PDF version
+    window.open('/.netlify/functions/payment-terms-pdf', '_blank');
   };
 
   return (

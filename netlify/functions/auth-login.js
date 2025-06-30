@@ -5,8 +5,8 @@ import jwt from 'jsonwebtoken';
 // JWT secret
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 
-// Only allow these two emails
-const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai'];
+// Only allow these three emails
+const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai', 'jorge@jaydus.ai'];
 
 export const handler = async (event, context) => {
   // Only allow POST
@@ -60,6 +60,13 @@ export const handler = async (event, context) => {
         id: 2,
         email: 'almir@jaydus.ai',
         name: 'Almir',
+        role: 'admin',
+        password: await bcrypt.hash('Canada2024@@@@', 10)
+      },
+      {
+        id: 3,
+        email: 'jorge@jaydus.ai',
+        name: 'Jorge',
         role: 'admin',
         password: await bcrypt.hash('Canada2024@@@@', 10)
       }
