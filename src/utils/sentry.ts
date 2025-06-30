@@ -41,6 +41,9 @@ export const initSentry = () => {
         // Network errors
         'NetworkError',
         'Failed to fetch',
+        // Old Sentry dashboard errors
+        'updateFrom',
+        'Object [object Object] has no method',
       ],
       
       // Before sending error to Sentry
@@ -50,6 +53,19 @@ export const initSentry = () => {
           frame => frame.filename?.includes('chrome-extension://') || 
                    frame.filename?.includes('moz-extension://')
         )) {
+          return null;
+        }
+        
+        // Filter out errors from old Sentry dashboard
+        if (event.exception?.values?.[0]?.stacktrace?.frames?.some(
+          frame => frame.filename?.includes('sentry/scripts/') || 
+                   frame.filename?.includes('raven.js')
+        )) {
+          return null;
+        }
+        
+        // Filter out errors from example.com
+        if (event.request?.url?.includes('example.com')) {
           return null;
         }
         
