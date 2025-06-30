@@ -47,6 +47,7 @@ const AdminDebug = React.lazy(() => import("./pages/AdminDebug"));
 const IconTest = React.lazy(() => import("./components/IconTest"));
 const Industries = React.lazy(() => import("./pages/Industries"));
 const CommandCenterV2 = React.lazy(() => import("./pages/CommandCenterV2"));
+const AdminSimple = React.lazy(() => import("./pages/AdminSimple"));
 const TestProjectForm = React.lazy(() => import('./components/TestProjectForm'));
 const Examples = React.lazy(() => import("./pages/Examples"));
 const SolutionsWeveBuilt = React.lazy(() => import("./pages/SolutionsWeveBuilt"));
@@ -86,17 +87,23 @@ const PageLoader = () => (
 function AdminRoute() {
   const { user, isLoading } = useAuth();
   
+  // Add debugging
+  console.log('AdminRoute render:', { user, isLoading, pathname: window.location.pathname });
+  
   // Show loader while checking auth status
   if (isLoading) {
+    console.log('AdminRoute: Showing loader');
     return <PageLoader />;
   }
   
   // Show login form if not authenticated
   if (!user) {
+    console.log('AdminRoute: No user, showing login form');
     return <LoginForm />;
   }
   
   // Show admin content if authenticated
+  console.log('AdminRoute: User authenticated, showing content');
   return (
     <Suspense fallback={<PageLoader />}>
       <Outlet />
@@ -182,7 +189,7 @@ function App() {
         
         {/* Admin routes with authentication */}
         <Route path="admin" element={<AdminRoute />}>
-          <Route index element={<ErrorBoundary><CommandCenterV2 /></ErrorBoundary>} />
+          <Route index element={<ErrorBoundary><AdminSimple /></ErrorBoundary>} />
           <Route path="overview" element={<ErrorBoundary><CommandCenterV2 initialSection="overview" /></ErrorBoundary>} />
           <Route path="clients" element={<ErrorBoundary><CommandCenterV2 initialSection="clients" /></ErrorBoundary>} />
           <Route path="projects" element={<ErrorBoundary><CommandCenterV2 initialSection="projects" /></ErrorBoundary>} />
