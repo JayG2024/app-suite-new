@@ -17,9 +17,7 @@ export default function AdminSimple() {
     navigate('/');
   };
   
-  // Add try-catch for debugging
-  try {
-    return (
+  return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Simple Admin Page</h1>
