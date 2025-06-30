@@ -580,6 +580,18 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
                 {/* <HelpCircle className="h-4 w-4 mr-3" /> */}
                 Help & Support
               </Button>
+              {/* Sentry Test Button - Remove in production */}
+              {import.meta.env.DEV && (
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-red-600"
+                  onClick={() => {
+                    throw new Error("Test Sentry Error - This is intentional!");
+                  }}
+                >
+                  Test Sentry Error
+                </Button>
+              )}
             </div>
           </div>
         </ScrollArea>

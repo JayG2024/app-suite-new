@@ -1,27 +1,12 @@
 import * as Sentry from "@sentry/react";
-import { BrowserTracing } from "@sentry/tracing";
-import { useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from "react-router-dom";
-import React from "react";
 
 export const initSentry = () => {
-  // Only initialize in production
-  if (import.meta.env.PROD) {
-    Sentry.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN || "", // Add your Sentry DSN to .env
+  // Initialize Sentry in both development and production for testing
+  Sentry.init({
+    dsn: import.meta.env.VITE_SENTRY_DSN || "https://b7c33a866247123c2970068e1743ece9@o4509586957074432.ingest.us.sentry.io/4509586957991936",
       integrations: [
-        new BrowserTracing({
-          // Set sampling to detect performance issues
-          tracingOrigins: ["localhost", "app-suite.io", /^\//],
-          // Track router changes
-          routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-            React.useEffect,
-            useLocation,
-            useNavigationType,
-            createRoutesFromChildren,
-            matchRoutes
-          ),
-        }),
-        new Sentry.Replay({
+        Sentry.browserTracingIntegration(),
+        Sentry.replayIntegration({
           // Mask all text content by default for privacy
           maskAllText: true,
           maskAllInputs: true,
