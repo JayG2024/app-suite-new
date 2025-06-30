@@ -11,6 +11,7 @@ import { useSocket } from "@/contexts/SocketContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
+import ProjectTrackerSimple from "@/components/ProjectTrackerSimple";
 import ClientManager from "@/components/ClientManager";
 import SalesPipeline from "@/components/SalesPipeline";
 import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
@@ -254,9 +255,13 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
           }
         case 'projects':
           try {
-            return <ProjectTrackerV2 />;
+            console.log('Attempting to render ProjectTrackerV2...');
+            // Temporarily use simple version while debugging ProjectTrackerV2
+            return <ProjectTrackerSimple />;
+            // return <ProjectTrackerV2 />;
           } catch (error) {
             console.error('Error rendering Projects section:', error);
+            console.error('Stack trace:', error?.stack);
             return <ErrorSection section="Projects" error={error} />;
           }
         case 'tasks':
