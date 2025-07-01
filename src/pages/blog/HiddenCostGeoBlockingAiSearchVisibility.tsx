@@ -351,14 +351,6 @@ const HiddenCostGeoBlockingAiSearchVisibility = () => {
               <Headphones className="w-4 h-4" />
               Listen (22 min)
             </Button>
-            <Button variant="outline" onClick={handleDownloadPDF} className="flex items-center gap-2">
-              <FileText className="w-4 h-4" />
-              Download PDF
-            </Button>
-            <Button variant="outline" onClick={handleDownloadInfographic} className="flex items-center gap-2">
-              <FileImage className="w-4 h-4" />
-              View Infographic
-            </Button>
           </div>
 
           {/* Main Content */}
@@ -761,6 +753,89 @@ const HiddenCostGeoBlockingAiSearchVisibility = () => {
                 <div className="mt-4 p-4 border border-slate-200 rounded-lg">
                   <p className="text-sm text-slate-600">
                     <strong>Additional sources:</strong> This research also incorporates data from PPC Land, Google Support, Search Engine Land, Cloudflare, Geotargetly, SearchNatural, Ipify, Indusface, Momentic Marketing, SEO.ai, and Google Developers documentation. Full citation list available upon request.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* FAQ Section */}
+            <section className="mb-12">
+              <h2 className="text-3xl font-bold mb-8 text-slate-900">Frequently Asked Questions</h2>
+              
+              <div className="space-y-6">
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">1. What is the main problem with traditional geo-blocking strategies in the current digital landscape?</h3>
+                  <p className="text-slate-700 leading-relaxed">
+                    Traditional geo-blocking, often used to prevent spam and bot traffic from specific countries, is now inadvertently harming businesses' visibility in the evolving AI-powered search landscape. While effective against spam in the past, it blocks legitimate AI crawlers (like GPTBot, ClaudeBot, and Google-Extended) that primarily originate from US-based IP addresses. This means that by blocking certain geographic regions, businesses are preventing AI systems from accessing and learning about their content, leading to a significant "hidden cost" in terms of future search visibility.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">2. How has the search landscape fundamentally changed with the emergence of AI?</h3>
+                  <p className="text-slate-700 leading-relaxed">
+                    The search landscape has shifted significantly beyond traditional keyword-based Google searches. AI-powered search engines and features are rapidly growing in prominence, including platforms like ChatGPT (100M+ searches/day), Google AI Overviews (15% of all search results), Perplexity AI (300% year-over-year growth), and Microsoft Copilot. These AI systems learn about businesses by crawling their websites to build their knowledge base. If a website is inaccessible to these crawlers due to geo-blocking, the business essentially becomes invisible in AI-generated answers, which is crucial for Generative Engine Optimization (GEO).
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">3. What is Generative Engine Optimization (GEO) and how does it differ from traditional SEO?</h3>
+                  <p className="text-slate-700 leading-relaxed">
+                    Traditional SEO (Search Engine Optimization) primarily focused on improving a website's ranking in standard search engine results pages. Generative Engine Optimization (GEO), on the other hand, is centered around being cited and referenced in AI-generated answers. This means that when a user asks an AI system like ChatGPT or Google's AI about a specific industry, product, or service, the goal of GEO is to ensure that your business is included and referenced in that AI's response. This requires AI systems to have access to and understand your website's content.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">4. What are the "hidden costs" of geo-blocking in relation to AI search visibility?</h3>
+                  <p className="text-slate-700 leading-relaxed mb-3">
+                    The hidden costs of geo-blocking are significant and compounding. When AI systems cannot crawl a website, it leads to:
+                  </p>
+                  <ol className="list-decimal list-inside space-y-2 text-slate-700 pl-4">
+                    <li><strong>Training Data Exclusion:</strong> The business's information is not included in the foundational knowledge that AI systems use for their responses.</li>
+                    <li><strong>Citation Invisibility:</strong> The business will not be referenced or cited in AI-generated answers about its industry or offerings.</li>
+                    <li><strong>Competitive Disadvantage:</strong> Competitors with accessible websites gain authority and visibility in the AI-powered search ecosystem.</li>
+                    <li><strong>Future-Proofing Failure:</strong> As AI search continues to grow and dominate, a business's digital presence shrinks due to inaccessibility.</li>
+                  </ol>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">5. What does Google's official stance on geo-blocking imply for businesses?</h3>
+                  <p className="text-slate-700 leading-relaxed">
+                    Google's official stance on geo-blocking is that it's not inherently against their guidelines if implemented correctly, meaning if human users are blocked from a country, Googlebot should also be blocked from that same country. However, the critical caveat is that implementation errors can be catastrophic, potentially leading to complete deindexing and severe traffic losses. Furthermore, Google's crawling infrastructure is expanding beyond the US, meaning geo-blocking requires constant, difficult-to-manage updates, making it impractical for most businesses to maintain without risking search visibility.
+                  </p>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">6. What are the recommended modern solutions for spam prevention that do not impact AI search visibility?</h3>
+                  <p className="text-slate-700 leading-relaxed mb-3">
+                    Instead of geo-blocking, modern and more effective spam prevention solutions are available that do not hinder AI search visibility. These include:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-slate-700 pl-4">
+                    <li><strong>Intelligent Filtering Systems:</strong> Tools like Akismet (99.99% accuracy), advanced honeypots (invisible to humans, obvious to bots), and machine learning detection (identifying patterns without blocking regions).</li>
+                    <li><strong>User-Friendly Security:</strong> Solutions like Cloudflare Turnstile (CAPTCHA replacement with zero user friction) and behavioral analysis that detect bot patterns without geographic assumptions.</li>
+                    <li><strong>Progressive Challenges:</strong> Security measures that escalate only when suspicious behavior is detected, rather than blanket blocking. These solutions offer higher accuracy (99%+), better user experience (zero legitimate users blocked), and lower maintenance compared to geo-blocking.</li>
+                  </ul>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">7. What strategic shift should businesses make regarding website accessibility in an AI-first world?</h3>
+                  <p className="text-slate-700 leading-relaxed mb-3">
+                    Businesses should shift from broad geographic blocking to intelligent accessibility strategies. This involves:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 text-slate-700 pl-4">
+                    <li><strong>Bot Intelligence:</strong> Allowing verified search engine and AI crawlers while effectively blocking malicious bots.</li>
+                    <li><strong>Behavioral Filtering:</strong> Focusing on actions and patterns of visitors rather than their geographic origin for security.</li>
+                    <li><strong>Progressive Security:</strong> Starting with a more permissive approach and escalating security measures only when necessary.</li>
+                    <li><strong>Content Strategy:</strong> Optimizing content not just for traditional search but specifically for AI citation, making it easily understandable and referenceable by AI systems.</li>
+                  </ul>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-3 text-slate-900">8. What are the immediate and medium-term recommendations for businesses currently using or considering geo-blocking?</h3>
+                  <p className="text-slate-700 leading-relaxed mb-4">
+                    For businesses currently using geo-blocking, immediate actions include auditing current restrictions, whitelisting AI crawlers (GPTBot, ClaudeBot, Google-Extended), implementing modern spam prevention like Akismet, and monitoring performance. The medium-term strategy involves gradually phasing out geographic restrictions while monitoring spam levels, optimizing content for AI citation, and implementing comprehensive monitoring for both traditional SEO and AI visibility.
+                  </p>
+                  <p className="text-slate-700 leading-relaxed">
+                    For businesses starting fresh, recommendations include choosing CDN-level security (e.g., Cloudflare) with bot management, implementing progressive security, focusing on high-quality content, and actively monitoring AI mentions of their business. The key takeaway is that in 2025, accessibility to AI systems is the new optimization.
                   </p>
                 </div>
               </div>

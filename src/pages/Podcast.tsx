@@ -5,6 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import SEO from "@/components/SEO";
 import Newsletter from "@/components/Newsletter";
 import { 
@@ -19,7 +25,11 @@ import {
   Rss,
   ChevronRight,
   Mic,
-  Radio
+  Radio,
+  Twitter,
+  Linkedin,
+  Facebook,
+  Copy
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -46,6 +56,16 @@ const Podcast = () => {
   // Episodes data
   const episodes: Episode[] = [
     {
+      id: 2,
+      title: "Geo-Blocking's Hidden Cost: AI Search Visibility",
+      description: "Research reveals how traditional geo-blocking strategies may be hurting your visibility in AI-powered search. Learn why 95% of AI crawlers are blocked by geographic restrictions and discover modern alternatives that protect without limiting AI discovery.",
+      date: "July 1, 2025",
+      duration: "18:45",
+      audioUrl: "/podcasts/Geo-Blocking's Hidden Cost_ AI Search Visibility.wav",
+      topics: ["Geo-blocking", "AI Crawlers", "Website Accessibility", "GEO"],
+      featured: true
+    },
+    {
       id: 1,
       title: "AI Ate SEO: The Rise of Generative Engine Optimization",
       description: "A deep dive into how AI is transforming search and what Generative Engine Optimization (GEO) means for businesses. We explore the shift from traditional SEO to AI-first optimization strategies.",
@@ -53,7 +73,7 @@ const Podcast = () => {
       duration: "15:32",
       audioUrl: "/podcasts/AI Ate SEO_ The Rise of Generative Engine Optimization.mp3",
       topics: ["GEO", "AI Search", "ChatGPT", "SEO Evolution"],
-      featured: true
+      featured: false
     }
   ];
 
@@ -109,22 +129,46 @@ const Podcast = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleShare = async (episode: Episode) => {
-    const shareData = {
-      title: episode.title,
-      text: `Listen to "${episode.title}" on the App Suite Insights Podcast`,
-      url: window.location.href
-    };
-
-    try {
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-        await navigator.share(shareData);
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
+  const handleShare = async (episode: Episode, platform?: string) => {
+    const shareUrl = window.location.href;
+    const shareTitle = episode.title;
+    const shareText = `Listen to "${episode.title}" on the App Suite Insights Podcast`;
+    
+    if (platform === 'twitter') {
+      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+      window.open(twitterUrl, '_blank', 'width=550,height=420');
+    } else if (platform === 'linkedin') {
+      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`;
+      window.open(linkedinUrl, '_blank', 'width=550,height=520');
+    } else if (platform === 'facebook') {
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+      window.open(facebookUrl, '_blank', 'width=550,height=420');
+    } else if (platform === 'copy') {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
         toast.success('Link copied to clipboard!');
+      } catch (error) {
+        console.error('Copy failed:', error);
+        toast.error('Failed to copy link');
       }
-    } catch (error) {
-      console.error('Share failed:', error);
+    } else {
+      // Native share fallback
+      const shareData = {
+        title: shareTitle,
+        text: shareText,
+        url: shareUrl
+      };
+
+      try {
+        if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success('Link copied to clipboard!');
+        }
+      } catch (error) {
+        console.error('Share failed:', error);
+      }
     }
   };
 
@@ -299,13 +343,32 @@ const Podcast = () => {
                         <Download className="w-4 h-4 mr-2" />
                         Download
                       </Button>
-                      <Button 
-                        variant="outline"
-                        onClick={() => handleShare(episode)}
-                      >
-                        <Share2 className="w-4 h-4 mr-2" />
-                        Share
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline">
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          <DropdownMenuItem onClick={() => handleShare(episode, 'twitter')}>
+                            <Twitter className="w-4 h-4 mr-2" />
+                            Share on X
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShare(episode, 'linkedin')}>
+                            <Linkedin className="w-4 h-4 mr-2" />
+                            Share on LinkedIn
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShare(episode, 'facebook')}>
+                            <Facebook className="w-4 h-4 mr-2" />
+                            Share on Facebook
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleShare(episode, 'copy')}>
+                            <Copy className="w-4 h-4 mr-2" />
+                            Copy Link
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </CardContent>
                 </Card>

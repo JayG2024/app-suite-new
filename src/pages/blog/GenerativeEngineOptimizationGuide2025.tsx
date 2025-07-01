@@ -196,10 +196,6 @@ const GenerativeEngineOptimizationGuide2025 = () => {
               <Share2 className="w-4 h-4" />
               Share Research
             </Button>
-            <Button variant="outline" onClick={handleDownloadPDF} className="flex items-center gap-2">
-              <Download className="w-4 h-4" />
-              Download PDF
-            </Button>
           </div>
 
           {/* Main Content */}
