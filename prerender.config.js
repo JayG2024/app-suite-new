@@ -1,6 +1,10 @@
-const path = require('path');
-const Prerenderer = require('@prerenderer/prerenderer');
-const PuppeteerRenderer = require('@prerenderer/renderer-puppeteer');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Prerenderer from '@prerenderer/prerenderer';
+import PuppeteerRenderer from '@prerenderer/renderer-puppeteer';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const routes = [
   '/',

@@ -128,7 +128,8 @@ export const handler = async (event, context) => {
         );
         
         if (userToDelete.rows[0]?.email === 'jason@jaydus.ai' || 
-            userToDelete.rows[0]?.email === 'almir@jaydus.ai') {
+            userToDelete.rows[0]?.email === 'almir@jaydus.ai' ||
+            userToDelete.rows[0]?.email === 'jorge@jaydus.ai') {
           return {
             statusCode: 403,
             headers,

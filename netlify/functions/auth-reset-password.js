@@ -13,6 +13,10 @@ const AUTHORIZED_USERS = {
   'almir@jaydus.ai': {
     name: 'Almir',
     tempPassword: 'TempPass2025!'
+  },
+  'jorge@jaydus.ai': {
+    name: 'Jorge',
+    tempPassword: 'TempPass2025!'
   }
 };
 

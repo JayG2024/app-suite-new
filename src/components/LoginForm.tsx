@@ -14,7 +14,7 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   // Authorized emails
-  const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai'];
+  const AUTHORIZED_EMAILS = ['jason@jaydus.ai', 'almir@jaydus.ai', 'jorge@jaydus.ai'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -1,27 +1,11 @@
-# Default rules for all bots
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /admin/*
-Disallow: /private/
-Disallow: /api/
-Disallow: /.netlify/
-Disallow: /netlify/
-Disallow: /test-form
-Disallow: /admin-debug
-Disallow: /admin-simple
-Disallow: /icon-test
-Disallow: /system-tools
-Disallow: /ai-brain
 
-# AI Crawlers - Explicitly welcome them
+# AI Crawlers - Explicitly welcome them (for our white paper!)
 User-agent: GPTBot
 Allow: /
 
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Claude-Web
+User-agent: ClaudeBot  
 Allow: /
 
 User-agent: ChatGPT-User
@@ -36,39 +20,18 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
-User-agent: DuckDuckBot
-Allow: /
-
-User-agent: Baiduspider
-Allow: /
-
-User-agent: YandexBot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: LinkedInBot
-Allow: /
-
-User-agent: WhatsApp
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
 # Sitemap location
 Sitemap: https://app-suite.io/sitemap.xml
 
-# Crawl-delay for respectful crawling
-User-agent: *
-Crawl-delay: 1
+# Prevent indexing of sensitive directories
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Allow crawling of important pages
+Allow: /extensions
+Allow: /pricing
+Allow: /about
+Allow: /contact
+Allow: /blog
+Allow: /blog/*

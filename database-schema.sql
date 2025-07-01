@@ -151,5 +151,6 @@ CREATE INDEX idx_activity_created ON activity_log(created_at);
 -- Insert default admin users if they don't exist
 INSERT INTO users (email, name, role) VALUES 
   ('jason@jaydus.ai', 'Jason', 'admin'),
-  ('almir@jaydus.ai', 'Almir', 'admin')
+  ('almir@jaydus.ai', 'Almir', 'admin'),
+  ('jorge@jaydus.ai', 'Jorge', 'admin')
 ON CONFLICT (email) DO NOTHING;
