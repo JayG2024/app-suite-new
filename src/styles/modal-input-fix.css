@@ -1,0 +1,91 @@
+/* Comprehensive fix for inputs in modals/sheets/dialogs */
+
+/* Reset all potential blocking styles */
+[data-radix-portal] {
+  pointer-events: auto !important;
+}
+
+/* Ensure all dialog overlays allow interaction with their content */
+[role="dialog"],
+[data-state="open"],
+[data-radix-portal] > * {
+  pointer-events: auto !important;
+}
+
+/* Fix for all input elements in any modal context */
+[role="dialog"] input:not([disabled]),
+[role="dialog"] textarea:not([disabled]),
+[role="dialog"] select:not([disabled]),
+[role="dialog"] button:not([disabled]),
+[data-state="open"] input:not([disabled]),
+[data-state="open"] textarea:not([disabled]),
+[data-state="open"] select:not([disabled]),
+[data-state="open"] button:not([disabled]),
+.sheet-content input:not([disabled]),
+.sheet-content textarea:not([disabled]),
+.sheet-content select:not([disabled]),
+.sheet-content button:not([disabled]) {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  position: relative !important;
+  z-index: 10000 !important;
+  opacity: 1 !important;
+  cursor: text !important;
+}
+
+/* Specific fix for Radix UI sheet/dialog content */
+[data-radix-collection-item] input,
+[data-radix-collection-item] textarea,
+[data-radix-collection-item] select {
+  pointer-events: auto !important;
+  z-index: 10001 !important;
+}
+
+/* Ensure focus states work */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid var(--ring) !important;
+  outline-offset: 2px !important;
+  z-index: 10002 !important;
+}
+
+/* Fix for sheet overlays specifically */
+.fixed.inset-0.z-50,
+.fixed.inset-0.z-\\[100\\] {
+  pointer-events: none !important;
+}
+
+.fixed.inset-0.z-50 ~ *,
+.fixed.inset-0.z-\\[100\\] ~ * {
+  pointer-events: auto !important;
+}
+
+/* Ensure form elements are always interactive */
+form {
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix for any nested modal/sheet scenarios */
+[role="dialog"] [role="dialog"] input,
+[role="dialog"] [role="dialog"] textarea,
+[role="dialog"] [role="dialog"] select {
+  z-index: 20000 !important;
+}
+
+/* Disable any touch-action restrictions on inputs */
+input, textarea, select {
+  touch-action: auto !important;
+  -webkit-touch-action: auto !important;
+}
+
+/* Fix for mobile devices */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}

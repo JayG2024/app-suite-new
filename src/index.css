@@ -1,5 +1,6 @@
 @import './styles/sheet-fix.css';
 @import './styles/input-fix.css';
+@import './styles/modal-input-fix.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
