@@ -13,7 +13,7 @@ import { useAuth } from "@/contexts/SupabaseAuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ClientManager from "@/components/ClientManager";
-import SalesPipeline from "@/components/SalesPipeline";
+import SalesPipeline from "@/components/SalesPipelineSupabase";
 import MarketingHubFixed from "@/components/MarketingHubFixed";
 import FinancialDashboardFixed from "@/components/FinancialDashboardFixed";
 import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
