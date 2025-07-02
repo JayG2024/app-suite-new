@@ -13,7 +13,7 @@ import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ProjectTrackerSimple from "@/components/ProjectTrackerSimple";
 import ClientManager from "@/components/ClientManager";
-import SalesPipeline from "@/components/SalesPipeline";
+import SalesPipeline from "@/components/SalesPipelineSupabase";
 import TeamWorkspaceFixed from "@/components/TeamWorkspaceFixed";
 import EmailTemplates from "@/components/EmailTemplates";
 import TaskManagerV2 from "@/components/TaskManagerV2";

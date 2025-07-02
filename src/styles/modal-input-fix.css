@@ -24,7 +24,11 @@
 .sheet-content input:not([disabled]),
 .sheet-content textarea:not([disabled]),
 .sheet-content select:not([disabled]),
-.sheet-content button:not([disabled]) {
+.sheet-content button:not([disabled]),
+[data-radix-dialog-content] input:not([disabled]),
+[data-radix-dialog-content] textarea:not([disabled]),
+[data-radix-dialog-content] select:not([disabled]),
+[data-radix-dialog-content] button:not([disabled]) {
   pointer-events: auto !important;
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
@@ -54,13 +58,24 @@ select:focus {
 
 /* Fix for sheet overlays specifically */
 .fixed.inset-0.z-50,
-.fixed.inset-0.z-\\[100\\] {
+.fixed.inset-0.z-\\[100\\],
+[data-radix-dialog-overlay] {
   pointer-events: none !important;
 }
 
 .fixed.inset-0.z-50 ~ *,
-.fixed.inset-0.z-\\[100\\] ~ * {
+.fixed.inset-0.z-\\[100\\] ~ *,
+[data-radix-dialog-overlay] ~ * {
   pointer-events: auto !important;
+}
+
+/* Ensure DialogContent is interactive */
+[data-radix-dialog-content],
+.DialogContent,
+[role="dialog"][data-state="open"] {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 10001 !important;
 }
 
 /* Ensure form elements are always interactive */

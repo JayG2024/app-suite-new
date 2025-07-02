@@ -904,6 +904,7 @@ const ProjectTrackerV2 = () => {
               onChange={(e) => setProjectForm({...projectForm, projectName: e.target.value})}
               placeholder="Website Redesign"
               autoComplete="off"
+              style={{ pointerEvents: 'auto', cursor: 'text' }}
             />
           </div>
           <div>
@@ -1343,14 +1344,14 @@ const ProjectTrackerV2 = () => {
 
       {/* Add Project Dialog */}
       <Dialog open={showAddProject} onOpenChange={setShowAddProject}>
-        <DialogContent className="max-w-[700px] max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-[700px] max-h-[90vh] overflow-y-auto" style={{ pointerEvents: 'auto' }}>
           <DialogHeader>
             <DialogTitle>Create New Project</DialogTitle>
             <DialogDescription>
               Quickly create a project - only the name is required
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4">
+          <div className="mt-4" style={{ pointerEvents: 'auto' }}>
             <ProjectForm onSubmit={createProject} submitLabel="Create Project" />
           </div>
         </DialogContent>
