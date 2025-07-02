@@ -6,6 +6,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  NODE_OPTIONS = "--experimental-modules"
 
 # Force HTTPS
 [[redirects]]
@@ -91,6 +92,7 @@
 [functions]
   node_bundler = "esbuild"
   external_node_modules = ["@sendgrid/mail", "nodemailer", "@sparticuz/chromium", "puppeteer-core"]
+  included_files = ["node_modules/**"]
   
 [[headers]]
   for = "/*"
