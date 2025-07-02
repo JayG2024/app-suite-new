@@ -8,7 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import SEO from "@/components/SEO";
 import { toast } from "sonner";
 import { useSocket } from "@/contexts/SocketContext";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/SupabaseAuthContext";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import ProjectTrackerV2 from "@/components/ProjectTrackerV2";
 import ProjectTrackerSimple from "@/components/ProjectTrackerSimple";

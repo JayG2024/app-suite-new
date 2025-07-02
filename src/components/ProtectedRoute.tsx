@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/SupabaseAuthContext';
 import { Loader2 } from 'lucide-react';
 
 interface ProtectedRouteProps {
@@ -7,9 +7,9 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
@@ -22,8 +22,8 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     return <Navigate to="/admin" replace />;
   }
 
-  // Only allow Jason and Almir
-  const allowedEmails = ['jason@jaydus.ai', 'almir@jaydus.ai'];
+  // Only allow Jason, Almir, and Jorge
+  const allowedEmails = ['jason@jaydus.ai', 'almir@jaydus.ai', 'jorge@jaydus.ai'];
   if (!allowedEmails.includes(user.email.toLowerCase())) {
     return (
       <div className="min-h-screen flex items-center justify-center">

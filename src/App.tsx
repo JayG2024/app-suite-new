@@ -11,7 +11,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import RedirectHandler from "./components/RedirectHandler";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SocketProvider } from "./contexts/SocketContext";
-import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { AuthProvider, useAuth } from "./contexts/SupabaseAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginForm from "./components/LoginForm";
 import Index from "./pages/Index";
