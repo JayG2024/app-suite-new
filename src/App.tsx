@@ -91,23 +91,18 @@ const PageLoader = () => (
 function AdminRoute() {
   const { user, isLoading } = useAuth();
   
-  // Add debugging
-  console.log('AdminRoute render:', { user, isLoading, pathname: window.location.pathname });
   
   // Show loader while checking auth status
   if (isLoading) {
-    console.log('AdminRoute: Showing loader');
     return <PageLoader />;
   }
   
   // Show login form if not authenticated
   if (!user) {
-    console.log('AdminRoute: No user, showing login form');
     return <LoginForm />;
   }
   
   // Show admin content if authenticated
-  console.log('AdminRoute: User authenticated, showing content');
   return (
     <Suspense fallback={<PageLoader />}>
       <Outlet />
@@ -126,7 +121,7 @@ function App() {
         toast.promise(
           hardcoreCachePurge({
             preserveAuth: true,
-            showProgress: (msg) => console.log(msg)
+            showProgress: () => {}
           }),
           {
             loading: 'Purging all caches...',
