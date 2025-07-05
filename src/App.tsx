@@ -175,7 +175,7 @@ function App() {
           <Route path="terms" element={<Terms />} />
           <Route path="roi-calculator" element={<RoiCalculator />} />
           <Route path="ai-development-process" element={<AiDevelopmentProcess />} />
-          <Route path="image-generator" element={<ImageGenerator />} />
+          <Route path="image-generator" element={<ProtectedRoute><ImageGenerator /></ProtectedRoute>} />
           <Route path="get-started" element={<GetStarted />} />
           <Route path="payment-terms" element={<PaymentTerms />} />
           <Route path="price-calculator" element={<PriceCalculator />} />
