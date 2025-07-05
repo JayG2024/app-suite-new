@@ -55,9 +55,12 @@ export async function apiCall(
     'Content-Type': 'application/json',
   };
 
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    defaultHeaders['Authorization'] = `Bearer ${token}`;
+  // Get Supabase session token
+  const supabase = (await import('@/lib/supabase')).supabase;
+  const { data: { session } } = await supabase.auth.getSession();
+  
+  if (session?.access_token) {
+    defaultHeaders['Authorization'] = `Bearer ${session.access_token}`;
   }
 
   const response = await fetch(endpoint, {
