@@ -59,13 +59,6 @@ const Header = () => {
       <div className="container flex h-16 items-center justify-between px-4 md:px-6">
         {/* Left section with logo and chat toggle */}
         <div className="flex items-center gap-3 md:gap-4">
-          <SidebarTrigger>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <MessageCircle className="h-5 w-5" />
-              <span className="sr-only">Toggle chat</span>
-            </Button>
-          </SidebarTrigger>
-          
           <Link to="/" className="flex items-center gap-2">
             <div className="rounded-md bg-primary p-1">
               <div className="h-6 w-6 text-primary-foreground flex items-center justify-center font-bold">
