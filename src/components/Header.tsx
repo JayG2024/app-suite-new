@@ -94,13 +94,6 @@ const Header = () => {
               Payment Terms
             </Link>
             
-            <Link 
-              to="/roi-calculator" 
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-1"
-            >
-              ROI Calculator
-            </Link>
-            
             {/* Resources Mega Menu */}
             <div className="relative">
               <button
@@ -263,10 +256,6 @@ const Header = () => {
           </nav>
           
           <div className="flex items-center gap-3">
-            <CacheClearer />
-            <Button variant="outline" asChild>
-              <Link to="/roi-calculator">ROI Calculator</Link>
-            </Button>
             <ProposalButton className="group">
               Get Free Proposal
             </ProposalButton>
@@ -339,21 +328,6 @@ const Header = () => {
               </ProposalButton>
             </div>
 
-            {/* ROI Calculator Link */}
-            <div className="space-y-2">
-              <Link 
-                to="/roi-calculator"
-                className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Target className="h-4 w-4 text-primary" />
-                <div>
-                  <div className="font-medium">ROI Calculator</div>
-                  <div className="text-xs text-muted-foreground">Calculate your savings</div>
-                </div>
-              </Link>
-            </div>
-            
             {/* Resources Section */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b">
