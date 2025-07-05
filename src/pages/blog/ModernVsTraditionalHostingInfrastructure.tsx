@@ -368,7 +368,7 @@ const ModernVsTraditionalHostingInfrastructure = () => {
       category="Strategic Research"
       isWhitePaper={true}
       description="A comprehensive guide for technical leaders on modern vs traditional hosting infrastructure. Learn how to achieve 5x cost reduction and 80% faster deployment with serverless platforms."
-      keywords="serverless hosting, AI infrastructure, modern platforms, Vercel, Netlify, Railway, cloud infrastructure, deployment automation, traditional hosting, infrastructure comparison"
+      keywords="serverless hosting, AI infrastructure, modern platforms, Vercel, Railway, cloud infrastructure, deployment automation, traditional hosting, infrastructure comparison"
       keyFindings={[
         "90% of organizations now utilize modern serverless architecture",
         "5x cost reduction compared to traditional hosting approaches",
@@ -381,7 +381,6 @@ const ModernVsTraditionalHostingInfrastructure = () => {
       sections={sections}
       sources={[
         { title: "Vercel Enterprise Customers", url: "vercel.com/customers" },
-        { title: "Netlify Case Studies", url: "netlify.com/customers" },
         { title: "AWS Serverless Computing", url: "aws.amazon.com/serverless" },
         { title: "State of Serverless Report 2025", url: "serverless.com/state-of-serverless" },
         { title: "Gartner Infrastructure Trends", url: "gartner.com/infrastructure-trends-2025" }
