@@ -37,7 +37,7 @@ async function importClientsFromConsole() {
             clientType = 'active';
           }
           
-          const response = await fetch('/.netlify/functions/clients', {
+          const response = await fetch('/api/clients', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

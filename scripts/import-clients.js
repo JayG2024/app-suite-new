@@ -5,7 +5,7 @@
 
 import { clients } from '../src/data/clientData.ts';
 
-const API_BASE = 'http://localhost:8080/.netlify/functions';
+const API_BASE = 'http://localhost:3000/api';
 const BATCH_SIZE = 10;
 
 async function importClients() {
