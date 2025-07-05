@@ -137,12 +137,14 @@ const PaymentProcessor = () => {
 
   const loadPayments = async () => {
     try {
-      const data = await apiCall(API_ENDPOINTS.payments);
-      setPayments(data.payments || []);
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(API_ENDPOINTS.payments);
+      // setPayments(data.payments || []);
     } catch (error) {
       console.error('Error loading payments:', error);
-      // Mock data for demo
-      setPayments([
+    }
+    // Mock data for demo
+    setPayments([
         {
           id: "1",
           amount: 7500,
@@ -177,8 +179,9 @@ const PaymentProcessor = () => {
 
   const loadInvoices = async () => {
     try {
-      const data = await apiCall(API_ENDPOINTS.invoices);
-      setInvoices(data.invoices || []);
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(API_ENDPOINTS.invoices);
+      // setInvoices(data.invoices || []);
     } catch (error) {
       console.error('Error loading invoices:', error);
     }

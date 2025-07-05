@@ -198,14 +198,13 @@ const AnalyticsDashboard = () => {
   const loadAnalytics = async () => {
     setLoading(true);
     try {
-      // In a real app, this would fetch from API with timeRange parameter
-      const data = await apiCall(`${API_ENDPOINTS.analytics}?range=${timeRange}`);
-      if (data.analytics) {
-        setAnalyticsData(data.analytics);
-      }
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(`${API_ENDPOINTS.analytics}?range=${timeRange}`);
+      // if (data.analytics) {
+      //   setAnalyticsData(data.analytics);
+      // }
     } catch (error) {
       console.error('Error loading analytics:', error);
-      // Using mock data for now
     }
     setLoading(false);
   };

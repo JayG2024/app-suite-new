@@ -141,56 +141,50 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
   // Calculate metrics from database
   useEffect(() => {
     const calculateMetrics = async () => {
-      try {
-        // Fetch metrics from dashboard endpoint
-        const metricsData = await apiCall(API_ENDPOINTS.dashboard.metrics);
-        setMetrics(metricsData);
-      } catch (error) {
-        console.error('Error fetching metrics:', error);
-        // Fallback to localStorage
-        const leads = JSON.parse(localStorage.getItem('app_suite_leads') || '[]');
-        const proposals = Object.keys(localStorage).filter(key => key.startsWith('proposal_'));
-        
-        const totalRevenue = leads
-          .filter((lead: any) => lead.stage === 'closed-won')
-          .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
-        
-        const activeProjects = leads.filter((lead: any) => 
-          ['qualified', 'proposal', 'negotiation'].includes(lead.stage)
-        ).length;
-        
-        const totalClients = leads.filter((lead: any) => lead.stage === 'closed-won').length;
-        
-        const pipelineValue = leads
-          .filter((lead: any) => ['qualified', 'proposal', 'negotiation'].includes(lead.stage))
-          .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
-        
-        const proposalsSent = proposals.length;
-        
-        const wonDeals = leads.filter((lead: any) => lead.stage === 'closed-won').length;
-        const lostDeals = leads.filter((lead: any) => lead.stage === 'closed-lost').length;
-        const conversionRate = (wonDeals + lostDeals) > 0 ? Math.round((wonDeals / (wonDeals + lostDeals)) * 100) : 0;
-        
-        const averageProjectValue = totalClients > 0 ? Math.round(totalRevenue / totalClients) : 0;
-        
-        setMetrics({
-          totalRevenue,
-          activeProjects,
-          totalClients,
-          monthlyGrowth: 15, // Mock data
-          pipelineValue,
-          proposalsSent,
-          conversionRate,
-          averageProjectValue,
-          totalTasks: 24, // Mock data
-          completedTasks: 18, // Mock data
-          taskCompletionRate: 75 // Mock data
-        });
-      }
+      // Use localStorage directly without API call
+      const leads = JSON.parse(localStorage.getItem('app_suite_leads') || '[]');
+      const proposals = Object.keys(localStorage).filter(key => key.startsWith('proposal_'));
+      
+      const totalRevenue = leads
+        .filter((lead: any) => lead.stage === 'closed-won')
+        .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
+      
+      const activeProjects = leads.filter((lead: any) => 
+        ['qualified', 'proposal', 'negotiation'].includes(lead.stage)
+      ).length;
+      
+      const totalClients = leads.filter((lead: any) => lead.stage === 'closed-won').length;
+      
+      const pipelineValue = leads
+        .filter((lead: any) => ['qualified', 'proposal', 'negotiation'].includes(lead.stage))
+        .reduce((sum: number, lead: any) => sum + (lead.value || 0), 0);
+      
+      const proposalsSent = proposals.length;
+      
+      const wonDeals = leads.filter((lead: any) => lead.stage === 'closed-won').length;
+      const lostDeals = leads.filter((lead: any) => lead.stage === 'closed-lost').length;
+      const conversionRate = (wonDeals + lostDeals) > 0 ? Math.round((wonDeals / (wonDeals + lostDeals)) * 100) : 0;
+      
+      const averageProjectValue = totalClients > 0 ? Math.round(totalRevenue / totalClients) : 0;
+      
+      setMetrics({
+        totalRevenue,
+        activeProjects,
+        totalClients,
+        monthlyGrowth: 15, // Mock data
+        pipelineValue,
+        proposalsSent,
+        conversionRate,
+        averageProjectValue,
+        totalTasks: 24, // Mock data
+        completedTasks: 18, // Mock data
+        taskCompletionRate: 75 // Mock data
+      });
     };
 
     if (user) {
       calculateMetrics();
+      // Update metrics every 30 seconds
       const interval = setInterval(calculateMetrics, 30000);
       return () => clearInterval(interval);
     }

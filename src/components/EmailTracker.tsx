@@ -126,12 +126,14 @@ const EmailTracker = () => {
 
   const loadEmails = async () => {
     try {
-      const data = await apiCall(API_ENDPOINTS.emails);
-      setEmails(data.emails || []);
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(API_ENDPOINTS.emails);
+      // setEmails(data.emails || []);
     } catch (error) {
       console.error('Error loading emails:', error);
-      // Mock data for demo
-      setEmails([
+    }
+    // Mock data for demo
+    setEmails([
         {
           id: "1",
           to: "client@example.com",
@@ -166,12 +168,14 @@ const EmailTracker = () => {
 
   const loadTemplates = async () => {
     try {
-      const data = await apiCall(API_ENDPOINTS.emailTemplates);
-      setTemplates(data.templates || []);
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(API_ENDPOINTS.emailTemplates);
+      // setTemplates(data.templates || []);
     } catch (error) {
       console.error('Error loading templates:', error);
-      // Mock templates
-      setTemplates([
+    }
+    // Mock templates
+    setTemplates([
         {
           id: "1",
           name: "Project Update",
@@ -193,13 +197,13 @@ const EmailTracker = () => {
           updated_at: new Date().toISOString()
         }
       ]);
-    }
   };
 
   const loadCampaigns = async () => {
     try {
-      const data = await apiCall(API_ENDPOINTS.emailCampaigns);
-      setCampaigns(data.campaigns || []);
+      // Using mock data - API endpoint not implemented yet
+      // const data = await apiCall(API_ENDPOINTS.emailCampaigns);
+      // setCampaigns(data.campaigns || []);
     } catch (error) {
       console.error('Error loading campaigns:', error);
     }
