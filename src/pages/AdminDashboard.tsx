@@ -21,6 +21,11 @@ import TaskManagerV2 from "@/components/TaskManagerV2";
 // import DeploymentManager from "@/components/DeploymentManager";
 // import ASCDashboardV2 from "@/components/ASCDashboardV2";
 import CallTranscriptAnalyzer from "@/components/CallTranscriptAnalyzer";
+import EmailTracker from "@/components/EmailTracker";
+import PaymentProcessor from "@/components/PaymentProcessor";
+import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import TeamChat from "@/components/TeamChat";
+import DocumentationCenter from "@/components/DocumentationCenter";
 import { cn } from "@/lib/utils";
 import { 
   LayoutDashboard,
@@ -47,7 +52,8 @@ import {
   ArrowDownRight,
   FileText,
   Phone,
-  HelpCircle
+  HelpCircle,
+  BookOpen
 } from "lucide-react";
 
 interface DashboardMetrics {
@@ -78,7 +84,11 @@ const menuItems: MenuItem[] = [
   { id: 'projects', label: 'Projects', icon: Code, color: 'text-purple-600' },
   { id: 'tasks', label: 'Tasks', icon: CheckSquare, color: 'text-orange-600' },
   { id: 'sales', label: 'Sales Pipeline', icon: Target, color: 'text-yellow-600' },
-  { id: 'team', label: 'Team', icon: Users, color: 'text-cyan-600' },
+  { id: 'emails', label: 'Email Tracking', icon: Mail, color: 'text-indigo-600' },
+  { id: 'payments', label: 'Payments', icon: DollarSign, color: 'text-green-600' },
+  { id: 'analytics', label: 'Analytics', icon: BarChart3, color: 'text-purple-600' },
+  { id: 'team', label: 'Team Chat', icon: MessageSquare, color: 'text-cyan-600' },
+  { id: 'documentation', label: 'Documentation', icon: BookOpen, color: 'text-indigo-600' },
   { id: 'templates', label: 'Email Templates', icon: FileText, color: 'text-gray-600' },
   { id: 'call-analyzer', label: 'Call Analyzer', icon: Phone, color: 'text-rose-600' },
   { id: 'settings', label: 'Settings', icon: Settings, color: 'text-gray-600' },
@@ -276,12 +286,40 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
             console.error('Error rendering Sales section:', error);
             return <ErrorSection section="Sales" error={error} />;
           }
+        case 'emails':
+          try {
+            return <EmailTracker />;
+          } catch (error) {
+            console.error('Error rendering Email Tracking section:', error);
+            return <ErrorSection section="Email Tracking" error={error} />;
+          }
+        case 'payments':
+          try {
+            return <PaymentProcessor />;
+          } catch (error) {
+            console.error('Error rendering Payments section:', error);
+            return <ErrorSection section="Payments" error={error} />;
+          }
+        case 'analytics':
+          try {
+            return <AnalyticsDashboard />;
+          } catch (error) {
+            console.error('Error rendering Analytics section:', error);
+            return <ErrorSection section="Analytics" error={error} />;
+          }
         case 'team':
           try {
-            return <TeamWorkspaceFixed />;
+            return <TeamChat />;
           } catch (error) {
-            console.error('Error rendering Team section:', error);
-            return <ErrorSection section="Team" error={error} />;
+            console.error('Error rendering Team Chat section:', error);
+            return <ErrorSection section="Team Chat" error={error} />;
+          }
+        case 'documentation':
+          try {
+            return <DocumentationCenter />;
+          } catch (error) {
+            console.error('Error rendering Documentation section:', error);
+            return <ErrorSection section="Documentation" error={error} />;
           }
         case 'templates':
           try {

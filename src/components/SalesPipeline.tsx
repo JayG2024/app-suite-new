@@ -11,6 +11,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Textarea } from "@/components/ui/textarea";
 import { API_ENDPOINTS, apiCall } from "@/utils/api";
 import { toast } from "sonner";
+import { sampleLeads } from "@/data/salesData";
 import { 
   DollarSign, 
   TrendingUp, 
@@ -29,7 +30,9 @@ import {
   Building,
   Trash2,
   Edit,
-  MoreHorizontal
+  MoreHorizontal,
+  Upload,
+  Activity
 } from "lucide-react";
 
 interface Lead {
@@ -66,6 +69,7 @@ const SalesPipeline = () => {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [showEditLead, setShowEditLead] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [importLoading, setImportLoading] = useState(false);
 
   // Load data from database
   useEffect(() => {
@@ -327,6 +331,58 @@ const SalesPipeline = () => {
     setShowEditLead(true);
   };
 
+  const handleImportSampleLeads = async () => {
+    if (!confirm('This will import 15 sample sales leads. Continue?')) {
+      return;
+    }
+
+    setImportLoading(true);
+    let successCount = 0;
+    let errorCount = 0;
+
+    try {
+      // Import leads in batches
+      for (const lead of sampleLeads) {
+        try {
+          await apiCall(API_ENDPOINTS.leads, {
+            method: 'POST',
+            body: JSON.stringify({
+              name: lead.contact,
+              company: lead.company,
+              email: lead.email,
+              phone: lead.phone || '',
+              status: 'active',
+              value: lead.value,
+              stage: lead.stage,
+              probability: lead.stage === 'closed-won' ? 100 : 
+                          lead.stage === 'closed-lost' ? 0 :
+                          lead.stage === 'negotiation' ? 80 :
+                          lead.stage === 'proposal' ? 60 :
+                          lead.stage === 'qualified' ? 40 : 20,
+              source: lead.source || 'import',
+              notes: lead.notes || '',
+              next_action: lead.nextAction || '',
+              industry: lead.industry || '',
+              title: lead.title || ''
+            })
+          });
+          successCount++;
+        } catch (error) {
+          console.error('Failed to import lead:', lead.company, error);
+          errorCount++;
+        }
+      }
+
+      await loadLeads();
+      toast.success(`Imported ${successCount} leads successfully${errorCount > 0 ? `, ${errorCount} failed` : ''}`);
+    } catch (error) {
+      console.error('Error importing sample leads:', error);
+      toast.error('Failed to import sample leads');
+    } finally {
+      setImportLoading(false);
+    }
+  };
+
   const getTypeInfo = (type: string) => {
     switch(type) {
       case "standard": return { label: "$5K Standard", color: "default" };
@@ -418,7 +474,21 @@ const SalesPipeline = () => {
           </Badge>
         </div>
 
-        <Sheet open={showAddLead} onOpenChange={setShowAddLead}>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleImportSampleLeads}
+            disabled={importLoading}
+          >
+            {importLoading ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2" />
+            ) : (
+              <Upload className="h-4 w-4 mr-2" />
+            )}
+            Import Sample Leads
+          </Button>
+
+          <Sheet open={showAddLead} onOpenChange={setShowAddLead}>
           <SheetTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
@@ -530,6 +600,7 @@ const SalesPipeline = () => {
             </div>
           </SheetContent>
         </Sheet>
+        </div>
       </div>
 
       {/* Pipeline Stages */}
