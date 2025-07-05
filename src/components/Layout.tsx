@@ -21,7 +21,7 @@ const Layout = ({ children }: LayoutProps) => {
   const isAuthPage = location.pathname === "/auth";
 
   return (
-    <SidebarProvider>
+    <>
       <SEO />
       <div className="flex min-h-screen w-full max-w-full">
         <div className="flex-1 w-full overflow-x-hidden">
@@ -40,7 +40,7 @@ const Layout = ({ children }: LayoutProps) => {
           <FinancingCTA variant="compact" />
         )}
       </div>
-    </SidebarProvider>
+    </>
   );
 };
 
