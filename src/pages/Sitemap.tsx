@@ -111,44 +111,6 @@ const Sitemap = () => {
               </Card>
             ))}
           </div>
-
-          <div className="mt-12 p-6 bg-muted rounded-lg">
-            <h2 className="text-xl font-semibold mb-4">Additional Resources</h2>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="font-medium mb-2">For Developers</h3>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>
-                    <a 
-                      href="/sitemap.xml" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-primary"
-                    >
-                      XML Sitemap
-                    </a>
-                  </li>
-                  <li>
-                    <a 
-                      href="/robots.txt" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="hover:text-primary"
-                    >
-                      Robots.txt
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-medium mb-2">Connect With Us</h3>
-                <ul className="space-y-1 text-sm text-muted-foreground">
-                  <li>Email: hello@app-suite.io</li>
-                  <li>Phone: 1-800-APP-SUITE</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>
