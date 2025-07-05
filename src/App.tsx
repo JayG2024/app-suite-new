@@ -184,7 +184,7 @@ function App() {
           <Route path="newsletter" element={<NewsletterPage />} />
           <Route path="icon-test" element={<Suspense fallback={<PageLoader />}><IconTest /></Suspense>} />
           <Route path="system-status" element={<Suspense fallback={<PageLoader />}><SystemStatus /></Suspense>} />
-          <Route path="system-tools" element={<Suspense fallback={<PageLoader />}><SystemTools /></Suspense>} />
+          <Route path="system-tools" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><SystemTools /></Suspense></ProtectedRoute>} />
           <Route path="industries" element={<Suspense fallback={<PageLoader />}><Industries /></Suspense>} />
           <Route path="examples" element={<Suspense fallback={<PageLoader />}><Examples /></Suspense>} />
           <Route path="solutions-weve-built" element={<Suspense fallback={<PageLoader />}><SolutionsWeveBuilt /></Suspense>} />
