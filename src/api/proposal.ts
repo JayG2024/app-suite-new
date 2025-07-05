@@ -1,5 +1,40 @@
 // API endpoint for generating custom proposals
-export const generateProposal = async (formData) => {
+
+interface ProposalFormData {
+  companyName: string;
+  contactName: string;
+  email: string;
+  industry: string;
+  appType: string;
+  currentChallenge: string;
+  desiredFeatures: string[];
+  teamSize: string;
+  timeline: string;
+  budget: string;
+  additionalInfo?: string;
+}
+
+interface ProposalResponse {
+  success: boolean;
+  proposalContent?: string;
+  proposalId?: string;
+  error?: string;
+}
+
+interface EmailAttachment {
+  filename: string;
+  content: string | Buffer;
+  contentType: string;
+}
+
+interface ProposalEmail {
+  to: string;
+  subject: string;
+  html: string;
+  attachments: EmailAttachment[];
+}
+
+export const generateProposal = async (formData: ProposalFormData): Promise<ProposalResponse> => {
   try {
     // This would integrate with your AI service (OpenAI, Claude, etc.)
     const response = await fetch('/api/generate-proposal', {
@@ -14,7 +49,7 @@ export const generateProposal = async (formData) => {
       throw new Error('Failed to generate proposal');
     }
 
-    const result = await response.json();
+    const result: ProposalResponse = await response.json();
     return result;
   } catch (error) {
     console.error('Error generating proposal:', error);
@@ -23,7 +58,7 @@ export const generateProposal = async (formData) => {
 };
 
 // AI Prompt template for proposal generation
-export const createProposalPrompt = (formData) => {
+export const createProposalPrompt = (formData: ProposalFormData): string => {
   const {
     companyName,
     contactName,
@@ -97,7 +132,7 @@ Make it feel highly personalized to ${companyName} and ${contactName}. Use their
 };
 
 // Email template for sending proposals
-export const createProposalEmail = (formData, proposalContent) => {
+export const createProposalEmail = (formData: ProposalFormData, proposalContent: string | Buffer): ProposalEmail => {
   return {
     to: formData.email,
     subject: `Your Custom ${formData.appType} Proposal - ${formData.companyName}`,
