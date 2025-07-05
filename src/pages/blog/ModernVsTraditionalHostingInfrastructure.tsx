@@ -71,7 +71,7 @@ const ModernVsTraditionalHostingInfrastructure = () => {
     {
       type: 'comparison',
       content: {
-        headers: ['Aspect', 'Traditional Hosting', 'Modern Platforms (Vercel/Netlify)', 'Business Impact'],
+        headers: ['Aspect', 'Traditional Hosting', 'Modern Platforms (Vercel)', 'Business Impact'],
         rows: [
           {
             label: 'Initial Setup',
@@ -108,7 +108,7 @@ const ModernVsTraditionalHostingInfrastructure = () => {
     },
     {
       type: 'paragraph',
-      content: 'Modern deployment platforms like Vercel, Netlify, and Railway represent a paradigm shift in application infrastructure. These platforms abstract away infrastructure complexity while providing enterprise-grade capabilities that were previously only available to large technology companies.'
+      content: 'Modern deployment platforms like Vercel and Railway represent a paradigm shift in application infrastructure. These platforms abstract away infrastructure complexity while providing enterprise-grade capabilities that were previously only available to large technology companies.'
     },
     {
       type: 'finding',

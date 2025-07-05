@@ -56,6 +56,16 @@ const Podcast = () => {
   // Episodes data
   const episodes: Episode[] = [
     {
+      id: 3,
+      title: "Double Trouble, Single Solution: Unifying Your Google Business Profiles & Untangling Reviews",
+      description: "Learn how to merge duplicate Google Business Profiles and consolidate reviews without losing valuable customer feedback. We cover step-by-step strategies for cleaning up multiple listings and maintaining your online reputation during the merge process.",
+      date: "July 2, 2025",
+      duration: "12:28",
+      audioUrl: "/podcasts/Double-Trouble-Single-Solution-Google-Business-Profiles.mp3",
+      topics: ["Google Business Profile", "Local SEO", "Review Management", "Business Listings"],
+      featured: true
+    },
+    {
       id: 2,
       title: "Geo-Blocking's Hidden Cost: AI Search Visibility",
       description: "Research reveals how traditional geo-blocking strategies may be hurting your visibility in AI-powered search. Learn why 95% of AI crawlers are blocked by geographic restrictions and discover modern alternatives that protect without limiting AI discovery.",
@@ -63,7 +73,7 @@ const Podcast = () => {
       duration: "18:45",
       audioUrl: "/podcasts/Geo-Blocking's Hidden Cost_ AI Search Visibility.wav",
       topics: ["Geo-blocking", "AI Crawlers", "Website Accessibility", "GEO"],
-      featured: true
+      featured: false
     },
     {
       id: 1,

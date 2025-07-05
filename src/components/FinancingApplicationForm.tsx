@@ -62,7 +62,7 @@ const FinancingApplicationForm: React.FC<FinancingApplicationFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/.netlify/functions/financing-application', {
+      const response = await fetch('/api/financing-application', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ export const useTextToSpeech = () => {
       setProgress(10);
       onProgress?.(10);
 
-      const response = await fetch('/.netlify/functions/audio-generate-tts', {
+      const response = await fetch('/api/audio-generate-tts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

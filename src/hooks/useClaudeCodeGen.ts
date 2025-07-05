@@ -25,7 +25,7 @@ export const useClaudeCodeGen = (options: UseClaudeCodeGenOptions = {}) => {
     setIsGenerating(true);
 
     try {
-      const response = await fetch('/.netlify/functions/claude-code-gen', {
+      const response = await fetch('/api/claude-code-gen', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

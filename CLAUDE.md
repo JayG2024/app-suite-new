@@ -13,36 +13,37 @@
 - Build for production: `yarn build`
 - Preview production build: `yarn preview`
 
-## Netlify Deployment Info
-- **Framework**: Vite + React
-- **Node Version**: 20.x (specified in netlify.toml)
+## Vercel Deployment Info
+- **Framework**: Vite + React + TypeScript
+- **Node Version**: 20.x
 - **Build Command**: `yarn build`
-- **Publish Directory**: `dist`
-- **Functions Directory**: `netlify/functions`
+- **Output Directory**: `dist`
+- **API Routes Directory**: `api/`
 
-### Netlify Commands
-- Deploy via CLI: `netlify deploy`
-- Deploy to production: `netlify deploy --prod`
-- Open Netlify admin: `netlify open`
-- Check deployment status: `netlify status`
+### Vercel Commands
+- Deploy via CLI: `vercel`
+- Deploy to production: `vercel --prod`
+- Check deployment status: `vercel ls`
+- View logs: `vercel logs`
 
-### Best Practices for Netlify + Claude Code
+### Best Practices for Vercel + Supabase
 1. **Environment Variables:**
-   - Set in Netlify Dashboard → Site Settings → Environment Variables
+   - Set in Vercel Dashboard → Settings → Environment Variables
    - Use `VITE_` prefix for client-side variables
    - Server-side variables don't need prefix
+   - Required vars: `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
 
 2. **Deployment Workflow:**
    - [ ] Test build locally with `yarn build`
-   - [ ] Check for build errors
+   - [ ] Check for TypeScript errors
    - [ ] Push to GitHub (auto-deploys if connected)
-   - [ ] Or use CLI: `netlify deploy` for preview
-   - [ ] Then `netlify deploy --prod` for production
+   - [ ] Or use CLI: `vercel` for preview
+   - [ ] Then `vercel --prod` for production
 
-3. **Serverless Functions:**
-   - Place in `/netlify/functions/` directory
-   - Export as `exports.handler` (not default export)
-   - Access via `/.netlify/functions/function-name`
+3. **API Routes:**
+   - Place in `/api/` directory at project root
+   - Export default async function
+   - Access via `/api/route-name`
 
 ## SEO Setup Complete ✅
 
@@ -86,7 +87,7 @@
 ## Brand Voice & Messaging Guidelines
 
 ### Core Value Proposition
-**App Suite builds truly custom business applications from scratch at transparent, flat-rate pricing.**
+**App Suite builds fullstack AI powered modern business applications, at speeds 10 times faster than traditional developers, and 5 to 10x less expensive.
 
 ### Key Messaging Pillars
 
@@ -106,7 +107,7 @@
 - ✅ "You own the code, you own the data, you own the application"
 - ✅ "Stop paying monthly subscriptions for software that doesn't fit"
 - ✅ "Build equity in your business with software you actually own"
-- ❌ Don't bash other providers directly, focus on ownership benefits
+- ❌ Don't bash other providers directly, focus on quality, speed, cost and ownership benefits
 
 #### 4. **AI-Powered Speed**
 - ✅ "Built 10x faster with AI-powered development"
@@ -127,13 +128,12 @@
 - **Confident** but not arrogant
 - **Transparent** about pricing and process
 - **Problem-focused** (subscription fatigue, vendor lock-in)
-- **Solution-oriented** (ownership, customization, speed)
-- **Professional** but approachable
+- **Solution-oriented** (ownership, customization, speed, productivity, future ready)
+- **Professional** but approachable, understands real challenges and pain points of SMB's.
 
 ### What We DON'T Do
 - Templates or pre-built solutions
 - Hourly billing
-- Ongoing subscription fees
 - Vendor lock-in
 - Generic, one-size-fits-all software
 
@@ -143,6 +143,7 @@
 - Complete code ownership
 - AI-powered rapid development
 - Enterprise-grade solutions for SMBs
+- Guaranteed best rates and quality in the industry for SMB's
 
 ## Repository Notes
 This file contains the complete brand guidelines for App Suite. Always reference this section when writing copy, proposals, or any customer-facing content to ensure consistency.

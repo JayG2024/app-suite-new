@@ -50,7 +50,7 @@ const BusinessPlanRequestForm: React.FC<BusinessPlanRequestFormProps> = ({
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/.netlify/functions/business-plan-request', {
+      const response = await fetch('/api/business-plan-request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

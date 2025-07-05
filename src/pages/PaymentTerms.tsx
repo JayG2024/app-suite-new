@@ -22,7 +22,7 @@ import { CALENDLY_DISCOVERY_CALL_URL } from "@/utils/constants";
 const PaymentTerms = () => {
   const handleDownloadPDF = () => {
     // Download the PDF version
-    window.open('/.netlify/functions/payment-terms-pdf', '_blank');
+    window.open('/api/payment-terms-pdf', '_blank');
   };
 
   return (

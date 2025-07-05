@@ -59,9 +59,6 @@ dist-ssr
 ehthumbs.db
 Thumbs.db
 
-# Local Netlify folder
-.netlify
-
 # Supabase env files
 .env.supabase
 .env.vercel

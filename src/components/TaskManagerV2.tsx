@@ -128,7 +128,7 @@ const TaskManagerV2 = () => {
 
   const loadTasks = async () => {
     try {
-      const response = await fetch('/.netlify/functions/tasks');
+      const response = await fetch('/api/tasks');
       if (response.ok) {
         const data = await response.json();
         const tasks = data.tasks || [];
@@ -176,7 +176,7 @@ const TaskManagerV2 = () => {
 
   const loadProjects = async () => {
     try {
-      const response = await fetch('/.netlify/functions/projects');
+      const response = await fetch('/api/projects');
       if (response.ok) {
         const data = await response.json();
         setProjects(data.projects || []);
@@ -194,7 +194,7 @@ const TaskManagerV2 = () => {
     ];
     
     try {
-      const response = await fetch('/.netlify/functions/users');
+      const response = await fetch('/api/users');
       if (response.ok) {
         const data = await response.json();
         const apiUsers = data.users || [];
@@ -223,7 +223,7 @@ const TaskManagerV2 = () => {
     }
 
     try {
-      const response = await fetch('/.netlify/functions/tasks', {
+      const response = await fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -258,7 +258,7 @@ const TaskManagerV2 = () => {
     }
 
     try {
-      const response = await fetch(`/.netlify/functions/tasks?id=${selectedTask.id}`, {
+      const response = await fetch(`/api/tasks?id=${selectedTask.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -288,7 +288,7 @@ const TaskManagerV2 = () => {
 
   const quickUpdateTask = async (taskId: string | number, updates: Partial<Task>) => {
     try {
-      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
+      const response = await fetch(`/api/tasks?id=${taskId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)
@@ -310,7 +310,7 @@ const TaskManagerV2 = () => {
     if (!confirm('Are you sure you want to delete this task?')) return;
 
     try {
-      const response = await fetch(`/.netlify/functions/tasks?id=${taskId}`, {
+      const response = await fetch(`/api/tasks?id=${taskId}`, {
         method: 'DELETE'
       });
 
@@ -559,7 +559,7 @@ const TaskManagerV2 = () => {
         
         Make it professional and actionable.`;
 
-        const response = await fetch('/.netlify/functions/chat', {
+        const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 

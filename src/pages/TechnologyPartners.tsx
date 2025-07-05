@@ -108,13 +108,6 @@ const TechnologyPartners = () => {
       tier: "primary"
     },
     {
-      name: "Netlify",
-      logo: <div className="w-8 h-8 bg-teal-500 rounded flex items-center justify-center text-white text-sm font-bold">N</div>,
-      description: "Modern web development platform", 
-      capabilities: ["Static Hosting", "Serverless Functions", "CI/CD", "Edge Computing"],
-      tier: "primary"
-    },
-    {
       name: "Cloudflare",
       logo: <div className="w-8 h-8 bg-orange-400 rounded flex items-center justify-center text-white text-sm font-bold">CF</div>,
       description: "Security and performance network",

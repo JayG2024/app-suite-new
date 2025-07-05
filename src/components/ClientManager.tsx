@@ -323,7 +323,7 @@ const ClientManager = () => {
     setAiSearchLoading(true);
     
     try {
-      const response = await fetch('/.netlify/functions/openai-chat', {
+      const response = await fetch('/api/openai-chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

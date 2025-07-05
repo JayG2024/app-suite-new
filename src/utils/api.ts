@@ -1,13 +1,13 @@
 // Centralized API endpoints configuration
-// All API calls go through Netlify Functions
+// All API calls go through Vercel API Routes
 
-const API_BASE = '/.netlify/functions';
+const API_BASE = '/api';
 
 export const API_ENDPOINTS = {
   // Auth
   auth: {
-    login: `${API_BASE}/auth-login`,
-    resetPassword: `${API_BASE}/auth-reset-password`,
+    login: `${API_BASE}/auth/login`,
+    resetPassword: `${API_BASE}/auth/reset-password`,
   },
   
   // Core entities
@@ -28,21 +28,21 @@ export const API_ENDPOINTS = {
   
   // AI features
   ai: {
-    generateContent: `${API_BASE}/ai-generate-content`,
-    chatbot: `${API_BASE}/ai-chatbot`,
+    generateContent: `${API_BASE}/ai/generate-content`,
+    chatbot: `${API_BASE}/ai/chatbot`,
   },
   
   // Dashboard
   dashboard: {
-    metrics: `${API_BASE}/dashboard-metrics`,
-    analytics: `${API_BASE}/analytics`,
+    metrics: `${API_BASE}/dashboard/metrics`,
+    analytics: `${API_BASE}/dashboard/analytics`,
   },
   
   // Email
   email: {
-    send: `${API_BASE}/send-email`,
-    sendProposal: `${API_BASE}/send-proposal`,
-    sendContact: `${API_BASE}/send-contact`,
+    send: `${API_BASE}/email/send`,
+    sendProposal: `${API_BASE}/email/send-proposal`,
+    sendContact: `${API_BASE}/email/send-contact`,
   }
 };
 

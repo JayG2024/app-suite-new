@@ -166,7 +166,7 @@ const CallTranscriptAnalyzer = () => {
     setIsAnalyzing(true);
 
     try {
-      const response = await fetch('/.netlify/functions/analyze-transcript-v2', {
+      const response = await fetch('/api/analyze-transcript-v2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -226,7 +226,7 @@ const CallTranscriptAnalyzer = () => {
     
     try {
       // Generate styled PDF
-      const response = await fetch('/.netlify/functions/generate-proposal-pdf', {
+      const response = await fetch('/api/generate-proposal-pdf', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

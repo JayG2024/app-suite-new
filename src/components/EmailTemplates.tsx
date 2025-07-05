@@ -564,13 +564,13 @@ const EmailTemplates = () => {
   // Fetch projects and clients for dropdowns
   useEffect(() => {
     // Fetch projects
-    fetch('/.netlify/functions/projects')
+    fetch('/api/projects')
       .then(res => res.json())
       .then(data => setProjects(data.projects || []))
       .catch(err => console.error('Failed to fetch projects:', err));
 
     // Fetch clients
-    fetch('/.netlify/functions/clients')
+    fetch('/api/clients')
       .then(res => res.json())
       .then(data => setClients(data.clients || []))
       .catch(err => console.error('Failed to fetch clients:', err));
@@ -623,7 +623,7 @@ const EmailTemplates = () => {
         const user = userStr ? JSON.parse(userStr) : null;
 
         // Log the email activity
-        const response = await fetch('/.netlify/functions/project-activities', {
+        const response = await fetch('/api/project-activities', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

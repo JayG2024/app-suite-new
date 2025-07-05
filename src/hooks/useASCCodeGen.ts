@@ -25,7 +25,7 @@ export const useASCCodeGen = (options: UseASCCodeGenOptions = {}) => {
     setIsGenerating(true);
 
     try {
-      const response = await fetch('/.netlify/functions/asc-generate', {
+      const response = await fetch('/api/asc-generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
