@@ -97,6 +97,7 @@ const ClientManager = () => {
   const [aiSearchLoading, setAiSearchLoading] = useState(false);
   const [aiSearchQuery, setAiSearchQuery] = useState("");
   const [importLoading, setImportLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   
   const [formData, setFormData] = useState<ClientFormData>({
     name: '',
@@ -132,6 +133,7 @@ const ClientManager = () => {
   }, [clients, searchTerm, filterType]);
 
   const loadClients = async () => {
+    setApiError(null);
     try {
       // Use clients endpoint (which uses leads table internally)
       const data = await apiCall(API_ENDPOINTS.clients);
@@ -149,10 +151,10 @@ const ClientManager = () => {
         website: '',
         assigned_to_name: lead.assignedToName || lead.assigned_to_name
       })) || [];
-      
       setClients(clientsData);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading clients:', error);
+      setApiError('Failed to load clients. Please check your connection or try again.');
       toast.error('Failed to load clients');
     } finally {
       setLoading(false);
@@ -182,14 +184,12 @@ const ClientManager = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setApiError(null);
     if (!formData.name || !formData.email) {
       toast.error('Please fill in all required fields');
       return;
     }
-
     try {
-      // Create client
       const response = await apiCall(API_ENDPOINTS.clients, {
         method: 'POST',
         body: JSON.stringify({
@@ -202,7 +202,6 @@ const ClientManager = () => {
           notes: formData.notes,
           assigned_to: formData.assigned_to && formData.assigned_to !== 'unassigned' ? 
                        parseInt(formData.assigned_to) : null,
-          // Additional fields for future use
           metadata: {
             address: formData.address,
             city: formData.city,
@@ -214,15 +213,18 @@ const ClientManager = () => {
           }
         })
       });
-
       if (response.client || response.lead) {
         toast.success('Client added successfully');
         loadClients();
         setShowAddClient(false);
         resetForm();
+      } else {
+        setApiError('Failed to add client. Please try again.');
+        toast.error('Failed to add client');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error adding client:', error);
+      setApiError('Failed to add client. Please check your connection or try again.');
       toast.error('Failed to add client');
     }
   };
@@ -251,12 +253,11 @@ const ClientManager = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+    setApiError(null);
     if (!formData.name || !formData.email || !editingClient) {
       toast.error('Please fill in all required fields');
       return;
     }
-
     try {
       const response = await apiCall(`${API_ENDPOINTS.clients}?id=${editingClient.id}`, {
         method: 'PUT',
@@ -281,47 +282,49 @@ const ClientManager = () => {
           }
         })
       });
-
       if (response.client || response.lead) {
         toast.success('Client updated successfully');
         loadClients();
         setShowEditClient(false);
         setEditingClient(null);
         resetForm();
+      } else {
+        setApiError('Failed to update client. Please try again.');
+        toast.error('Failed to update client');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating client:', error);
+      setApiError('Failed to update client. Please check your connection or try again.');
       toast.error('Failed to update client');
     }
   };
 
   const handleDelete = async (clientId: number) => {
+    setApiError(null);
     if (!confirm('Are you sure you want to delete this client?')) return;
-
     try {
       await apiCall(`${API_ENDPOINTS.clients}?id=${clientId}`, {
         method: 'DELETE'
       });
-      
       toast.success('Client deleted successfully');
       loadClients();
       if (selectedClient?.id === clientId) {
         setSelectedClient(null);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting client:', error);
+      setApiError('Failed to delete client. Please check your connection or try again.');
       toast.error('Failed to delete client');
     }
   };
 
   const handleAISearch = async () => {
+    setApiError(null);
     if (!aiSearchQuery.trim()) {
       toast.error('Please enter a company name or employee information');
       return;
     }
-
     setAiSearchLoading(true);
-    
     try {
       const response = await fetch('/api/openai-chat', {
         method: 'POST',
@@ -349,20 +352,17 @@ const ClientManager = () => {
           maxTokens: 800
         })
       });
-
       if (!response.ok) {
+        setApiError('AI search failed. Please try again.');
         throw new Error('AI search failed');
       }
-
       const data = await response.json();
       const aiInfo = data.message;
-
-      // Parse AI response and populate form fields
       populateFormFromAI(aiInfo);
-      
       toast.success('AI search completed! Review and edit the populated information.');
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI search error:', error);
+      setApiError('AI search failed. Please try again or enter information manually.');
       toast.error('AI search failed. Please try again or enter information manually.');
     } finally {
       setAiSearchLoading(false);
@@ -422,30 +422,25 @@ const ClientManager = () => {
   };
 
   const handleImportClients = async () => {
+    setApiError(null);
     if (!confirm(`This will import ${importedClientsData.length} clients from the pre-loaded data. Continue?`)) {
       return;
     }
-
     setImportLoading(true);
     let successCount = 0;
     let errorCount = 0;
-
     try {
       // Process clients in batches to avoid overwhelming the API
       const batchSize = 10;
       for (let i = 0; i < importedClientsData.length; i += batchSize) {
         const batch = importedClientsData.slice(i, i + batchSize);
-        
-        // Process each client in the batch
         await Promise.all(
           batch.map(async (client) => {
             try {
-              // Determine client type based on existing data
               let clientType = 'prospect';
               if (client.company && ['PPOK', 'MyComputerCareer', 'Select Mat', 'Fireman Creative'].includes(client.company)) {
                 clientType = 'active';
               }
-              
               await apiCall(API_ENDPOINTS.clients, {
                 method: 'POST',
                 body: JSON.stringify({
@@ -467,23 +462,19 @@ const ClientManager = () => {
                 })
               });
               successCount++;
-            } catch (error) {
+            } catch (error: any) {
               console.error(`Failed to import client ${client.email}:`, error);
               errorCount++;
             }
           })
         );
-        
-        // Show progress
         toast.info(`Imported ${Math.min(i + batchSize, importedClientsData.length)} of ${importedClientsData.length} clients...`);
       }
-
-      // Reload clients
       await loadClients();
-      
       toast.success(`Import completed! ${successCount} clients imported successfully${errorCount > 0 ? `, ${errorCount} failed` : ''}`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error importing clients:', error);
+      setApiError('Failed to import clients. Please check your connection or try again.');
       toast.error('Failed to import clients');
     } finally {
       setImportLoading(false);
@@ -532,6 +523,14 @@ const ClientManager = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+  if (apiError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 text-red-700 dark:text-red-300">
+        <div className="mb-4 font-bold">{apiError}</div>
+        <Button onClick={loadClients}>Retry</Button>
       </div>
     );
   }

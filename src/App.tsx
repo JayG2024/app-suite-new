@@ -89,11 +89,10 @@ const PageLoader = () => (
 
 // Admin route component that shows login form or dashboard
 function AdminRoute() {
-  const { user, isLoading } = useAuth();
-  
+  const { user, loading } = useAuth();
   
   // Show loader while checking auth status
-  if (isLoading) {
+  if (loading) {
     return <PageLoader />;
   }
   
@@ -142,8 +141,20 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  const { user, loading } = useAuth();
+  const [showSessionModal, setShowSessionModal] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!loading && !user) {
+      setShowSessionModal(true);
+    } else {
+      setShowSessionModal(false);
+    }
+  }, [user, loading]);
+
   return (
     <ErrorBoundary>
+      <SessionTimeoutModal open={showSessionModal} onReload={() => window.location.reload()} />
       <SocketProvider>
         <Router>
           <AuthProvider>

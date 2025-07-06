@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useSupabaseAuth } from "@/contexts/SupabaseAuthContext";
+import { saveFormData, loadFormData, clearFormData, handleSupabaseError } from "@/utils/supabaseSessionFix";
 
 interface Lead {
   id: string;
@@ -66,6 +67,7 @@ const SalesPipelineSupabase = () => {
   const [showEditLead, setShowEditLead] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
   const { user, profile } = useSupabaseAuth();
 
   useEffect(() => {
@@ -85,6 +87,7 @@ const SalesPipelineSupabase = () => {
   }, []);
 
   const loadLeads = async () => {
+    setApiError(null);
     try {
       const { data, error } = await supabase
         .from('leads')
@@ -93,11 +96,11 @@ const SalesPipelineSupabase = () => {
           assigned_user:profiles!assigned_to(name, email)
         `)
         .order('created_at', { ascending: false });
-
       if (error) throw error;
       setLeads(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error loading leads:', error);
+      setApiError('Failed to load leads. Please check your connection or try again.');
       toast.error('Failed to load leads');
     } finally {
       setLoading(false);
@@ -105,6 +108,12 @@ const SalesPipelineSupabase = () => {
   };
 
   const saveLead = async (leadData: Partial<Lead>) => {
+    setApiError(null);
+    if (!user) {
+      setApiError('You must be logged in to save a lead.');
+      toast.error('You must be logged in to save a lead.');
+      return;
+    }
     try {
       if (selectedLead) {
         // Update existing lead
@@ -115,7 +124,6 @@ const SalesPipelineSupabase = () => {
             updated_at: new Date().toISOString()
           })
           .eq('id', selectedLead.id);
-
         if (error) throw error;
         toast.success('Lead updated successfully');
       } else {
@@ -126,37 +134,37 @@ const SalesPipelineSupabase = () => {
             ...leadData,
             assigned_to: user?.id || null
           });
-
         if (error) throw error;
         toast.success('Lead created successfully');
       }
-
       setShowEditLead(false);
       setSelectedLead(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving lead:', error);
+      setApiError('Failed to save lead. Please check your connection or try again.');
       toast.error('Failed to save lead');
     }
   };
 
   const deleteLead = async (id: string) => {
+    setApiError(null);
     if (!confirm('Are you sure you want to delete this lead?')) return;
-
     try {
       const { error } = await supabase
         .from('leads')
         .delete()
         .eq('id', id);
-
       if (error) throw error;
       toast.success('Lead deleted successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting lead:', error);
+      setApiError('Failed to delete lead. Please check your connection or try again.');
       toast.error('Failed to delete lead');
     }
   };
 
   const updateLeadStatus = async (leadId: string, newStatus: Lead['status']) => {
+    setApiError(null);
     try {
       const { error } = await supabase
         .from('leads')
@@ -165,11 +173,11 @@ const SalesPipelineSupabase = () => {
           updated_at: new Date().toISOString()
         })
         .eq('id', leadId);
-
       if (error) throw error;
       toast.success('Lead status updated');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating lead status:', error);
+      setApiError('Failed to update lead status. Please check your connection or try again.');
       toast.error('Failed to update lead status');
     }
   };
@@ -196,6 +204,14 @@ const SalesPipelineSupabase = () => {
 
   if (loading) {
     return <div className="flex items-center justify-center h-64">Loading...</div>;
+  }
+  if (apiError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 text-red-700 dark:text-red-300">
+        <div className="mb-4 font-bold">{apiError}</div>
+        <Button onClick={loadLeads}>Retry</Button>
+      </div>
+    );
   }
 
   return (
