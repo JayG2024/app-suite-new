@@ -46,6 +46,9 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
 
   // Initialize auth state
   useEffect(() => {
+    // Ensure session persistence
+    ensureSessionPersistence()
+    
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -55,13 +58,30 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
       setLoading(false)
     })
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        fetchProfile(session.user.id)
-      } else {
+    // Listen for auth changes with better error handling
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event)
+      
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed successfully')
+      }
+      
+      if (event === 'SIGNED_OUT') {
+        setUser(null)
         setProfile(null)
+      } else if (session?.user) {
+        setUser(session.user)
+        await fetchProfile(session.user.id)
+      } else {
+        // Try to refresh session if no user
+        const refreshedSession = await refreshSession()
+        if (refreshedSession?.user) {
+          setUser(refreshedSession.user)
+          await fetchProfile(refreshedSession.user.id)
+        } else {
+          setUser(null)
+          setProfile(null)
+        }
       }
     })
 

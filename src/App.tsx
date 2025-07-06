@@ -143,112 +143,106 @@ function App() {
   }, []);
 
   return (
-    <SocketProvider>
-      <Router>
-        <AuthProvider>
-          <RedirectHandler />
-          <ScrollToTop />
-          <Routes>
-        <Route path="/" element={<Layout><Outlet /></Layout>}>
-          <Route index element={<Index />} />
-          <Route path="about" element={<About />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="apps" element={<Apps />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="blog/:id" element={<BlogPost />} />
-          <Route path="careers" element={<Careers />} />
-          <Route path="cookie-policy" element={<CookiePolicy />} />
-          <Route path="customer-management" element={<CustomerManagement />} />
-          <Route path="extensions" element={<Extensions />} />
-          <Route path="finance-apps" element={<FinanceApps />} />
-          <Route path="help-center" element={<HelpCenter />} />
-          <Route path="marketing-solutions" element={<MarketingSolutions />} />
-          <Route path="operations-tools" element={<OperationsTools />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="sales" element={<Sales />} />
-          <Route path="support" element={<Support />} />
-          <Route path="terms" element={<Terms />} />
-          <Route path="roi-calculator" element={<RoiCalculator />} />
-          <Route path="ai-development-process" element={<AiDevelopmentProcess />} />
-          <Route path="image-generator" element={<ProtectedRoute><ImageGenerator /></ProtectedRoute>} />
-          <Route path="get-started" element={<GetStarted />} />
-          <Route path="payment-terms" element={<PaymentTerms />} />
-          <Route path="price-calculator" element={<PriceCalculator />} />
-          <Route path="financing-calculator" element={<FinancingCalculator />} />
-          <Route path="technology-partners" element={<TechnologyPartners />} />
-          <Route path="newsletter" element={<NewsletterPage />} />
-          <Route path="icon-test" element={<Suspense fallback={<PageLoader />}><IconTest /></Suspense>} />
-          <Route path="system-status" element={<Suspense fallback={<PageLoader />}><SystemStatus /></Suspense>} />
-          <Route path="system-tools" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><SystemTools /></Suspense></ProtectedRoute>} />
-          <Route path="industries" element={<Suspense fallback={<PageLoader />}><Industries /></Suspense>} />
-          <Route path="examples" element={<Suspense fallback={<PageLoader />}><Examples /></Suspense>} />
-          <Route path="solutions-weve-built" element={<Suspense fallback={<PageLoader />}><SolutionsWeveBuilt /></Suspense>} />
-          <Route path="sitemap" element={<Sitemap />} />
-          <Route path="portfolio/webaudit-dashboard" element={<Suspense fallback={<PageLoader />}><WebAuditDashboard /></Suspense>} />
-          <Route path="proposal/:proposalId" element={<Proposal />} />
-          <Route path="ai-brain" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><AdminPage /></Suspense></ProtectedRoute>} />
-          <Route path="test-form" element={<Suspense fallback={<PageLoader />}><TestProjectForm /></Suspense>} />
-          <Route path="admin-debug" element={<Suspense fallback={<PageLoader />}><AdminDebug /></Suspense>} />
-          <Route path="documentation" element={<Documentation />} />
-          <Route path="documentation/quick-start" element={<QuickStart />} />
-          <Route path="documentation/installation" element={<Installation />} />
-          <Route path="documentation/configuration" element={<Configuration />} />
-          <Route path="documentation/customization" element={<Customization />} />
-          <Route path="documentation/integrations" element={<Integrations />} />
-          <Route path="documentation/ai-capabilities" element={<AiCapabilities />} />
-          <Route path="documentation/security" element={<Security />} />
-          <Route path="documentation/client-onboarding" element={<ClientOnboarding />} />
-          <Route path="documentation/process" element={<Process />} />
-          <Route path="documentation/delivery" element={<Delivery />} />
-          
-          {/* Resources & Content */}
-          <Route path="resources" element={<Resources />} />
-          <Route path="whitepapers/geo-blocking-ai-search" element={<HiddenCostGeoBlocking />} />
-          <Route path="infographics/geo-blocking-impact" element={<GeoBlockingImpact />} />
-          <Route path="podcast" element={<Podcast />} />
-          
-          {/* Legacy redirects */}
-          <Route path="examples" element={<Navigate to="/solutions-weve-built" replace />} />
-          <Route path="portfolio" element={<Navigate to="/solutions-weve-built" replace />} />
-          <Route path="command-center" element={<Navigate to="/admin" replace />} />
-          <Route path="dashboard" element={<Navigate to="/admin" replace />} />
-          <Route path="manage" element={<Navigate to="/admin" replace />} />
-          <Route path="blog/the-hidden-cost-of-geo-blocking-and-ai-search-visibility" element={<Navigate to="/whitepapers/geo-blocking-ai-search" replace />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Route>
-        
-        {/* Admin routes with authentication */}
-        <Route path="admin" element={<AdminRoute />}>
-          <Route index element={
-            <ErrorBoundary fallback={
-              <div className="p-8">
-                <h1 className="text-2xl font-bold text-red-600 mb-4">Error Loading Admin Dashboard</h1>
-                <p>There was an error loading the dashboard. Please try refreshing the page.</p>
-                <Button onClick={() => window.location.reload()} className="mt-4">
-                  Refresh Page
-                </Button>
-              </div>
-            }>
-              <AdminDashboard />
-            </ErrorBoundary>
-          } />
-          <Route path="overview" element={<ErrorBoundary><AdminDashboard initialSection="overview" /></ErrorBoundary>} />
-          <Route path="clients" element={<ErrorBoundary><AdminDashboard initialSection="clients" /></ErrorBoundary>} />
-          <Route path="projects" element={<ErrorBoundary><AdminDashboard initialSection="projects" /></ErrorBoundary>} />
-          <Route path="tasks" element={<ErrorBoundary><AdminDashboard initialSection="tasks" /></ErrorBoundary>} />
-          <Route path="sales" element={<ErrorBoundary><AdminDashboard initialSection="sales" /></ErrorBoundary>} />
-          <Route path="team" element={<ErrorBoundary><AdminDashboard initialSection="team" /></ErrorBoundary>} />
-          <Route path="templates" element={<ErrorBoundary><AdminDashboard initialSection="templates" /></ErrorBoundary>} />
-          <Route path="call-analyzer" element={<ErrorBoundary><AdminDashboard initialSection="call-analyzer" /></ErrorBoundary>} />
-          <Route path="settings" element={<ErrorBoundary><AdminDashboard initialSection="settings" /></ErrorBoundary>} />
-          <Route path="*" element={<Navigate to="/admin" replace />} />
-        </Route>
-      </Routes>
-      <Toaster position="top-right" />
-        </AuthProvider>
-      </Router>
-    </SocketProvider>
+    <ErrorBoundary>
+      <SocketProvider>
+        <Router>
+          <AuthProvider>
+            <RedirectHandler />
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Layout><Outlet /></Layout>}>
+                <Route index element={<Index />} />
+                <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="apps" element={<Apps />} />
+                <Route path="blog" element={<Blog />} />
+                <Route path="blog/:id" element={<BlogPost />} />
+                <Route path="careers" element={<Careers />} />
+                <Route path="cookie-policy" element={<CookiePolicy />} />
+                <Route path="customer-management" element={<CustomerManagement />} />
+                <Route path="extensions" element={<Extensions />} />
+                <Route path="finance-apps" element={<FinanceApps />} />
+                <Route path="help-center" element={<HelpCenter />} />
+                <Route path="marketing-solutions" element={<MarketingSolutions />} />
+                <Route path="operations-tools" element={<OperationsTools />} />
+                <Route path="privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="sales" element={<Sales />} />
+                <Route path="support" element={<Support />} />
+                <Route path="terms" element={<Terms />} />
+                <Route path="roi-calculator" element={<RoiCalculator />} />
+                <Route path="ai-development-process" element={<AiDevelopmentProcess />} />
+                <Route path="image-generator" element={<ProtectedRoute><ImageGenerator /></ProtectedRoute>} />
+                <Route path="get-started" element={<GetStarted />} />
+                <Route path="payment-terms" element={<PaymentTerms />} />
+                <Route path="price-calculator" element={<PriceCalculator />} />
+                <Route path="financing-calculator" element={<FinancingCalculator />} />
+                <Route path="technology-partners" element={<TechnologyPartners />} />
+                <Route path="newsletter" element={<NewsletterPage />} />
+                <Route path="icon-test" element={<Suspense fallback={<PageLoader />}><IconTest /></Suspense>} />
+                <Route path="system-status" element={<Suspense fallback={<PageLoader />}><SystemStatus /></Suspense>} />
+                <Route path="system-tools" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><SystemTools /></Suspense></ProtectedRoute>} />
+                <Route path="industries" element={<Suspense fallback={<PageLoader />}><Industries /></Suspense>} />
+                <Route path="examples" element={<Suspense fallback={<PageLoader />}><Examples /></Suspense>} />
+                <Route path="solutions-weve-built" element={<Suspense fallback={<PageLoader />}><SolutionsWeveBuilt /></Suspense>} />
+                <Route path="sitemap" element={<Sitemap />} />
+                <Route path="portfolio/webaudit-dashboard" element={<Suspense fallback={<PageLoader />}><WebAuditDashboard /></Suspense>} />
+                <Route path="proposal/:proposalId" element={<Proposal />} />
+                <Route path="ai-brain" element={<ProtectedRoute><Suspense fallback={<PageLoader />}><AdminPage /></Suspense></ProtectedRoute>} />
+                <Route path="test-form" element={<Suspense fallback={<PageLoader />}><TestProjectForm /></Suspense>} />
+                <Route path="admin-debug" element={<Suspense fallback={<PageLoader />}><AdminDebug /></Suspense>} />
+                <Route path="documentation" element={<Documentation />} />
+                <Route path="documentation/quick-start" element={<QuickStart />} />
+                <Route path="documentation/installation" element={<Installation />} />
+                <Route path="documentation/configuration" element={<Configuration />} />
+                <Route path="documentation/customization" element={<Customization />} />
+                <Route path="documentation/integrations" element={<Integrations />} />
+                <Route path="documentation/ai-capabilities" element={<AiCapabilities />} />
+                <Route path="documentation/security" element={<Security />} />
+                <Route path="documentation/client-onboarding" element={<ClientOnboarding />} />
+                <Route path="documentation/process" element={<Process />} />
+                <Route path="documentation/delivery" element={<Delivery />} />
+                
+                {/* Resources & Content */}
+                <Route path="resources" element={<Resources />} />
+                <Route path="whitepapers/geo-blocking-ai-search" element={<HiddenCostGeoBlocking />} />
+                <Route path="infographics/geo-blocking-impact" element={<GeoBlockingImpact />} />
+                <Route path="podcast" element={<Podcast />} />
+                
+                {/* Legacy redirects */}
+                <Route path="examples" element={<Navigate to="/solutions-weve-built" replace />} />
+                <Route path="portfolio" element={<Navigate to="/solutions-weve-built" replace />} />
+                <Route path="command-center" element={<Navigate to="/admin" replace />} />
+                <Route path="dashboard" element={<Navigate to="/admin" replace />} />
+                <Route path="manage" element={<Navigate to="/admin" replace />} />
+                <Route path="blog/the-hidden-cost-of-geo-blocking-and-ai-search-visibility" element={<Navigate to="/whitepapers/geo-blocking-ai-search" replace />} />
+                
+                <Route path="*" element={<NotFound />} />
+              </Route>
+              
+              {/* Admin routes with authentication */}
+              <Route path="admin" element={<AdminRoute />}>
+                <Route index element={
+                  <ErrorBoundary>
+                    <AdminDashboard />
+                  </ErrorBoundary>
+                } />
+                <Route path="overview" element={<ErrorBoundary><AdminDashboard initialSection="overview" /></ErrorBoundary>} />
+                <Route path="clients" element={<ErrorBoundary><AdminDashboard initialSection="clients" /></ErrorBoundary>} />
+                <Route path="projects" element={<ErrorBoundary><AdminDashboard initialSection="projects" /></ErrorBoundary>} />
+                <Route path="tasks" element={<ErrorBoundary><AdminDashboard initialSection="tasks" /></ErrorBoundary>} />
+                <Route path="sales" element={<ErrorBoundary><AdminDashboard initialSection="sales" /></ErrorBoundary>} />
+                <Route path="team" element={<ErrorBoundary><AdminDashboard initialSection="team" /></ErrorBoundary>} />
+                <Route path="templates" element={<ErrorBoundary><AdminDashboard initialSection="templates" /></ErrorBoundary>} />
+                <Route path="call-analyzer" element={<ErrorBoundary><AdminDashboard initialSection="call-analyzer" /></ErrorBoundary>} />
+                <Route path="settings" element={<ErrorBoundary><AdminDashboard initialSection="settings" /></ErrorBoundary>} />
+                <Route path="*" element={<Navigate to="/admin" replace />} />
+              </Route>
+            </Routes>
+            <Toaster position="top-right" />
+          </AuthProvider>
+        </Router>
+      </SocketProvider>
+    </ErrorBoundary>
   );
 }
 

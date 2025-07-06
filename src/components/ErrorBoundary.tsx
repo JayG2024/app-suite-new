@@ -1,77 +1,51 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
-import * as Sentry from '@sentry/react';
+import React from 'react';
 
-interface Props {
-  children: ReactNode;
-  fallback?: ReactNode;
-}
-
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: ErrorInfo;
+  error: Error | null;
+  errorInfo: React.ErrorInfo | null;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    // Update state so the next render will show the fallback UI
-    return { hasError: true, error };
+class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, ErrorBoundaryState> {
+  constructor(props: React.PropsWithChildren<{}>) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error, errorInfo: null };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error, errorInfo });
-    
-    // Log error to console
-    console.error('Uncaught error:', error, errorInfo);
-    
-    // Send to Sentry in production
-    if (import.meta.env.PROD) {
-      Sentry.withScope((scope) => {
-        scope.setContext('errorBoundary', {
-          componentStack: errorInfo.componentStack,
-        });
-        Sentry.captureException(error);
-      });
-    }
+    // Log error to console or external service
+    console.error('Global ErrorBoundary caught an error:', error, errorInfo);
   }
 
-  private handleReset = (): void => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  handleReload = () => {
+    window.location.reload();
   };
 
-  public render(): ReactNode {
+  render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-      
-      // Default fallback UI
       return (
-        <div className="flex flex-col items-center justify-center min-h-[50vh] p-6 text-center">
-          <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
-          <p className="mb-6 text-muted-foreground">
-            We apologize for the inconvenience. Our team has been notified of this issue.
-          </p>
-          <Button onClick={this.handleReset}>Try Again</Button>
-          {process.env.NODE_ENV !== 'production' && this.state.error && (
-            <div className="mt-6 p-4 bg-muted rounded-md text-left overflow-auto max-w-full">
-              <p className="font-mono text-sm mb-2">{this.state.error.toString()}</p>
-              {this.state.errorInfo && (
-                <pre className="font-mono text-xs overflow-auto">
-                  {this.state.errorInfo.componentStack}
-                </pre>
-              )}
-            </div>
-          )}
+        <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 dark:bg-red-900/20 p-8">
+          <h1 className="text-3xl font-bold text-red-700 dark:text-red-300 mb-4">Something went wrong</h1>
+          <p className="text-lg text-red-600 dark:text-red-200 mb-4">An unexpected error occurred. Please try reloading the page.</p>
+          <button
+            onClick={this.handleReload}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+          >
+            Reload Page
+          </button>
+          <details className="mt-6 w-full max-w-xl bg-white dark:bg-gray-900 rounded p-4 border border-red-200 dark:border-red-800 text-xs text-left">
+            <summary className="cursor-pointer font-semibold text-red-700 dark:text-red-300">Error Details</summary>
+            <pre className="whitespace-pre-wrap mt-2">{this.state.error?.toString()}</pre>
+            <pre className="whitespace-pre-wrap mt-2">{this.state.errorInfo?.componentStack}</pre>
+          </details>
         </div>
       );
     }
-
     return this.props.children;
   }
 }
