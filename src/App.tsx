@@ -154,7 +154,6 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <SessionTimeoutModal open={showSessionModal} onReload={() => window.location.reload()} />
       <SocketProvider>
         <Router>
           <AuthProvider>
