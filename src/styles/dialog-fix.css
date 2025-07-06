@@ -1,0 +1,138 @@
+/* Dialog-specific CSS fixes for input elements */
+
+/* Remove pointer-events restrictions from dialog overlay */
+[data-radix-dialog-overlay] {
+  pointer-events: none !important;
+}
+
+/* Ensure dialog content and all children are interactive */
+[data-radix-dialog-content] {
+  pointer-events: auto !important;
+  isolation: isolate !important;
+}
+
+/* Fix for all form elements in dialogs */
+[role="dialog"] input,
+[role="dialog"] textarea,
+[role="dialog"] select,
+[role="dialog"] button,
+[data-radix-dialog-content] input,
+[data-radix-dialog-content] textarea,
+[data-radix-dialog-content] select,
+[data-radix-dialog-content] button {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 100 !important;
+  opacity: 1 !important;
+  cursor: auto !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Specific fix for input elements */
+[role="dialog"] input:not([type="checkbox"]):not([type="radio"]),
+[role="dialog"] textarea,
+[data-radix-dialog-content] input:not([type="checkbox"]):not([type="radio"]),
+[data-radix-dialog-content] textarea {
+  cursor: text !important;
+}
+
+/* Ensure labels are clickable */
+[role="dialog"] label,
+[data-radix-dialog-content] label {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Fix for select dropdowns in dialogs */
+[data-radix-select-content] {
+  pointer-events: auto !important;
+  z-index: 200 !important;
+}
+
+/* Fix focus styles */
+[role="dialog"] input:focus,
+[role="dialog"] textarea:focus,
+[role="dialog"] select:focus,
+[data-radix-dialog-content] input:focus,
+[data-radix-dialog-content] textarea:focus,
+[data-radix-dialog-content] select:focus {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 2px !important;
+  box-shadow: none !important;
+}
+
+/* Fix for dialog close button */
+[data-radix-dialog-content] > button[aria-label="Close"] {
+  pointer-events: auto !important;
+  z-index: 101 !important;
+}
+
+/* Ensure form submission works */
+[role="dialog"] form,
+[data-radix-dialog-content] form {
+  pointer-events: auto !important;
+}
+
+/* Fix for nested dialogs */
+[role="dialog"] [role="dialog"] {
+  z-index: 150 !important;
+}
+
+[role="dialog"] [role="dialog"] input,
+[role="dialog"] [role="dialog"] textarea,
+[role="dialog"] [role="dialog"] select {
+  z-index: 151 !important;
+}
+
+/* Remove any webkit appearance issues */
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Ensure proper text selection */
+input,
+textarea {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+}
+
+/* Fix for mobile Safari */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Fix any transform issues */
+[data-radix-dialog-content] {
+  transform: translate(-50%, -50%) !important;
+  will-change: auto !important;
+}
+
+/* Ensure buttons in dialogs are clickable */
+[role="dialog"] button:not([disabled]),
+[data-radix-dialog-content] button:not([disabled]) {
+  cursor: pointer !important;
+  pointer-events: auto !important;
+}
+
+/* Fix for dialog content scrolling */
+[data-radix-dialog-content] {
+  overflow-y: auto !important;
+  max-height: 90vh !important;
+}
+
+/* Ensure all interactive elements work */
+[role="dialog"] a,
+[role="dialog"] [tabindex]:not([tabindex="-1"]),
+[data-radix-dialog-content] a,
+[data-radix-dialog-content] [tabindex]:not([tabindex="-1"]) {
+  pointer-events: auto !important;
+}
