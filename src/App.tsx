@@ -141,16 +141,6 @@ function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const { user, loading } = useAuth();
-  const [showSessionModal, setShowSessionModal] = React.useState(false);
-
-  React.useEffect(() => {
-    if (!loading && !user) {
-      setShowSessionModal(true);
-    } else {
-      setShowSessionModal(false);
-    }
-  }, [user, loading]);
 
   return (
     <ErrorBoundary>
