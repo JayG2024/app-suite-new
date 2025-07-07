@@ -152,8 +152,6 @@ button:disabled {
 /* 16. Ensure labels are clickable */
 label {
   cursor: pointer;
-  display: block;
-  margin-bottom: 0.5rem;
 }
 
 /* 17. Fix form submission */
@@ -271,4 +269,22 @@ body:has([role="dialog"][data-state="open"]) {
   visibility: visible !important;
   position: relative !important;
   z-index: 10 !important;
+}
+
+/* 31. Preserve tab component styles */
+[role="tablist"] button,
+[data-radix-collection-item][role="tab"],
+.tabs-list button,
+.tabs-trigger {
+  display: inline-flex !important;
+  width: auto !important;
+}
+
+/* 32. Preserve other UI component button styles */
+.inline-flex button,
+button.inline-flex,
+[class*="inline-flex"] button,
+button[class*="inline-flex"] {
+  display: inline-flex !important;
+  width: auto !important;
 }
