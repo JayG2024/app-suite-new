@@ -8,8 +8,7 @@
 /* 2. Fix all input elements globally */
 input,
 textarea,
-select,
-button {
+select {
   font-family: inherit;
   font-size: 100%;
   line-height: inherit;
@@ -18,6 +17,16 @@ button {
   padding: 0.5rem 0.75rem;
   display: block;
   width: 100%;
+}
+
+/* Buttons should not have global display: block and width: 100% */
+button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
 }
 
 /* 3. Ensure all forms and inputs are interactive */
