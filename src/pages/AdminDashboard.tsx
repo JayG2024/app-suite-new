@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -126,16 +126,18 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
     const pathSegments = location.pathname.split('/');
     const section = pathSegments[2];
     
-    if (section) {
-      // Handle special cases
-      if (section === 'asc-ai') {
-        setCurrentSection('cloud-dev');
-      } else {
-        setCurrentSection(section);
+    startTransition(() => {
+      if (section) {
+        // Handle special cases
+        if (section === 'asc-ai') {
+          setCurrentSection('cloud-dev');
+        } else {
+          setCurrentSection(section);
+        }
+      } else if (location.pathname === '/admin' || location.pathname === '/admin/') {
+        setCurrentSection('overview');
       }
-    } else if (location.pathname === '/admin' || location.pathname === '/admin/') {
-      setCurrentSection('overview');
-    }
+    });
   }, [location.pathname]);
 
   // Calculate metrics from database
@@ -195,6 +197,14 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
     navigate('/');
   };
 
+  // Handle section changes with startTransition to prevent Suspense errors
+  const handleSectionChange = (section: string) => {
+    startTransition(() => {
+      setCurrentSection(section);
+      navigate(`/admin/${section === 'overview' ? '' : section}`);
+    });
+  };
+
   // Error section component for detailed error display
   const ErrorSection = ({ section, error }: { section: string; error: any }) => (
     <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
@@ -231,7 +241,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
         <Button 
           variant="outline" 
           size="sm"
-          onClick={() => setCurrentSection('overview')}
+          onClick={() => handleSectionChange('overview')}
           className="text-red-600 border-red-600 hover:bg-red-100 dark:text-red-400 dark:border-red-400 dark:hover:bg-red-900/30"
         >
           Go to Overview
@@ -414,7 +424,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
             <Button 
               className="w-full justify-start" 
               variant="outline"
-              onClick={() => setCurrentSection('projects')}
+              onClick={() => handleSectionChange('projects')}
             >
               <Code className="h-4 w-4 mr-2" />
               Create New Project
@@ -422,7 +432,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
             <Button 
               className="w-full justify-start" 
               variant="outline"
-              onClick={() => setCurrentSection('clients')}
+              onClick={() => handleSectionChange('clients')}
             >
               <Users className="h-4 w-4 mr-2" />
               Add New Client
@@ -430,7 +440,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
             <Button 
               className="w-full justify-start" 
               variant="outline"
-              onClick={() => setCurrentSection('sales')}
+              onClick={() => handleSectionChange('sales')}
             >
               <Target className="h-4 w-4 mr-2" />
               Create Lead
@@ -446,7 +456,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
             <Button 
               className="w-full justify-start" 
               variant="outline"
-              onClick={() => setCurrentSection('call-analyzer')}
+              onClick={() => handleSectionChange('call-analyzer')}
             >
               <Phone className="h-4 w-4 mr-2" />
               Analyze Call Transcript
@@ -590,10 +600,12 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
                   currentSection === item.id && "bg-secondary"
                 )}
                 onClick={() => {
-                  const path = item.id === 'overview' ? '/admin' : `/admin/${item.id === 'cloud-dev' ? 'asc-ai' : item.id}`;
-                  navigate(path);
-                  setCurrentSection(item.id);
-                  setMobileMenuOpen(false);
+                  startTransition(() => {
+                    const path = item.id === 'overview' ? '/admin' : `/admin/${item.id === 'cloud-dev' ? 'asc-ai' : item.id}`;
+                    navigate(path);
+                    setCurrentSection(item.id);
+                    setMobileMenuOpen(false);
+                  });
                 }}
               >
                 <item.icon className={cn("h-4 w-4 mr-3", item.color)} />
