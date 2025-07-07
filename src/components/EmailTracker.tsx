@@ -798,6 +798,6 @@ const EmailTracker = () => {
       )}
     </div>
   );
-}
+};
 
 export default EmailTracker;
