@@ -785,6 +785,6 @@ const PaymentProcessor = () => {
       </Tabs>
     </div>
   );
-};
+}
 
 export default PaymentProcessor;
