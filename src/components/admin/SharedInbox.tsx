@@ -68,7 +68,7 @@ const SharedInbox = () => {
         {
           id: '1',
           from: 'john.doe@example.com',
-          to: 'sales@app-suite.io',
+          to: 'sales@jaydus.ai',
           subject: 'Interested in custom CRM solution',
           body: 'Hi, I am interested in developing a custom CRM solution for my business. We have about 50 employees and need features like lead tracking, pipeline management, and reporting. Can you provide a quote?',
           timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
@@ -81,7 +81,7 @@ const SharedInbox = () => {
         {
           id: '2',
           from: 'support@client.com',
-          to: 'support@app-suite.io',
+          to: 'support@jaydus.ai',
           subject: 'Bug report: Login issues',
           body: 'We are experiencing login issues with our application. Users are getting "Invalid credentials" error even with correct passwords. This started happening after the latest update.',
           timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000),
@@ -94,7 +94,7 @@ const SharedInbox = () => {
         {
           id: '3',
           from: 'info@partner.com',
-          to: 'info@app-suite.io',
+          to: 'info@jaydus.ai',
           subject: 'Partnership opportunity',
           body: 'Hello App Suite team, we would like to discuss a potential partnership opportunity. We are a digital marketing agency looking for a reliable development partner.',
           timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
@@ -214,7 +214,7 @@ const SharedInbox = () => {
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle>Shared Inbox</CardTitle>
-          <CardDescription>All emails sent to @app-suite.io</CardDescription>
+          <CardDescription>All emails sent to @jaydus.ai</CardDescription>
           
           {/* Search */}
           <div className="relative mt-4">

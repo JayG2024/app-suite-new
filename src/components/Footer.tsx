@@ -59,7 +59,7 @@ const Footer = () => {
               <li><Link to="/about" className="text-sm text-muted-foreground hover:text-foreground">About Us</Link></li>
               <li><Link to="/documentation" className="text-sm text-muted-foreground hover:text-foreground">Documentation</Link></li>
               <li><Link to="/blog" className="text-sm text-muted-foreground hover:text-foreground">Blog & Updates</Link></li>
-              <li><a href="mailto:support@app-suite.io?subject=Support%20Request&body=Hello%2C%20I%20need%20help%20with..." className="text-sm text-muted-foreground hover:text-foreground">Email Support</a></li>
+              <li><a href="mailto:support@jaydus.ai?subject=Support%20Request&body=Hello%2C%20I%20need%20help%20with..." className="text-sm text-muted-foreground hover:text-foreground">Email Support</a></li>
               <li><Link to="/sitemap" className="text-sm text-muted-foreground hover:text-foreground">Sitemap</Link></li>
             </ul>
           </div>

@@ -42,8 +42,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Send email notification
     await resend.emails.send({
-      from: 'App Suite <noreply@app-suite.io>',
-      to: 'support@app-suite.io',
+      from: 'App Suite <noreply@jaydus.ai>',
+      to: 'support@jaydus.ai',
       subject: `New Contact Form Submission from ${name}`,
       html: `
         <h2>New Contact Form Submission</h2>
@@ -57,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Send confirmation email to user
     await resend.emails.send({
-      from: 'App Suite <noreply@app-suite.io>',
+      from: 'App Suite <noreply@jaydus.ai>',
       to: email,
       subject: 'Thank you for contacting App Suite',
       html: `

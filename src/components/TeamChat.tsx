@@ -238,7 +238,7 @@ const TeamChat = () => {
           channel_id: channelId,
           user_id: "2",
           user_name: "Sarah Chen",
-          user_email: "sarah@app-suite.io",
+          user_email: "sarah@jaydus.ai",
           content: "Hey team! Just finished the new feature implementation 🎉",
           is_pinned: false,
           created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
@@ -250,7 +250,7 @@ const TeamChat = () => {
           channel_id: channelId,
           user_id: "1",
           user_name: "Mike Johnson",
-          user_email: "mike@app-suite.io",
+          user_email: "mike@jaydus.ai",
           content: "Great work @Sarah! Can you share the PR link?",
           mentions: ["2"],
           is_pinned: false,
@@ -262,7 +262,7 @@ const TeamChat = () => {
           channel_id: channelId,
           user_id: "2",
           user_name: "Sarah Chen",
-          user_email: "sarah@app-suite.io",
+          user_email: "sarah@jaydus.ai",
           content: "Sure! Here's the PR: https://github.com/app-suite/project/pull/123",
           is_pinned: true,
           created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
@@ -282,28 +282,28 @@ const TeamChat = () => {
         {
           id: "1",
           name: "Mike Johnson",
-          email: "mike@app-suite.io",
+          email: "mike@jaydus.ai",
           status: "online",
           role: "Developer"
         },
         {
           id: "2",
           name: "Sarah Chen",
-          email: "sarah@app-suite.io",
+          email: "sarah@jaydus.ai",
           status: "online",
           role: "Developer"
         },
         {
           id: "3",
           name: "Alex Rivera",
-          email: "alex@app-suite.io",
+          email: "alex@jaydus.ai",
           status: "away",
           role: "Designer"
         },
         {
           id: "4",
           name: "Emma Watson",
-          email: "emma@app-suite.io",
+          email: "emma@jaydus.ai",
           status: "offline",
           role: "Sales",
           last_seen: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
