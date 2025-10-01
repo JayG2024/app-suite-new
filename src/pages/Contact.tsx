@@ -71,7 +71,8 @@ const Contact = () => {
 
     } catch (error) {
       console.error("Error submitting form:", error);
-      toast.error("Failed to send message. Please try again or email us directly at support@app-suite.io.");
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error(`Failed to send message: ${errorMessage}. Please try again or email us directly at support@app-suite.io.`);
       
       setFormData({
         name: "",

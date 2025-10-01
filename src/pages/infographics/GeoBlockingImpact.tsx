@@ -18,7 +18,9 @@ const GeoBlockingImpact = () => {
         toast.success('Link copied to clipboard!');
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       console.error('Share failed:', error);
+      toast.error(`Share failed: ${errorMessage}`);
     }
   };
 

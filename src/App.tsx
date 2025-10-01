@@ -5,7 +5,7 @@ import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import "./version"; // Import version for cache debugging
 import "./utils/clearCache"; // Cache clearing utility
-import { hardcoreCachePurge, purgeAndReload } from "@/utils/hardcoreCachePurge";
+import { hardcoreCachePurge, purgeAndReload, forceHardReload } from "@/utils/hardcoreCachePurge";
 import Layout from "./components/Layout";
 import ScrollToTop from "./components/ScrollToTop";
 import RedirectHandler from "./components/RedirectHandler";
@@ -49,8 +49,7 @@ const SystemTools = React.lazy(() => import("./pages/SystemTools"));
 const AdminDebug = React.lazy(() => import("./pages/AdminDebug"));
 const IconTest = React.lazy(() => import("./components/IconTest"));
 const Industries = React.lazy(() => import("./pages/Industries"));
-// Import AdminDashboard directly without lazy loading for testing
-import AdminDashboard from "./pages/AdminDashboard";
+const AdminDashboard = React.lazy(() => import("./pages/AdminDashboard"));
 const AdminSimple = React.lazy(() => import("./pages/AdminSimple"));
 const TestProjectForm = React.lazy(() => import('./components/TestProjectForm'));
 const Examples = React.lazy(() => import("./pages/Examples"));
@@ -80,11 +79,11 @@ import Resources from "./pages/Resources";
 import GeoBlockingImpact from "./pages/infographics/GeoBlockingImpact";
 import Podcast from "./pages/Podcast";
 
+import LoadingSpinner from "./components/LoadingSpinner";
+
 // Loading component for lazy loaded routes
 const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-  </div>
+  <LoadingSpinner fullScreen text="Loading..." />
 );
 
 // Admin route component that shows login form or dashboard
@@ -223,18 +222,20 @@ function App() {
               <Route path="admin" element={<AdminRoute />}>
                 <Route index element={
                   <ErrorBoundary>
-                    <AdminDashboard />
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminDashboard />
+                    </Suspense>
                   </ErrorBoundary>
                 } />
-                <Route path="overview" element={<ErrorBoundary><AdminDashboard initialSection="overview" /></ErrorBoundary>} />
-                <Route path="clients" element={<ErrorBoundary><AdminDashboard initialSection="clients" /></ErrorBoundary>} />
-                <Route path="projects" element={<ErrorBoundary><AdminDashboard initialSection="projects" /></ErrorBoundary>} />
-                <Route path="tasks" element={<ErrorBoundary><AdminDashboard initialSection="tasks" /></ErrorBoundary>} />
-                <Route path="sales" element={<ErrorBoundary><AdminDashboard initialSection="sales" /></ErrorBoundary>} />
-                <Route path="team" element={<ErrorBoundary><AdminDashboard initialSection="team" /></ErrorBoundary>} />
-                <Route path="templates" element={<ErrorBoundary><AdminDashboard initialSection="templates" /></ErrorBoundary>} />
-                <Route path="call-analyzer" element={<ErrorBoundary><AdminDashboard initialSection="call-analyzer" /></ErrorBoundary>} />
-                <Route path="settings" element={<ErrorBoundary><AdminDashboard initialSection="settings" /></ErrorBoundary>} />
+                <Route path="overview" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="overview" /></Suspense></ErrorBoundary>} />
+                <Route path="clients" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="clients" /></Suspense></ErrorBoundary>} />
+                <Route path="projects" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="projects" /></Suspense></ErrorBoundary>} />
+                <Route path="tasks" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="tasks" /></Suspense></ErrorBoundary>} />
+                <Route path="sales" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="sales" /></Suspense></ErrorBoundary>} />
+                <Route path="team" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="team" /></Suspense></ErrorBoundary>} />
+                <Route path="templates" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="templates" /></Suspense></ErrorBoundary>} />
+                <Route path="call-analyzer" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="call-analyzer" /></Suspense></ErrorBoundary>} />
+                <Route path="settings" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="settings" /></Suspense></ErrorBoundary>} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
               </Route>
             </Routes>

@@ -82,7 +82,9 @@ const HiddenCostGeoBlockingAiSearchVisibility = () => {
         await navigator.clipboard.writeText(window.location.href);
         alert('Link copied to clipboard!');
       } catch (clipboardError) {
+        const errorMessage = clipboardError instanceof Error ? clipboardError.message : "Unknown error occurred";
         console.error('Failed to copy to clipboard:', clipboardError);
+        toast.error(`Failed to copy link: ${errorMessage}`);
       }
     }
   };
@@ -239,8 +241,9 @@ const HiddenCostGeoBlockingAiSearchVisibility = () => {
         toast.success("PDF ready! Use your browser's print dialog to save as PDF.");
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       console.error('PDF generation error:', error);
-      toast.error("Failed to generate PDF. Please try again.");
+      toast.error(`Failed to generate PDF: ${errorMessage}. Please try again.`);
     }
   };
 

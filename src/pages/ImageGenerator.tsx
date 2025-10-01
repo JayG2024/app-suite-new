@@ -31,8 +31,9 @@ const ImageGeneratorPage = () => {
       console.log('Generated image:', image);
       // Here you would typically update the post with the new image
     } catch (error) {
-      toast.error('Failed to auto-generate image');
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error(`Failed to auto-generate image: ${errorMessage}`);
+      console.error('Image generation error:', error);
     } finally {
       setIsAutoGenerating(null);
     }

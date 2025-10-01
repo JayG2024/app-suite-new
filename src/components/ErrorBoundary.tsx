@@ -2,6 +2,7 @@ import React from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { captureException } from '@/utils/sentry';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -21,8 +22,13 @@ class ErrorBoundary extends React.Component<React.PropsWithChildren<{}>, ErrorBo
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({ error, errorInfo });
-    // Log error to console or external service
+    // Log error to console and Sentry
     console.error('Global ErrorBoundary caught an error:', error, errorInfo);
+    captureException(error, {
+      component: 'ErrorBoundary',
+      errorInfo: errorInfo.componentStack,
+      errorBoundary: true
+    });
   }
 
   handleReload = () => {

@@ -1,9 +1,14 @@
 import * as Sentry from "@sentry/react";
 
 export const initSentry = () => {
-  // Initialize Sentry in both development and production for testing
+  // Only initialize Sentry if DSN is provided
+  if (!import.meta.env.VITE_SENTRY_DSN) {
+    console.log('Sentry DSN not provided, skipping initialization');
+    return;
+  }
+
   Sentry.init({
-    dsn: import.meta.env.VITE_SENTRY_DSN || "https://b7c33a866247123c2970068e1743ece9@o4509586957074432.ingest.us.sentry.io/4509586957991936",
+    dsn: import.meta.env.VITE_SENTRY_DSN,
       integrations: [
         Sentry.browserTracingIntegration(),
         Sentry.replayIntegration({
