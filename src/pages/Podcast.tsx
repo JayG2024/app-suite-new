@@ -158,8 +158,9 @@ const Podcast = () => {
         await navigator.clipboard.writeText(shareUrl);
         toast.success('Link copied to clipboard!');
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
         console.error('Copy failed:', error);
-        toast.error('Failed to copy link');
+        toast.error(`Failed to copy link: ${errorMessage}`);
       }
     } else {
       // Native share fallback
@@ -177,7 +178,9 @@ const Podcast = () => {
           toast.success('Link copied to clipboard!');
         }
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
         console.error('Share failed:', error);
+        toast.error(`Share failed: ${errorMessage}`);
       }
     }
   };

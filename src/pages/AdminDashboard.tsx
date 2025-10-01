@@ -206,7 +206,7 @@ const AdminDashboard = ({ initialSection }: AdminDashboardProps) => {
   };
 
   // Error section component for detailed error display
-  const ErrorSection = ({ section, error }: { section: string; error: any }) => (
+  const ErrorSection = ({ section, error }: { section: string; error: Error | unknown }) => (
     <div className="p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
       <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
         Error Loading {section} Section

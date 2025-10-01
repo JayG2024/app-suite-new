@@ -55,7 +55,9 @@ const GenerativeEngineOptimizationGuide2025 = () => {
         await navigator.clipboard.writeText(window.location.href);
         alert('Link copied to clipboard!');
       } catch (clipboardError) {
+        const errorMessage = clipboardError instanceof Error ? clipboardError.message : "Unknown error occurred";
         console.error('Failed to copy to clipboard:', clipboardError);
+        toast.error(`Failed to copy link: ${errorMessage}`);
       }
     }
   };

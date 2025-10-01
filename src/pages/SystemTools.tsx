@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RefreshCw, Info, Terminal } from 'lucide-react';
+import { toast } from 'sonner';
 import SEO from '@/components/SEO';
 
 export default function SystemTools() {
@@ -17,7 +18,9 @@ export default function SystemTools() {
       setResult(res);
       setLastCleared(new Date());
     } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
       console.error('Failed to clear cache:', err);
+      toast.error(`Failed to clear cache: ${errorMessage}`);
     }
   };
 
