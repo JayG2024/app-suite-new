@@ -42,12 +42,7 @@ async function prerender() {
       maxConcurrentRoutes: 4,
       timeout: 30000,
       headless: true,
-      navigationOptions: {
-        waitUntil: 'networkidle0',
-      },
-      puppeteerLaunchOptions: {
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-      }
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     })
   });
 

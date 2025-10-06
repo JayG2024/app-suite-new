@@ -7,7 +7,7 @@
     "dev": "node scripts/generate-static-files.js && vite",
     "prebuild": "node scripts/generate-static-files.js",
     "build": "vite build",
-    "postbuild-disabled": "node prerender.config.js",
+    "postbuild": "node scripts/generate-seo-pages.js",
     "preview": "vite preview",
     "generate-static": "node scripts/generate-static-files.js"
   },
