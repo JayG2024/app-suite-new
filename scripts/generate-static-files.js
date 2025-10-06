@@ -55,6 +55,14 @@ Disallow: /image-generator
 # Exclude dynamic proposal pages (they're user-specific)
 Disallow: /proposal/
 
+# Exclude legacy redirect URLs to prevent duplicate content
+Disallow: /examples
+Disallow: /portfolio
+Disallow: /command-center
+Disallow: /dashboard
+Disallow: /manage
+Disallow: /blog/the-hidden-cost-of-geo-blocking-and-ai-search-visibility
+
 # Allow crawling of important pages
 Allow: /extensions
 Allow: /pricing
@@ -152,7 +160,7 @@ const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>${SITE_URL}/blog/hidden-cost-geo-blocking-ai-search-visibility</loc>
+    <loc>${SITE_URL}/whitepapers/geo-blocking-ai-search</loc>
     <lastmod>${new Date().toISOString().split('T')[0]}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>

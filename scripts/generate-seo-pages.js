@@ -718,6 +718,13 @@ function generateSEOPages() {
     const baseTemplate = createBaseTemplate(assets);
 
     console.log(`📦 Using assets: JS=${assets.jsPath}, CSS=${assets.cssPath}`);
+
+    // Add cache busting timestamp
+    const cacheBust = Date.now();
+    assets.jsPath += `?v=${cacheBust}`;
+    if (assets.cssPath) assets.cssPath += `?v=${cacheBust}`;
+
+    console.log(`🔄 Cache busting enabled: v=${cacheBust}`);
     console.log(`📄 Generating ${pages.length} SEO pages...`);
 
     // Debug: List all page paths

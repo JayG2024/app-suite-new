@@ -43,6 +43,14 @@ Disallow: /image-generator
 # Exclude dynamic proposal pages (they're user-specific)
 Disallow: /proposal/
 
+# Exclude legacy redirect URLs to prevent duplicate content
+Disallow: /examples
+Disallow: /portfolio
+Disallow: /command-center
+Disallow: /dashboard
+Disallow: /manage
+Disallow: /blog/the-hidden-cost-of-geo-blocking-and-ai-search-visibility
+
 # Allow crawling of important pages
 Allow: /extensions
 Allow: /pricing
