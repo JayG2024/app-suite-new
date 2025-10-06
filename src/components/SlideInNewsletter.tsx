@@ -83,7 +83,7 @@ const SlideInNewsletter = ({
         <Button 
           variant="ghost" 
           size="icon" 
-          className="absolute top-2 right-2 h-8 w-8" 
+          className="absolute top-2 right-2 h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors" 
           onClick={handleDismiss}
         >
           <X className="h-4 w-4" />
