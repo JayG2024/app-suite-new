@@ -609,6 +609,88 @@ const pages = [
             "name": "App Suite Documentation",
             "description": "Complete documentation for custom business application development"
         }
+    },
+    {
+        path: '/blog/generative-engine-optimization-complete-guide-2025',
+        title: 'Generative Engine Optimization Complete Guide 2025 | App Suite',
+        description: 'Complete guide to Generative Engine Optimization (GEO) for 2025. Learn how to optimize for AI search engines like ChatGPT, Claude, and Perplexity.',
+        keywords: 'generative engine optimization, GEO, AI search, ChatGPT optimization, Claude search, AI SEO',
+        staticContent: `
+      <section>
+        <h1>Generative Engine Optimization Complete Guide 2025</h1>
+        <p>The definitive guide to optimizing your content for AI-powered search engines and generative AI tools.</p>
+        <div>
+          <h2>What is Generative Engine Optimization?</h2>
+          <p>Generative Engine Optimization (GEO) is the practice of optimizing content to appear in AI-generated responses from tools like ChatGPT, Claude, and Perplexity.</p>
+          
+          <h2>Key GEO Strategies</h2>
+          <ul>
+            <li>Structured data implementation</li>
+            <li>Clear, authoritative content</li>
+            <li>FAQ-style formatting</li>
+            <li>Citation-friendly sources</li>
+            <li>Technical accuracy</li>
+          </ul>
+          
+          <h2>Why GEO Matters for Business</h2>
+          <p>As AI search becomes mainstream, businesses need to ensure their content is discoverable and citable by AI systems.</p>
+        </div>
+      </section>
+    `,
+        structuredData: {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Generative Engine Optimization Complete Guide 2025",
+            "description": "Complete guide to optimizing for AI search engines",
+            "author": {
+                "@type": "Organization",
+                "name": "App Suite"
+            },
+            "publisher": {
+                "@type": "Organization",
+                "name": "App Suite"
+            }
+        }
+    },
+    {
+        path: '/blog/google-business-profile-consolidation',
+        title: 'Google Business Profile Consolidation Guide | App Suite',
+        description: 'Learn how to consolidate duplicate Google Business Profiles and improve your local SEO presence. Step-by-step guide for business owners.',
+        keywords: 'google business profile, local SEO, duplicate listings, business profile consolidation',
+        staticContent: `
+      <section>
+        <h1>Google Business Profile Consolidation Guide</h1>
+        <p>Step-by-step guide to consolidating duplicate Google Business Profiles and improving your local search presence.</p>
+        <div>
+          <h2>Why Consolidate Business Profiles?</h2>
+          <ul>
+            <li>Avoid confusing customers</li>
+            <li>Improve local search rankings</li>
+            <li>Centralize reviews and ratings</li>
+            <li>Better analytics and insights</li>
+          </ul>
+          
+          <h2>Consolidation Process</h2>
+          <ol>
+            <li>Identify duplicate profiles</li>
+            <li>Verify ownership of all profiles</li>
+            <li>Choose the primary profile</li>
+            <li>Request consolidation through Google</li>
+            <li>Monitor the process</li>
+          </ol>
+        </div>
+      </section>
+    `,
+        structuredData: {
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": "Google Business Profile Consolidation Guide",
+            "description": "Guide to consolidating duplicate Google Business Profiles",
+            "author": {
+                "@type": "Organization",
+                "name": "App Suite"
+            }
+        }
     }
 ];
 
