@@ -17,8 +17,8 @@
       "destination": "/api/:path*"
     },
     {
-      "source": "/((?!documents|images|logos|podcasts|content|assets|robots\\.txt|sitemap\\.xml|favicon\\.ico|.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|pdf|mp3|wav|html)).*)",
-      "destination": "/"
+      "source": "/((?!api|_next|favicon.ico|robots.txt|sitemap.xml).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
