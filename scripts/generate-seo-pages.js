@@ -1,7 +1,28 @@
 import fs from 'fs';
 import path from 'path';
 
-const baseTemplate = `<!DOCTYPE html>
+function getBuiltAssets() {
+    const distIndexPath = path.join('dist', 'index.html');
+
+    if (!fs.existsSync(distIndexPath)) {
+        console.error('❌ Built index.html not found. Run build first.');
+        return { jsPath: '/src/main.tsx', cssPath: '' };
+    }
+
+    const builtHtml = fs.readFileSync(distIndexPath, 'utf-8');
+
+    // Extract JS and CSS paths from built HTML
+    const jsMatch = builtHtml.match(/<script[^>]*src="([^"]*\.js)"[^>]*>/);
+    const cssMatch = builtHtml.match(/<link[^>]*href="([^"]*\.css)"[^>]*>/);
+
+    return {
+        jsPath: jsMatch ? jsMatch[1] : '/src/main.tsx',
+        cssPath: cssMatch ? cssMatch[1] : ''
+    };
+}
+
+function createBaseTemplate(assets) {
+    return `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -35,9 +56,8 @@ const baseTemplate = `<!DOCTYPE html>
     <script type="application/ld+json">
     {{STRUCTURED_DATA}}
     </script>
-    
-    <script type="module" crossorigin src="/assets/index.BnV5YwtD.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index.oAHTV7tk.css">
+    ${assets.cssPath ? `
+    <link rel="stylesheet" crossorigin href="${assets.cssPath}">` : ''}
   </head>
   <body>
     <div id="root">
@@ -64,9 +84,10 @@ const baseTemplate = `<!DOCTYPE html>
         window.history.replaceState({}, '', window.location.pathname);
       }
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" crossorigin src="${assets.jsPath}"></script>
   </body>
 </html>`;
+}
 
 const pages = [
     {
@@ -158,7 +179,7 @@ const pages = [
     }
 ];
 
-function generatePage(pageData) {
+function generatePage(pageData, baseTemplate) {
     let html = baseTemplate;
     html = html.replace(/{{TITLE}}/g, pageData.title);
     html = html.replace(/{{DESCRIPTION}}/g, pageData.description);
@@ -177,8 +198,14 @@ function generateSEOPages() {
         fs.mkdirSync(distDir, { recursive: true });
     }
 
+    // Get the actual built asset paths
+    const assets = getBuiltAssets();
+    const baseTemplate = createBaseTemplate(assets);
+
+    console.log(`📦 Using assets: JS=${assets.jsPath}, CSS=${assets.cssPath}`);
+
     pages.forEach(page => {
-        const html = generatePage(page);
+        const html = generatePage(page, baseTemplate);
         const filePath = page.path === '/' ?
             path.join(distDir, 'index.html') :
             path.join(distDir, page.path.slice(1), 'index.html');

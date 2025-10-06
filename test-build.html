@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Build</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Build Test</h1>
+    <div class="test">
+        <h2>Static Content Test</h2>
+        <p>This content should always be visible.</p>
+    </div>
+    
+    <div class="test">
+        <h2>JavaScript Test</h2>
+        <p id="js-test">JavaScript not loaded</p>
+    </div>
+    
+    <div class="test">
+        <h2>Asset Paths</h2>
+        <p>CSS: <span id="css-path">/assets/index.oAHTV7tk.css</span></p>
+        <p>JS: <span id="js-path">/assets/index.BnV5YwtD.js</span></p>
+    </div>
+    
+    <script>
+        document.getElementById('js-test').textContent = 'JavaScript loaded successfully!';
+        document.getElementById('js-test').style.color = 'green';
+        
+        // Test if the main bundle exists
+        fetch('/assets/index.BnV5YwtD.js')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('js-path').style.color = 'green';
+                    document.getElementById('js-path').textContent += ' ✓ Found';
+                } else {
+                    document.getElementById('js-path').style.color = 'red';
+                    document.getElementById('js-path').textContent += ' ✗ Not Found';
+                }
+            })
+            .catch(err => {
+                document.getElementById('js-path').style.color = 'red';
+                document.getElementById('js-path').textContent += ' ✗ Error: ' + err.message;
+            });
+            
+        fetch('/assets/index.oAHTV7tk.css')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('css-path').style.color = 'green';
+                    document.getElementById('css-path').textContent += ' ✓ Found';
+                } else {
+                    document.getElementById('css-path').style.color = 'red';
+                    document.getElementById('css-path').textContent += ' ✗ Not Found';
+                }
+            })
+            .catch(err => {
+                document.getElementById('css-path').style.color = 'red';
+                document.getElementById('css-path').textContent += ' ✗ Error: ' + err.message;
+            });
+    </script>
+</body>
+</html>
