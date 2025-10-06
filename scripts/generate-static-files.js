@@ -40,6 +40,21 @@ Disallow: /admin/
 Disallow: /private/
 Disallow: /api/
 
+# Exclude development/testing pages
+Disallow: /test-form
+Disallow: /admin-debug
+Disallow: /icon-test
+Disallow: /system-tools
+Disallow: /ai-brain
+Disallow: /debug.html
+Disallow: /test.html
+
+# Exclude protected/auth-required pages
+Disallow: /image-generator
+
+# Exclude dynamic proposal pages (they're user-specific)
+Disallow: /proposal/
+
 # Allow crawling of important pages
 Allow: /extensions
 Allow: /pricing
