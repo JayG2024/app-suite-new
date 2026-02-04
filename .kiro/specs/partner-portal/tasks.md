@@ -23,7 +23,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Show partner discount tier and account status
     - _Requirements: 4.1, 4.2, 4.4, 5.1, 5.3_
 
-  - [x]* 2.2 Write property test for partner-specific content personalization
+  - [~] 2.2 Write property test for partner-specific content personalization
     - **Property 2: Partner-Specific Content Personalization**
     - **Validates: Requirements 1.5, 4.4, 5.1, 5.3, 5.5**
 
@@ -135,21 +135,21 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Include maintenance agreement templates
     - _Requirements: 3.3_
 
-  - [-] 8.4 Add partner onboarding and training materials
+  - [x] 8.4 Add partner onboarding and training materials
     - Create partner training guides
     - Add best practices documentation
     - Include sales process workflows
     - Add technical implementation guides
     - _Requirements: 3.4_
 
-  - [~] 8.5 Implement advanced document customization
+  - [x] 8.5 Implement advanced document customization
     - Enable logo replacement in all materials
     - Add company information updates across documents
     - Implement contact detail insertion
     - Support multiple branding levels (co-branded, partner-primary, full white-label)
     - _Requirements: 3.5, 3.6_
 
-  - [~] 8.6 Add resource organization and search
+  - [x] 8.6 Add resource organization and search
     - Implement category-based organization (technical, sales, client-facing, training)
     - Add search and filtering capabilities
     - Implement version tracking and update notifications
@@ -157,13 +157,13 @@ This implementation plan creates a comprehensive partner portal that extends the
     - _Requirements: 3.7, 3.8, 3.9_
 
 - [~] 9. Implement URL scanner for website analysis
-  - [~] 9.1 Create website analysis interface
+  - [x] 9.1 Create website analysis interface
     - Build URL input form with validation
     - Integrate with Fire Crawl API for site analysis
     - Display page count and content assessment
     - _Requirements: 9.1, 9.2_
 
-  - [~] 9.2 Add rebuild pricing suggestions
+  - [x] 9.2 Add rebuild pricing suggestions
     - Calculate rebuild pricing based on page count and complexity
     - Suggest best practices and improvements
     - Allow quote generation from analysis results
@@ -174,7 +174,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - **Validates: Requirements 9.1, 9.2, 9.3, 9.4, 9.5**
 
 - [~] 10. Implement white-label branding system
-  - [~] 10.1 Create URL structure and domain management
+  - [-] 10.1 Create URL structure and domain management
     - Implement dedicated partner path (/partners/portal) access
     - Add custom subdomain configuration (partner.domain.com)
     - Support custom domain mapping with partner-owned domains
@@ -262,7 +262,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Implement markup preference saving and consistent application
     - _Requirements: 16.6, 16.8_
 
-  - [ ]* 12.6 Write property test for markup management
+  - [ ] 12.6 Write property test for markup management
     - **Property 16: Markup Management and Pricing Strategy**
     - **Validates: Requirements 16.1, 16.3, 16.7, 16.8**
 
@@ -302,7 +302,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Provide talking points and objection handling guides
     - _Requirements: 15.5, 15.6, 15.7, 15.8_
 
-  - [ ]* 13.6 Write property test for ROI and competitive analysis
+  - [ ] 13.6 Write property test for ROI and competitive analysis
     - **Property 15: ROI and Competitive Analysis Tools**
     - **Validates: Requirements 15.5, 15.6**
 
@@ -320,7 +320,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Show engagement insights
     - _Requirements: 12.4, 12.5_
 
-  - [ ]* 14.3 Write property test for analytics and business intelligence
+  - [ ] 14.3 Write property test for analytics and business intelligence
     - **Property 12: Analytics and Business Intelligence**
     - **Validates: Requirements 12.1, 12.2, 12.3, 12.4, 12.5**
 

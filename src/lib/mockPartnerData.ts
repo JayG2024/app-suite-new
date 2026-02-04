@@ -631,6 +631,80 @@ export const mockResources = [
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[2]
+  },
+  
+  // Training Materials
+  {
+    id: 'res-6a',
+    title: 'Partner Portal Getting Started Guide',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
+  },
+  {
+    id: 'res-6b',
+    title: 'Lead to Close Sales Workflow',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
+  },
+  {
+    id: 'res-6c',
+    title: 'Effective Client Communication Best Practices',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
+  },
+  {
+    id: 'res-6d',
+    title: 'Strategic Pricing Approach Guide',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
+  },
+  {
+    id: 'res-6e',
+    title: 'Modern Technology Stack Overview',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
+  },
+  {
+    id: 'res-6f',
+    title: 'Project Lifecycle & Implementation Process',
+    category_id: 'cat-4',
+    content_type: 'pdf',
+    customizable: false,
+    white_labelable: false,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[3]
   }
 ]
 

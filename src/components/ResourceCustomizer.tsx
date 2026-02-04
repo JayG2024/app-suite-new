@@ -22,6 +22,12 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { 
+  validateBrandingConfig, 
+  generateCustomizedDocument as generateDoc,
+  prepareBrandingForDocument,
+  type BrandingConfig
+} from '@/utils/documentCustomization';
 
 interface Resource {
   id: string;
@@ -39,18 +45,6 @@ interface Resource {
   };
 }
 
-interface BrandingData {
-  logo?: string;
-  companyName: string;
-  contactEmail: string;
-  contactPhone?: string;
-  website?: string;
-  address?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  whiteLabelLevel: 'co-branded' | 'partner-primary' | 'full-white-label';
-}
-
 interface ResourceCustomizerProps {
   resource: Resource;
   partnerId: string;
@@ -62,14 +56,26 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
   partnerId, 
   onBack 
 }) => {
-  const [branding, setBranding] = useState<BrandingData>({
+  const [branding, setBranding] = useState<BrandingConfig>({
     companyName: '',
+    tagline: '',
     contactEmail: '',
     contactPhone: '',
     website: '',
     address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
     primaryColor: '#3b82f6',
     secondaryColor: '#64748b',
+    accentColor: '#10b981',
+    socialMedia: {
+      linkedin: '',
+      twitter: '',
+      facebook: '',
+      instagram: ''
+    },
     whiteLabelLevel: 'co-branded'
   });
   const [loading, setLoading] = useState(false);
@@ -86,7 +92,8 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
       setLoading(true);
 
       // Check if there's an existing customization
-      const { data: existingCustomization, error } = await supabase
+      // Partner portal tables not in generated types yet, using any cast
+      const { data: existingCustomization, error } = await (supabase as any)
         .from('custom_resources')
         .select('*')
         .eq('partner_id', partnerId)
@@ -94,7 +101,7 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
         .single();
 
       if (existingCustomization && !error) {
-        const brandingData = existingCustomization.branding_data as BrandingData;
+        const brandingData = existingCustomization.branding_data as BrandingConfig;
         setBranding(brandingData);
         if (brandingData.logo) {
           setLogoPreview(brandingData.logo);
@@ -163,13 +170,14 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
       // Upload logo if there's a new one
       const logoUrl = await uploadLogo();
       
-      const brandingData: BrandingData = {
+      const brandingData: BrandingConfig = {
         ...branding,
         logo: logoUrl || undefined
       };
 
       // Save or update customization
-      const { error } = await supabase
+      // Partner portal tables not in generated types yet, using any cast
+      const { error } = await (supabase as any)
         .from('custom_resources')
         .upsert({
           partner_id: partnerId,
@@ -182,7 +190,7 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
       if (error) throw error;
 
       // Track customization analytics
-      await supabase
+      await (supabase as any)
         .from('partner_analytics')
         .insert({
           partner_id: partnerId,
@@ -211,11 +219,37 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
 
   const handleDownloadCustomized = async () => {
     try {
-      // In a real implementation, this would generate and download the customized document
-      toast.success('Generating customized document...');
+      setLoading(true);
+      
+      // Validate branding configuration
+      const validation = validateBrandingConfig(branding);
+      if (!validation.valid) {
+        toast.error(validation.errors[0]);
+        return;
+      }
+      
+      // Generate customized document with branding applied
+      const result = await generateDoc(
+        {
+          id: resource.id,
+          title: resource.title,
+          contentType: resource.content_type,
+          customizable: resource.customizable,
+          whiteLabelable: resource.white_labelable
+        },
+        branding,
+        partnerId
+      );
+      
+      if (!result.success) {
+        toast.error(result.error || 'Failed to generate customized document');
+        return;
+      }
+      
+      toast.success('Document customization complete!');
       
       // Track download analytics
-      await supabase
+      await (supabase as any)
         .from('partner_analytics')
         .insert({
           partner_id: partnerId,
@@ -227,9 +261,14 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
             white_label_level: branding.whiteLabelLevel
           }
         });
+      
+      // In a real implementation, this would trigger actual document download
+      toast.info('Download starting...');
     } catch (error) {
       console.error('Error downloading customized resource:', error);
       toast.error('Failed to download customized resource');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -311,6 +350,9 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
                 <Building2 className="h-5 w-5" />
                 Company Information
               </CardTitle>
+              <CardDescription>
+                Enter your company details for document customization
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -324,24 +366,36 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="contactEmail">Contact Email *</Label>
+                <Label htmlFor="tagline">Company Tagline</Label>
                 <Input
-                  id="contactEmail"
-                  type="email"
-                  value={branding.contactEmail}
-                  onChange={(e) => setBranding(prev => ({ ...prev, contactEmail: e.target.value }))}
-                  placeholder="contact@yourcompany.com"
+                  id="tagline"
+                  value={branding.tagline || ''}
+                  onChange={(e) => setBranding(prev => ({ ...prev, tagline: e.target.value }))}
+                  placeholder="Your company's tagline or slogan"
                 />
               </div>
 
-              <div>
-                <Label htmlFor="contactPhone">Phone Number</Label>
-                <Input
-                  id="contactPhone"
-                  value={branding.contactPhone || ''}
-                  onChange={(e) => setBranding(prev => ({ ...prev, contactPhone: e.target.value }))}
-                  placeholder="+1 (555) 123-4567"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="contactEmail">Contact Email *</Label>
+                  <Input
+                    id="contactEmail"
+                    type="email"
+                    value={branding.contactEmail}
+                    onChange={(e) => setBranding(prev => ({ ...prev, contactEmail: e.target.value }))}
+                    placeholder="contact@yourcompany.com"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="contactPhone">Phone Number</Label>
+                  <Input
+                    id="contactPhone"
+                    value={branding.contactPhone || ''}
+                    onChange={(e) => setBranding(prev => ({ ...prev, contactPhone: e.target.value }))}
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
               </div>
 
               <div>
@@ -355,14 +409,57 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
               </div>
 
               <div>
-                <Label htmlFor="address">Address</Label>
-                <Textarea
+                <Label htmlFor="address">Street Address</Label>
+                <Input
                   id="address"
                   value={branding.address || ''}
                   onChange={(e) => setBranding(prev => ({ ...prev, address: e.target.value }))}
-                  placeholder="123 Business St, City, State 12345"
-                  rows={3}
+                  placeholder="123 Business Street"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="city">City</Label>
+                  <Input
+                    id="city"
+                    value={branding.city || ''}
+                    onChange={(e) => setBranding(prev => ({ ...prev, city: e.target.value }))}
+                    placeholder="San Francisco"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="state">State/Province</Label>
+                  <Input
+                    id="state"
+                    value={branding.state || ''}
+                    onChange={(e) => setBranding(prev => ({ ...prev, state: e.target.value }))}
+                    placeholder="CA"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="zipCode">ZIP/Postal Code</Label>
+                  <Input
+                    id="zipCode"
+                    value={branding.zipCode || ''}
+                    onChange={(e) => setBranding(prev => ({ ...prev, zipCode: e.target.value }))}
+                    placeholder="94102"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="country">Country</Label>
+                  <Input
+                    id="country"
+                    value={branding.country || ''}
+                    onChange={(e) => setBranding(prev => ({ ...prev, country: e.target.value }))}
+                    placeholder="United States"
+                  />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -408,9 +505,12 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
                 <Palette className="h-5 w-5" />
                 Brand Colors
               </CardTitle>
+              <CardDescription>
+                Define your brand color palette for document styling
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div>
                   <Label htmlFor="primaryColor">Primary Color</Label>
                   <div className="flex items-center gap-2">
@@ -448,6 +548,91 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
                     />
                   </div>
                 </div>
+
+                <div>
+                  <Label htmlFor="accentColor">Accent Color</Label>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="accentColor"
+                      type="color"
+                      value={branding.accentColor}
+                      onChange={(e) => setBranding(prev => ({ ...prev, accentColor: e.target.value }))}
+                      className="w-16 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      value={branding.accentColor}
+                      onChange={(e) => setBranding(prev => ({ ...prev, accentColor: e.target.value }))}
+                      placeholder="#10b981"
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Social Media Links */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5" />
+                Social Media Links
+              </CardTitle>
+              <CardDescription>
+                Add your social media profiles (optional)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="linkedin">LinkedIn</Label>
+                <Input
+                  id="linkedin"
+                  value={branding.socialMedia?.linkedin || ''}
+                  onChange={(e) => setBranding(prev => ({ 
+                    ...prev, 
+                    socialMedia: { ...prev.socialMedia, linkedin: e.target.value }
+                  }))}
+                  placeholder="https://linkedin.com/company/yourcompany"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="twitter">Twitter/X</Label>
+                <Input
+                  id="twitter"
+                  value={branding.socialMedia?.twitter || ''}
+                  onChange={(e) => setBranding(prev => ({ 
+                    ...prev, 
+                    socialMedia: { ...prev.socialMedia, twitter: e.target.value }
+                  }))}
+                  placeholder="https://twitter.com/yourcompany"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="facebook">Facebook</Label>
+                <Input
+                  id="facebook"
+                  value={branding.socialMedia?.facebook || ''}
+                  onChange={(e) => setBranding(prev => ({ 
+                    ...prev, 
+                    socialMedia: { ...prev.socialMedia, facebook: e.target.value }
+                  }))}
+                  placeholder="https://facebook.com/yourcompany"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="instagram">Instagram</Label>
+                <Input
+                  id="instagram"
+                  value={branding.socialMedia?.instagram || ''}
+                  onChange={(e) => setBranding(prev => ({ 
+                    ...prev, 
+                    socialMedia: { ...prev.socialMedia, instagram: e.target.value }
+                  }))}
+                  placeholder="https://instagram.com/yourcompany"
+                />
               </div>
             </CardContent>
           </Card>
@@ -467,24 +652,85 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center bg-gray-50">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="font-semibold text-gray-900 mb-2">
-                  {branding.companyName || 'Your Company'}
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  {resource.title}
-                </p>
-                <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-                  {branding.whiteLabelLevel === 'co-branded' && (
-                    <span>Co-branded with App Suite</span>
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-6 bg-gray-50">
+                {/* Logo Preview */}
+                {logoPreview && (
+                  <div className="flex justify-center mb-4">
+                    <div className="w-32 h-16 flex items-center justify-center bg-white rounded border">
+                      <img 
+                        src={logoPreview} 
+                        alt="Logo preview" 
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  </div>
+                )}
+                
+                {/* Company Info */}
+                <div className="text-center mb-4">
+                  <h3 className="font-bold text-lg" style={{ color: branding.primaryColor }}>
+                    {branding.companyName || 'Your Company'}
+                  </h3>
+                  {branding.tagline && (
+                    <p className="text-sm text-gray-600 italic mt-1">
+                      {branding.tagline}
+                    </p>
                   )}
-                  {branding.whiteLabelLevel === 'partner-primary' && (
-                    <span>Partner branding primary</span>
+                </div>
+                
+                {/* Document Title */}
+                <div className="text-center mb-4 pb-4 border-b">
+                  <p className="text-sm font-medium text-gray-900">
+                    {resource.title}
+                  </p>
+                </div>
+                
+                {/* Contact Details */}
+                <div className="space-y-2 text-xs text-gray-600">
+                  {branding.contactEmail && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-3 w-3" />
+                      <span>{branding.contactEmail}</span>
+                    </div>
                   )}
-                  {branding.whiteLabelLevel === 'full-white-label' && (
-                    <span>Full white-label</span>
+                  {branding.contactPhone && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-3 w-3" />
+                      <span>{branding.contactPhone}</span>
+                    </div>
                   )}
+                  {branding.website && (
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-3 w-3" />
+                      <span>{branding.website}</span>
+                    </div>
+                  )}
+                  {(branding.address || branding.city) && (
+                    <div className="flex items-start gap-2">
+                      <Building2 className="h-3 w-3 mt-0.5" />
+                      <span>
+                        {branding.address && `${branding.address}, `}
+                        {branding.city && branding.city}
+                        {branding.state && `, ${branding.state}`}
+                        {branding.zipCode && ` ${branding.zipCode}`}
+                        {branding.country && (branding.city || branding.state) && `, ${branding.country}`}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Branding Level Indicator */}
+                <div className="mt-4 pt-4 border-t">
+                  <div className="flex items-center justify-center gap-2 text-xs">
+                    <Badge 
+                      variant={branding.whiteLabelLevel === 'full-white-label' ? 'default' : 'secondary'}
+                      className="text-xs"
+                    >
+                      {branding.whiteLabelLevel === 'co-branded' && 'Co-branded'}
+                      {branding.whiteLabelLevel === 'partner-primary' && 'Partner Primary'}
+                      {branding.whiteLabelLevel === 'full-white-label' && 'Full White-Label'}
+                    </Badge>
+                  </div>
                 </div>
               </div>
               
@@ -531,10 +777,29 @@ export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
             <CardHeader>
               <CardTitle>Customization Help</CardTitle>
             </CardHeader>
-            <CardContent className="text-sm text-muted-foreground space-y-2">
-              <p><strong>Co-branded:</strong> Your logo appears alongside App Suite branding</p>
-              <p><strong>Partner Primary:</strong> Your branding is prominent with minimal App Suite presence</p>
-              <p><strong>Full White-Label:</strong> Only your branding appears (available for white-labelable resources)</p>
+            <CardContent className="text-sm text-muted-foreground space-y-3">
+              <div>
+                <p className="font-semibold text-foreground mb-1">Co-branded:</p>
+                <p>Your logo and company information appear alongside App Suite branding. Best for partners who want to show they're working with a trusted provider.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-foreground mb-1">Partner Primary:</p>
+                <p>Your branding is prominent throughout the document with minimal App Suite presence. Ideal for established partners with strong brand recognition.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-foreground mb-1">Full White-Label:</p>
+                <p>Only your branding appears - complete brand replacement. Available for white-labelable resources. Perfect for partners who want to present services as their own.</p>
+              </div>
+              <div className="pt-3 border-t">
+                <p className="font-semibold text-foreground mb-1">What gets customized:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Logo replacement in headers/footers</li>
+                  <li>Company name and tagline</li>
+                  <li>Contact information (email, phone, address)</li>
+                  <li>Brand colors for styling</li>
+                  <li>Social media links</li>
+                </ul>
+              </div>
             </CardContent>
           </Card>
         </div>

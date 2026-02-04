@@ -15,7 +15,12 @@ import {
   Filter,
   Star,
   Calendar,
-  Eye
+  Eye,
+  Bell,
+  FileDown,
+  SortAsc,
+  SortDesc,
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -23,7 +28,23 @@ import { ResourceCustomizer } from './ResourceCustomizer';
 import TechnicalDocViewer from './TechnicalDocViewer';
 import SalesMarketingViewer from './SalesMarketingViewer';
 import ClientMaterialsViewer from './ClientMaterialsViewer';
+import { PartnerTrainingViewer } from './PartnerTrainingViewer';
 import { mockResources, mockResourceCategories, USE_MOCK_DATA } from '@/lib/mockPartnerData';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface ResourceCategory {
   id: string;
@@ -44,7 +65,23 @@ interface Resource {
   created_at: string;
   updated_at: string;
   category?: ResourceCategory;
+  description?: string;
+  tags?: string[];
+  file_size?: number;
+  download_count?: number;
 }
+
+interface ResourceUpdate {
+  id: string;
+  resource_id: string;
+  version: number;
+  changes: string;
+  updated_at: string;
+  resource?: Resource;
+}
+
+type SortOption = 'title-asc' | 'title-desc' | 'date-asc' | 'date-desc' | 'popular';
+type DownloadFormat = 'pdf' | 'docx' | 'pptx' | 'original';
 
 interface ResourceLibraryProps {
   partnerId: string;
@@ -61,10 +98,26 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
   const [viewingTechnicalDocs, setViewingTechnicalDocs] = useState(false);
   const [viewingSalesMarketing, setViewingSalesMarketing] = useState(false);
   const [viewingClientMaterials, setViewingClientMaterials] = useState(false);
+  const [viewingTrainingMaterials, setViewingTrainingMaterials] = useState(false);
+  const [sortBy, setSortBy] = useState<SortOption>('title-asc');
+  const [recentUpdates, setRecentUpdates] = useState<ResourceUpdate[]>([]);
+  const [showUpdatesDialog, setShowUpdatesDialog] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [availableTags, setAvailableTags] = useState<string[]>([]);
 
   useEffect(() => {
     fetchResourcesAndCategories();
+    fetchRecentUpdates();
   }, []);
+
+  useEffect(() => {
+    // Extract unique tags from resources
+    const tags = new Set<string>();
+    resources.forEach(resource => {
+      resource.tags?.forEach(tag => tags.add(tag));
+    });
+    setAvailableTags(Array.from(tags).sort());
+  }, [resources]);
 
   const fetchResourcesAndCategories = async () => {
     try {
@@ -73,7 +126,14 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       // Use mock data if database tables aren't available
       if (USE_MOCK_DATA) {
         setCategories(mockResourceCategories);
-        setResources(mockResources);
+        const enhancedMockResources = mockResources.map(r => ({
+          ...r,
+          description: `Comprehensive ${r.title.toLowerCase()} for partner use`,
+          tags: getCategoryTags(r.category?.name || ''),
+          file_size: Math.floor(Math.random() * 5000) + 500, // KB
+          download_count: Math.floor(Math.random() * 100)
+        }));
+        setResources(enhancedMockResources);
         setLoading(false);
         return;
       }
@@ -87,7 +147,14 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       if (categoriesError) {
         console.warn('Database tables not available, using mock data:', categoriesError);
         setCategories(mockResourceCategories);
-        setResources(mockResources);
+        const enhancedMockResources = mockResources.map(r => ({
+          ...r,
+          description: `Comprehensive ${r.title.toLowerCase()} for partner use`,
+          tags: getCategoryTags(r.category?.name || ''),
+          file_size: Math.floor(Math.random() * 5000) + 500,
+          download_count: Math.floor(Math.random() * 100)
+        }));
+        setResources(enhancedMockResources);
         setLoading(false);
         return;
       }
@@ -104,7 +171,14 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       if (resourcesError) {
         console.warn('Error fetching resources, using mock data:', resourcesError);
         setCategories(mockResourceCategories);
-        setResources(mockResources);
+        const enhancedMockResources = mockResources.map(r => ({
+          ...r,
+          description: `Comprehensive ${r.title.toLowerCase()} for partner use`,
+          tags: getCategoryTags(r.category?.name || ''),
+          file_size: Math.floor(Math.random() * 5000) + 500,
+          download_count: Math.floor(Math.random() * 100)
+        }));
+        setResources(enhancedMockResources);
         setLoading(false);
         return;
       }
@@ -115,17 +189,81 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       console.error('Error fetching resources:', error);
       // Fallback to mock data on error
       setCategories(mockResourceCategories);
-      setResources(mockResources);
+      const enhancedMockResources = mockResources.map(r => ({
+        ...r,
+        description: `Comprehensive ${r.title.toLowerCase()} for partner use`,
+        tags: getCategoryTags(r.category?.name || ''),
+        file_size: Math.floor(Math.random() * 5000) + 500,
+        download_count: Math.floor(Math.random() * 100)
+      }));
+      setResources(enhancedMockResources);
       toast.info('Using sample resources for demonstration');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDownload = async (resource: Resource) => {
+  const fetchRecentUpdates = async () => {
     try {
-      // For now, simulate download - in real implementation, this would download from Supabase Storage
-      toast.success(`Downloading ${resource.title}...`);
+      if (USE_MOCK_DATA) {
+        // Mock recent updates
+        const mockUpdates: ResourceUpdate[] = [
+          {
+            id: '1',
+            resource_id: mockResources[0]?.id || '1',
+            version: 2,
+            changes: 'Updated pricing information and added new case studies',
+            updated_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+            resource: mockResources[0]
+          },
+          {
+            id: '2',
+            resource_id: mockResources[1]?.id || '2',
+            version: 3,
+            changes: 'Added new security compliance section',
+            updated_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            resource: mockResources[1]
+          }
+        ];
+        setRecentUpdates(mockUpdates);
+        return;
+      }
+
+      // Fetch recent updates from database
+      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      const { data, error } = await supabase
+        .from('resource_updates')
+        .select(`
+          *,
+          resource:resources(*)
+        `)
+        .gte('updated_at', thirtyDaysAgo)
+        .order('updated_at', { ascending: false })
+        .limit(10);
+
+      if (!error && data) {
+        setRecentUpdates(data);
+      }
+    } catch (error) {
+      console.error('Error fetching recent updates:', error);
+    }
+  };
+
+  const getCategoryTags = (categoryName: string): string[] => {
+    const tagMap: Record<string, string[]> = {
+      'Technical Documentation': ['technical', 'development', 'architecture'],
+      'Sales Materials': ['sales', 'marketing', 'roi'],
+      'Client Resources': ['client-facing', 'templates', 'proposals'],
+      'Training Materials': ['training', 'onboarding', 'best-practices']
+    };
+    return tagMap[categoryName] || ['general'];
+  };
+
+  const handleDownload = async (resource: Resource, format: DownloadFormat = 'original') => {
+    try {
+      // Show format-specific download message
+      const formatName = format === 'original' ? resource.content_type.toUpperCase() : format.toUpperCase();
+      toast.success(`Downloading ${resource.title} as ${formatName}...`);
       
       // Track download analytics (skip if using mock data)
       if (!USE_MOCK_DATA) {
@@ -138,10 +276,23 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
             metadata: {
               resource_id: resource.id,
               resource_title: resource.title,
-              content_type: resource.content_type
+              content_type: resource.content_type,
+              download_format: format
             }
           });
+
+        // Update download count
+        await supabase
+          .from('resources')
+          .update({ download_count: (resource.download_count || 0) + 1 })
+          .eq('id', resource.id);
       }
+
+      // In a real implementation, this would trigger actual file download
+      // For now, we simulate the download
+      setTimeout(() => {
+        toast.success(`${resource.title} downloaded successfully`);
+      }, 1000);
     } catch (error) {
       console.error('Error downloading resource:', error);
       toast.error('Failed to download resource');
@@ -152,19 +303,42 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
     setCustomizingResource(resource);
   };
 
-  const filteredResources = resources.filter(resource => {
+  const sortResources = (resources: Resource[]): Resource[] => {
+    const sorted = [...resources];
+    
+    switch (sortBy) {
+      case 'title-asc':
+        return sorted.sort((a, b) => a.title.localeCompare(b.title));
+      case 'title-desc':
+        return sorted.sort((a, b) => b.title.localeCompare(a.title));
+      case 'date-asc':
+        return sorted.sort((a, b) => new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime());
+      case 'date-desc':
+        return sorted.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+      case 'popular':
+        return sorted.sort((a, b) => (b.download_count || 0) - (a.download_count || 0));
+      default:
+        return sorted;
+    }
+  };
+
+  const filteredResources = sortResources(resources.filter(resource => {
     const matchesSearch = resource.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         resource.category?.name.toLowerCase().includes(searchTerm.toLowerCase());
+                         resource.category?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         resource.description?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = selectedCategory === 'all' || resource.category_id === selectedCategory;
+    
+    const matchesTags = selectedTags.length === 0 || 
+                       selectedTags.some(tag => resource.tags?.includes(tag));
     
     const matchesTab = activeTab === 'all' || 
                       (activeTab === 'customizable' && resource.customizable) ||
                       (activeTab === 'white-label' && resource.white_labelable) ||
                       (activeTab === resource.category?.name.toLowerCase().replace(/\s+/g, '-'));
     
-    return matchesSearch && matchesCategory && matchesTab;
-  });
+    return matchesSearch && matchesCategory && matchesTags && matchesTab;
+  }));
 
   const getResourceIcon = (contentType: string) => {
     switch (contentType.toLowerCase()) {
@@ -173,12 +347,41 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       case 'docx':
       case 'doc':
         return <FileText className="h-5 w-5 text-blue-500" />;
+      case 'pptx':
+      case 'ppt':
+        return <FileText className="h-5 w-5 text-orange-500" />;
       case 'excel':
       case 'xlsx':
         return <FileText className="h-5 w-5 text-green-500" />;
       default:
         return <FileText className="h-5 w-5 text-gray-500" />;
     }
+  };
+
+  const formatFileSize = (sizeInKB?: number): string => {
+    if (!sizeInKB) return 'N/A';
+    if (sizeInKB < 1024) return `${sizeInKB} KB`;
+    return `${(sizeInKB / 1024).toFixed(1)} MB`;
+  };
+
+  const getAvailableFormats = (resource: Resource): DownloadFormat[] => {
+    const formats: DownloadFormat[] = ['original'];
+    
+    // Add format conversion options based on content type
+    if (resource.content_type.toLowerCase() === 'pdf') {
+      formats.push('docx');
+    } else if (resource.content_type.toLowerCase() === 'docx') {
+      formats.push('pdf', 'pptx');
+    } else if (resource.content_type.toLowerCase() === 'pptx') {
+      formats.push('pdf');
+    }
+    
+    return formats;
+  };
+
+  const getFormatLabel = (format: DownloadFormat, originalType: string): string => {
+    if (format === 'original') return originalType.toUpperCase();
+    return format.toUpperCase();
   };
 
   const getCategoryIcon = (categoryName: string) => {
@@ -245,6 +448,23 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
     );
   }
 
+  // Show training materials viewer
+  if (viewingTrainingMaterials) {
+    return (
+      <div className="space-y-4">
+        <Button
+          variant="ghost"
+          onClick={() => setViewingTrainingMaterials(false)}
+          className="gap-2"
+        >
+          <BookOpen className="h-4 w-4" />
+          Back to Resource Library
+        </Button>
+        <PartnerTrainingViewer />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -255,7 +475,18 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
             Access technical documentation, sales materials, and client resources
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          {recentUpdates.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={() => setShowUpdatesDialog(true)}
+              className="flex items-center gap-2"
+            >
+              <Bell className="h-4 w-4" />
+              {recentUpdates.length} Updates
+              <Badge variant="destructive" className="ml-1">New</Badge>
+            </Button>
+          )}
           <Button
             variant="outline"
             onClick={() => setViewingTechnicalDocs(true)}
@@ -280,6 +511,14 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
             <FileText className="h-4 w-4" />
             Client Materials
           </Button>
+          <Button
+            variant="outline"
+            onClick={() => setViewingTrainingMaterials(true)}
+            className="flex items-center gap-2"
+          >
+            <BookOpen className="h-4 w-4" />
+            Training
+          </Button>
           <Badge variant="secondary" className="flex items-center gap-1">
             <FileText className="h-3 w-3" />
             {resources.length} Resources
@@ -287,31 +526,79 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
         </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search resources..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
+      {/* Search, Filters, and Sort */}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search resources by title, category, or description..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
+            <SelectTrigger className="w-full sm:w-48">
+              {sortBy.includes('asc') ? <SortAsc className="h-4 w-4 mr-2" /> : <SortDesc className="h-4 w-4 mr-2" />}
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="title-asc">Title (A-Z)</SelectItem>
+              <SelectItem value="title-desc">Title (Z-A)</SelectItem>
+              <SelectItem value="date-desc">Newest First</SelectItem>
+              <SelectItem value="date-asc">Oldest First</SelectItem>
+              <SelectItem value="popular">Most Popular</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-48">
-            <Filter className="h-4 w-4 mr-2" />
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.id}>
-                {category.name}
-              </SelectItem>
+
+        {/* Tag Filters */}
+        {availableTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 items-center">
+            <span className="text-sm text-muted-foreground">Filter by tags:</span>
+            {availableTags.map(tag => (
+              <Badge
+                key={tag}
+                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                className="cursor-pointer"
+                onClick={() => {
+                  setSelectedTags(prev =>
+                    prev.includes(tag)
+                      ? prev.filter(t => t !== tag)
+                      : [...prev, tag]
+                  );
+                }}
+              >
+                {tag}
+              </Badge>
             ))}
-          </SelectContent>
-        </Select>
+            {selectedTags.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedTags([])}
+                className="h-6 text-xs"
+              >
+                Clear filters
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Tabs */}
@@ -359,6 +646,12 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
                   </CardHeader>
                   
                   <CardContent className="pt-0">
+                    {resource.description && (
+                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+                        {resource.description}
+                      </p>
+                    )}
+                    
                     <div className="flex flex-wrap gap-1 mb-3">
                       {resource.customizable && (
                         <Badge variant="secondary" className="text-xs">
@@ -373,22 +666,51 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
                       <Badge variant="outline" className="text-xs">
                         {resource.content_type.toUpperCase()}
                       </Badge>
+                      {resource.tags?.slice(0, 2).map(tag => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
                     </div>
                     
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mb-3">
-                      <Calendar className="h-3 w-3" />
-                      Updated {new Date(resource.updated_at).toLocaleDateString()}
+                    <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        Updated {new Date(resource.updated_at).toLocaleDateString()}
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span>{formatFileSize(resource.file_size)}</span>
+                        {resource.download_count !== undefined && (
+                          <span className="flex items-center gap-1">
+                            <Download className="h-3 w-3" />
+                            {resource.download_count}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     
                     <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => handleDownload(resource)}
-                        className="flex-1"
-                      >
-                        <Download className="h-3 w-3 mr-1" />
-                        Download
-                      </Button>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="sm" className="flex-1">
+                            <FileDown className="h-3 w-3 mr-1" />
+                            Download
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>Download Format</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          {getAvailableFormats(resource).map(format => (
+                            <DropdownMenuItem
+                              key={format}
+                              onClick={() => handleDownload(resource, format)}
+                            >
+                              {getFormatLabel(format, resource.content_type)}
+                              {format === 'original' && ' (Original)'}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                       {resource.customizable && (
                         <Button
                           size="sm"
@@ -408,6 +730,86 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Recent Updates Dialog */}
+      <Dialog open={showUpdatesDialog} onOpenChange={setShowUpdatesDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Bell className="h-5 w-5" />
+              Recent Resource Updates
+            </DialogTitle>
+            <DialogDescription>
+              Stay informed about the latest changes to resources in the past 30 days
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 mt-4">
+            {recentUpdates.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <AlertCircle className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <p>No recent updates in the past 30 days</p>
+              </div>
+            ) : (
+              recentUpdates.map((update) => (
+                <Card key={update.id} className="border-l-4 border-l-primary">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-base">
+                          {update.resource?.title || 'Unknown Resource'}
+                        </CardTitle>
+                        <CardDescription className="flex items-center gap-2 mt-1">
+                          <Badge variant="outline">v{update.version}</Badge>
+                          <span className="text-xs">
+                            {new Date(update.updated_at).toLocaleDateString('en-US', {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        </CardDescription>
+                      </div>
+                      {update.resource && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setShowUpdatesDialog(false);
+                            handleDownload(update.resource!);
+                          }}
+                        >
+                          <Download className="h-3 w-3 mr-1" />
+                          Download
+                        </Button>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="pt-0">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-muted-foreground">{update.changes}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+          
+          <div className="flex justify-end gap-2 mt-4 pt-4 border-t">
+            <Button variant="outline" onClick={() => setShowUpdatesDialog(false)}>
+              Close
+            </Button>
+            <Button onClick={() => {
+              setShowUpdatesDialog(false);
+              fetchResourcesAndCategories();
+              toast.success('Resources refreshed');
+            }}>
+              Refresh Resources
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
