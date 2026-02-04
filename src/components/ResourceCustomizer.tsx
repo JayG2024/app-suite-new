@@ -57,7 +57,7 @@ interface ResourceCustomizerProps {
   onBack: () => void;
 }
 
-const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({ 
+export const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({ 
   resource, 
   partnerId, 
   onBack 
@@ -542,5 +542,3 @@ const ResourceCustomizer: React.FC<ResourceCustomizerProps> = ({
     </div>
   );
 };
-
-export default ResourceCustomizer;

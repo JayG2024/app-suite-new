@@ -19,10 +19,13 @@ import {
   ShoppingCart,
   Settings,
   Zap,
-  Eye
+  Eye,
+  Share2,
+  Mail
 } from 'lucide-react'
 import { toast } from 'sonner'
 import QuoteTemplate from './QuoteTemplate'
+import { createPriceQuote, getPartnerQuotes } from '@/lib/supabase'
 
 interface ServiceSpecs {
   // Custom Website
@@ -78,6 +81,9 @@ interface PriceQuote {
   specifications: ServiceSpecs
   notes?: string
   createdAt?: Date
+  serviceName?: string
+  clientName?: string
+  clientEmail?: string
 }
 
 const serviceTypes = [
@@ -133,6 +139,58 @@ export default function PartnerPricingCalculator() {
   const [currentQuote, setCurrentQuote] = useState<PriceQuote | null>(null)
   const [savedQuotes, setSavedQuotes] = useState<PriceQuote[]>([])
   const [showQuotePreview, setShowQuotePreview] = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
+  const [clientName, setClientName] = useState('')
+  const [clientEmail, setClientEmail] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
+
+  // Load saved quotes on mount
+  useEffect(() => {
+    if (partnerProfile?.id) {
+      loadSavedQuotes()
+    }
+  }, [partnerProfile?.id])
+
+  const loadSavedQuotes = async () => {
+    if (!partnerProfile?.id) return
+    
+    try {
+      const { data, error } = await getPartnerQuotes(partnerProfile.id)
+      if (error) throw error
+      
+      // Transform database quotes to component format
+      const transformedQuotes = data?.map((q: any) => ({
+        id: q.id,
+        serviceType: q.service_type,
+        standardPrice: Number(q.partner_cost) / (1 - Number(q.markup_percentage || 0) / 100),
+        partnerPrice: Number(q.partner_cost),
+        discount: partnerProfile.discount_tier ? 
+          getDiscountForService(q.service_type, partnerProfile.discount_tier) : 0,
+        specifications: q.specifications as ServiceSpecs,
+        notes: (q.specifications as any)?.notes || '',
+        createdAt: new Date(q.created_at),
+        serviceName: serviceTypes.find(s => s.id === q.service_type)?.name
+      })) || []
+      
+      setSavedQuotes(transformedQuotes)
+    } catch (error) {
+      console.error('Error loading quotes:', error)
+      toast.error('Failed to load saved quotes')
+    }
+  }
+
+  const getDiscountForService = (serviceType: string, discountTier: any): number => {
+    switch (serviceType) {
+      case 'custom-website': return discountTier.website_discount
+      case 'web-application': return discountTier.webapp_discount
+      case 'mobile-app': return discountTier.mobile_app_discount
+      case 'ai-website': return discountTier.ai_website_base_discount
+      case 'ecommerce': return discountTier.ecommerce_discount
+      case 'maintenance': return discountTier.maintenance_discount
+      default: return 0
+    }
+  }
 
   // Calculate pricing based on service type and specifications
   const calculatePrice = (serviceType: string, specifications: ServiceSpecs): { standard: number, partner: number, discount: number } => {
@@ -277,28 +335,61 @@ export default function PartnerPricingCalculator() {
     }
   }, [selectedService, specs, notes, partnerProfile])
 
-  const handleSaveQuote = () => {
-    if (currentQuote) {
-      // In a real implementation, this would save to the database
-      const newQuote = { 
-        ...currentQuote, 
-        id: Date.now().toString(),
-        createdAt: new Date(),
-        lastModified: new Date()
+  const handleSaveQuote = async () => {
+    if (!currentQuote || !partnerProfile?.id) {
+      toast.error('Unable to save quote')
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const quoteData = {
+        partner_id: partnerProfile.id,
+        service_type: selectedService,
+        partner_cost: currentQuote.partnerPrice,
+        suggested_retail_price: currentQuote.standardPrice,
+        markup_percentage: 0, // Can be calculated based on partner's markup preferences
+        specifications: {
+          ...specs,
+          notes,
+          clientName,
+          clientEmail
+        },
+        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
       }
-      setSavedQuotes(prev => [newQuote, ...prev])
+
+      const { data, error } = await createPriceQuote(quoteData)
+      if (error) throw error
+
       toast.success('Quote saved successfully')
+      await loadSavedQuotes() // Reload quotes
+      
+      // Reset client info
+      setClientName('')
+      setClientEmail('')
+    } catch (error) {
+      console.error('Error saving quote:', error)
+      toast.error('Failed to save quote')
+    } finally {
+      setIsSaving(false)
     }
   }
 
-  const handleExportQuote = () => {
-    if (currentQuote) {
-      // In a real implementation, this would generate a PDF with partner branding
+  const handleExportQuote = async () => {
+    if (!currentQuote) return
+
+    setIsExporting(true)
+    try {
+      // Generate quote data for export
       const quoteData = {
         partner: {
           name: partnerProfile?.name,
           company: partnerProfile?.company_name,
           email: partnerProfile?.contact_email
+        },
+        client: {
+          name: clientName,
+          email: clientEmail
         },
         service: serviceTypes.find(s => s.id === selectedService)?.name,
         pricing: {
@@ -311,10 +402,69 @@ export default function PartnerPricingCalculator() {
         notes: notes,
         generatedAt: new Date().toISOString()
       }
-      
-      console.log('Quote data for PDF generation:', quoteData)
-      toast.success('Quote exported (PDF generation would happen here)')
+
+      // Create a downloadable JSON file
+      const blob = new Blob([JSON.stringify(quoteData, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `quote-${selectedService}-${Date.now()}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+      toast.success('Quote exported successfully')
+    } catch (error) {
+      console.error('Error exporting quote:', error)
+      toast.error('Failed to export quote')
+    } finally {
+      setIsExporting(false)
     }
+  }
+
+  const handleShareQuote = () => {
+    if (!currentQuote) return
+    setShowShareDialog(true)
+  }
+
+  const handleSendQuoteEmail = async () => {
+    if (!clientEmail || !currentQuote) {
+      toast.error('Please enter client email')
+      return
+    }
+
+    try {
+      // In a real implementation, this would call an API endpoint to send email
+      const emailData = {
+        to: clientEmail,
+        subject: `Quote for ${serviceTypes.find(s => s.id === selectedService)?.name}`,
+        partnerName: partnerProfile?.company_name,
+        serviceName: serviceTypes.find(s => s.id === selectedService)?.name,
+        price: currentQuote.partnerPrice,
+        specifications: specs,
+        notes
+      }
+
+      console.log('Email data:', emailData)
+      toast.success('Quote sent via email (email functionality would be implemented here)')
+      setShowShareDialog(false)
+    } catch (error) {
+      console.error('Error sending email:', error)
+      toast.error('Failed to send quote')
+    }
+  }
+
+  const handleCopyShareLink = () => {
+    if (!currentQuote?.id) {
+      toast.error('Please save the quote first')
+      return
+    }
+
+    // Generate a shareable link
+    const shareUrl = `${window.location.origin}/partner/quotes/${currentQuote.id}`
+    navigator.clipboard.writeText(shareUrl)
+    toast.success('Share link copied to clipboard')
   }
 
   const renderServiceSpecifications = () => {
@@ -371,6 +521,239 @@ export default function PartnerPricingCalculator() {
                 onChange={(e) => setSpecs({...specs, customIntegrations: e.target.value.split(', ').filter(Boolean)})}
                 placeholder="List any third-party integrations needed"
               />
+            </div>
+          </div>
+        )
+
+      case 'web-application':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Database Complexity</Label>
+              <Select value={specs.databaseComplexity} onValueChange={(value: any) => setSpecs({...specs, databaseComplexity: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select complexity" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="simple">Simple (Basic CRUD)</SelectItem>
+                  <SelectItem value="moderate">Moderate (Multiple tables)</SelectItem>
+                  <SelectItem value="complex">Complex (Advanced queries)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <Label>User Base Size</Label>
+              <Select value={specs.userBase} onValueChange={(value: any) => setSpecs({...specs, userBase: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select user base" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small (&lt;1,000 users)</SelectItem>
+                  <SelectItem value="medium">Medium (1,000-10,000 users)</SelectItem>
+                  <SelectItem value="large">Large (&gt;10,000 users)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.userAuthentication}
+                  onCheckedChange={(checked) => setSpecs({...specs, userAuthentication: !!checked})}
+                />
+                <Label>User Authentication (+$1,500)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.realTimeFeatures}
+                  onCheckedChange={(checked) => setSpecs({...specs, realTimeFeatures: !!checked})}
+                />
+                <Label>Real-time Features (+$3,000)</Label>
+              </div>
+            </div>
+            
+            <div>
+              <Label>API Integrations</Label>
+              <Textarea
+                value={specs.apiIntegrations?.join(', ') || ''}
+                onChange={(e) => setSpecs({...specs, apiIntegrations: e.target.value.split(', ').filter(Boolean)})}
+                placeholder="List API integrations (e.g., Stripe, SendGrid, Twilio)"
+              />
+              <p className="text-sm text-gray-500 mt-1">$800 per integration</p>
+            </div>
+            
+            <div>
+              <Label>Custom Functionality Requirements</Label>
+              <Textarea
+                value={specs.customFunctionality?.join(', ') || ''}
+                onChange={(e) => setSpecs({...specs, customFunctionality: e.target.value.split(', ').filter(Boolean)})}
+                placeholder="Describe any custom features needed"
+                rows={3}
+              />
+            </div>
+          </div>
+        )
+
+      case 'mobile-app':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Platform Selection</Label>
+              <div className="space-y-2 mt-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={specs.platforms?.includes('ios')}
+                    onCheckedChange={(checked) => {
+                      const platforms = specs.platforms || []
+                      if (checked) {
+                        setSpecs({...specs, platforms: [...platforms.filter(p => p !== 'cross-platform'), 'ios']})
+                      } else {
+                        setSpecs({...specs, platforms: platforms.filter(p => p !== 'ios')})
+                      }
+                    }}
+                  />
+                  <Label>iOS ($8,000)</Label>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={specs.platforms?.includes('android')}
+                    onCheckedChange={(checked) => {
+                      const platforms = specs.platforms || []
+                      if (checked) {
+                        setSpecs({...specs, platforms: [...platforms.filter(p => p !== 'cross-platform'), 'android']})
+                      } else {
+                        setSpecs({...specs, platforms: platforms.filter(p => p !== 'android')})
+                      }
+                    }}
+                  />
+                  <Label>Android ($8,000)</Label>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    checked={specs.platforms?.includes('cross-platform')}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        setSpecs({...specs, platforms: ['cross-platform']})
+                      } else {
+                        setSpecs({...specs, platforms: []})
+                      }
+                    }}
+                  />
+                  <Label>Cross-Platform (React Native/Flutter) ($12,000)</Label>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.backendRequired}
+                  onCheckedChange={(checked) => setSpecs({...specs, backendRequired: !!checked})}
+                />
+                <Label>Backend/API Required (+$5,000)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.appStoreDeployment}
+                  onCheckedChange={(checked) => setSpecs({...specs, appStoreDeployment: !!checked})}
+                />
+                <Label>App Store Deployment (+$1,000)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.pushNotifications}
+                  onCheckedChange={(checked) => setSpecs({...specs, pushNotifications: !!checked})}
+                />
+                <Label>Push Notifications (+$1,500)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.offlineCapability}
+                  onCheckedChange={(checked) => setSpecs({...specs, offlineCapability: !!checked})}
+                />
+                <Label>Offline Capability (+$2,000)</Label>
+              </div>
+            </div>
+            
+            <div>
+              <Label>Mobile Features</Label>
+              <Textarea
+                value={specs.mobileFeatures?.join(', ') || ''}
+                onChange={(e) => setSpecs({...specs, mobileFeatures: e.target.value.split(', ').filter(Boolean)})}
+                placeholder="List specific mobile features (e.g., camera, GPS, biometrics)"
+                rows={3}
+              />
+            </div>
+          </div>
+        )
+
+      case 'ecommerce':
+        return (
+          <div className="space-y-4">
+            <div>
+              <Label>Product Catalog Size</Label>
+              <Select value={specs.productCatalogSize} onValueChange={(value: any) => setSpecs({...specs, productCatalogSize: value})}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select catalog size" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="small">Small (&lt;100 products)</SelectItem>
+                  <SelectItem value="medium">Medium (100-1,000 products)</SelectItem>
+                  <SelectItem value="large">Large (&gt;1,000 products)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.inventoryManagement}
+                  onCheckedChange={(checked) => setSpecs({...specs, inventoryManagement: !!checked})}
+                />
+                <Label>Inventory Management (+$2,000)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.multiCurrency}
+                  onCheckedChange={(checked) => setSpecs({...specs, multiCurrency: !!checked})}
+                />
+                <Label>Multi-Currency Support (+$1,500)</Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  checked={specs.subscriptionSupport}
+                  onCheckedChange={(checked) => setSpecs({...specs, subscriptionSupport: !!checked})}
+                />
+                <Label>Subscription/Recurring Billing (+$3,000)</Label>
+              </div>
+            </div>
+            
+            <div>
+              <Label>Payment Processing</Label>
+              <Textarea
+                value={specs.paymentProcessing?.join(', ') || ''}
+                onChange={(e) => setSpecs({...specs, paymentProcessing: e.target.value.split(', ').filter(Boolean)})}
+                placeholder="List payment gateways (e.g., Stripe, PayPal, Square)"
+              />
+            </div>
+            
+            <div>
+              <Label>Third-Party Integrations</Label>
+              <Textarea
+                value={specs.thirdPartyIntegrations?.join(', ') || ''}
+                onChange={(e) => setSpecs({...specs, thirdPartyIntegrations: e.target.value.split(', ').filter(Boolean)})}
+                placeholder="List integrations (e.g., shipping, accounting, CRM)"
+              />
+              <p className="text-sm text-gray-500 mt-1">$1,000 per integration</p>
             </div>
           </div>
         )
@@ -528,15 +911,37 @@ export default function PartnerPricingCalculator() {
       {selectedService && (
         <Card>
           <CardHeader>
-            <CardTitle>Additional Notes</CardTitle>
+            <CardTitle>Client Information (Optional)</CardTitle>
           </CardHeader>
           <CardContent>
-            <Textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any additional requirements or notes..."
-              rows={3}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <div>
+                <Label>Client Name</Label>
+                <Input
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  placeholder="Enter client name"
+                />
+              </div>
+              <div>
+                <Label>Client Email</Label>
+                <Input
+                  type="email"
+                  value={clientEmail}
+                  onChange={(e) => setClientEmail(e.target.value)}
+                  placeholder="client@example.com"
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Additional Notes</Label>
+              <Textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add any additional requirements or notes..."
+                rows={3}
+              />
+            </div>
           </CardContent>
         </Card>
       )}
@@ -582,18 +987,22 @@ export default function PartnerPricingCalculator() {
                 You save ${(currentQuote.standardPrice - currentQuote.partnerPrice).toLocaleString()}!
               </p>
               
-              <div className="flex gap-3 justify-center">
-                <Button onClick={handleSaveQuote} variant="outline">
+              <div className="flex gap-3 justify-center flex-wrap">
+                <Button onClick={handleSaveQuote} variant="outline" disabled={isSaving}>
                   <Save className="h-4 w-4 mr-2" />
-                  Save Quote
+                  {isSaving ? 'Saving...' : 'Save Quote'}
                 </Button>
                 <Button onClick={() => setShowQuotePreview(true)} variant="outline">
                   <Eye className="h-4 w-4 mr-2" />
                   Preview
                 </Button>
-                <Button onClick={handleExportQuote}>
+                <Button onClick={handleExportQuote} variant="outline" disabled={isExporting}>
                   <Download className="h-4 w-4 mr-2" />
-                  Export PDF
+                  {isExporting ? 'Exporting...' : 'Export'}
+                </Button>
+                <Button onClick={handleShareQuote}>
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
                 </Button>
               </div>
             </div>
@@ -655,6 +1064,54 @@ export default function PartnerPricingCalculator() {
                 }}
                 showPartnerBranding={true}
               />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share Dialog */}
+      {showShareDialog && currentQuote && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="border-b p-4">
+              <h2 className="text-xl font-bold">Share Quote</h2>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <Label>Client Name</Label>
+                <Input
+                  value={clientName}
+                  onChange={(e) => setClientName(e.target.value)}
+                  placeholder="Enter client name"
+                />
+              </div>
+              <div>
+                <Label>Client Email</Label>
+                <Input
+                  type="email"
+                  value={clientEmail}
+                  onChange={(e) => setClientEmail(e.target.value)}
+                  placeholder="client@example.com"
+                />
+              </div>
+              <div className="flex gap-3">
+                <Button onClick={handleSendQuoteEmail} className="flex-1">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Send via Email
+                </Button>
+                <Button onClick={handleCopyShareLink} variant="outline" className="flex-1">
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Copy Link
+                </Button>
+              </div>
+            </div>
+            <div className="border-t p-4 flex justify-end">
+              <Button
+                variant="outline"
+                onClick={() => setShowShareDialog(false)}
+              >
+                Cancel
+              </Button>
             </div>
           </div>
         </div>

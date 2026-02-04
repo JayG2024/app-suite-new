@@ -19,7 +19,10 @@ import {
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import ResourceCustomizer from './ResourceCustomizer';
+import { ResourceCustomizer } from './ResourceCustomizer';
+import TechnicalDocViewer from './TechnicalDocViewer';
+import SalesMarketingViewer from './SalesMarketingViewer';
+import { mockResources, mockResourceCategories, USE_MOCK_DATA } from '@/lib/mockPartnerData';
 
 interface ResourceCategory {
   id: string;
@@ -54,6 +57,8 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [activeTab, setActiveTab] = useState('all');
   const [customizingResource, setCustomizingResource] = useState<Resource | null>(null);
+  const [viewingTechnicalDocs, setViewingTechnicalDocs] = useState(false);
+  const [viewingSalesMarketing, setViewingSalesMarketing] = useState(false);
 
   useEffect(() => {
     fetchResourcesAndCategories();
@@ -63,13 +68,27 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
     try {
       setLoading(true);
 
+      // Use mock data if database tables aren't available
+      if (USE_MOCK_DATA) {
+        setCategories(mockResourceCategories);
+        setResources(mockResources);
+        setLoading(false);
+        return;
+      }
+
       // Fetch categories
       const { data: categoriesData, error: categoriesError } = await supabase
         .from('resource_categories')
         .select('*')
         .order('name');
 
-      if (categoriesError) throw categoriesError;
+      if (categoriesError) {
+        console.warn('Database tables not available, using mock data:', categoriesError);
+        setCategories(mockResourceCategories);
+        setResources(mockResources);
+        setLoading(false);
+        return;
+      }
 
       // Fetch resources with category information
       const { data: resourcesData, error: resourcesError } = await supabase
@@ -80,13 +99,22 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
         `)
         .order('title');
 
-      if (resourcesError) throw resourcesError;
+      if (resourcesError) {
+        console.warn('Error fetching resources, using mock data:', resourcesError);
+        setCategories(mockResourceCategories);
+        setResources(mockResources);
+        setLoading(false);
+        return;
+      }
 
       setCategories(categoriesData || []);
       setResources(resourcesData || []);
     } catch (error) {
       console.error('Error fetching resources:', error);
-      toast.error('Failed to load resources');
+      // Fallback to mock data on error
+      setCategories(mockResourceCategories);
+      setResources(mockResources);
+      toast.info('Using sample resources for demonstration');
     } finally {
       setLoading(false);
     }
@@ -97,19 +125,21 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
       // For now, simulate download - in real implementation, this would download from Supabase Storage
       toast.success(`Downloading ${resource.title}...`);
       
-      // Track download analytics
-      await supabase
-        .from('partner_analytics')
-        .insert({
-          partner_id: partnerId,
-          metric_type: 'resource_download',
-          metric_value: 1,
-          metadata: {
-            resource_id: resource.id,
-            resource_title: resource.title,
-            content_type: resource.content_type
-          }
-        });
+      // Track download analytics (skip if using mock data)
+      if (!USE_MOCK_DATA) {
+        await supabase
+          .from('partner_analytics')
+          .insert({
+            partner_id: partnerId,
+            metric_type: 'resource_download',
+            metric_value: 1,
+            metadata: {
+              resource_id: resource.id,
+              resource_title: resource.title,
+              content_type: resource.content_type
+            }
+          });
+      }
     } catch (error) {
       console.error('Error downloading resource:', error);
       toast.error('Failed to download resource');
@@ -183,6 +213,26 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
     );
   }
 
+  // Show technical documentation viewer
+  if (viewingTechnicalDocs) {
+    return (
+      <TechnicalDocViewer
+        partnerId={partnerId}
+        onBack={() => setViewingTechnicalDocs(false)}
+      />
+    );
+  }
+
+  // Show sales and marketing materials viewer
+  if (viewingSalesMarketing) {
+    return (
+      <SalesMarketingViewer
+        partnerId={partnerId}
+        onBack={() => setViewingSalesMarketing(false)}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -193,10 +243,28 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
             Access technical documentation, sales materials, and client resources
           </p>
         </div>
-        <Badge variant="secondary" className="flex items-center gap-1">
-          <FileText className="h-3 w-3" />
-          {resources.length} Resources
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setViewingTechnicalDocs(true)}
+            className="flex items-center gap-2"
+          >
+            <BookOpen className="h-4 w-4" />
+            Technical Docs
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setViewingSalesMarketing(true)}
+            className="flex items-center gap-2"
+          >
+            <Star className="h-4 w-4" />
+            Sales Materials
+          </Button>
+          <Badge variant="secondary" className="flex items-center gap-1">
+            <FileText className="h-3 w-3" />
+            {resources.length} Resources
+          </Badge>
+        </div>
       </div>
 
       {/* Search and Filters */}

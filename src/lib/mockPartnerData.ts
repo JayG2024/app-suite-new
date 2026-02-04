@@ -139,6 +139,7 @@ export const mockResourceCategories = [
 ]
 
 export const mockResources = [
+  // Web Development Process Documentation
   {
     id: 'res-1',
     title: 'Web Development Process Guide',
@@ -147,8 +148,48 @@ export const mockResources = [
     customizable: true,
     white_labelable: true,
     version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[0]
   },
+  {
+    id: 'res-1a',
+    title: 'Agile Development Methodology Guide',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-1b',
+    title: 'Project Lifecycle & Milestones',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-1c',
+    title: 'Testing & Quality Assurance Standards',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  
+  // Security and Compliance Information
   {
     id: 'res-2',
     title: 'Security & Compliance Overview',
@@ -157,8 +198,222 @@ export const mockResources = [
     customizable: true,
     white_labelable: true,
     version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[0]
   },
+  {
+    id: 'res-2a',
+    title: 'Web Application Security Best Practices',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2b',
+    title: 'OWASP Top 10 Security Guide',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2c',
+    title: 'Data Protection & Privacy Compliance (GDPR)',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2d',
+    title: 'Authentication & Authorization Standards',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  
+  // Hosting and Deployment Guides
+  {
+    id: 'res-2e',
+    title: 'Cloud Hosting Architecture Overview',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2f',
+    title: 'Vercel Deployment Guide',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2g',
+    title: 'Custom Domain Setup & DNS Configuration',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2h',
+    title: 'CDN Configuration & Optimization',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  
+  // Modern Web Technology Explanations
+  {
+    id: 'res-2i',
+    title: 'React 18 Fundamentals & Best Practices',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2j',
+    title: 'TypeScript for Web Development',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2k',
+    title: 'Supabase Backend Architecture',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2l',
+    title: 'Component-Based Architecture',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2m',
+    title: 'Tailwind CSS Framework Guide',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  
+  // Performance Optimization Details
+  {
+    id: 'res-2n',
+    title: 'Web Performance Optimization Guide',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2o',
+    title: 'Core Web Vitals & SEO Performance',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2p',
+    title: 'Image Optimization Techniques',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  {
+    id: 'res-2q',
+    title: 'Caching Strategies & Service Workers',
+    category_id: 'cat-1',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[0]
+  },
+  
+  // Sales Materials
   {
     id: 'res-3',
     title: 'Service Comparison Chart',
@@ -167,6 +422,80 @@ export const mockResources = [
     customizable: true,
     white_labelable: true,
     version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3a',
+    title: 'Comprehensive Service Comparison Guide',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3b',
+    title: 'Competitive Analysis: Traditional Agencies',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3c',
+    title: 'Case Study: E-commerce Fashion Brand',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3d',
+    title: 'Case Study: SaaS Productivity App',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3e',
+    title: 'Case Study: Healthcare Patient Portal',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-3f',
+    title: 'Pricing Justification Guide for Clients',
+    category_id: 'cat-2',
+    content_type: 'pdf',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[1]
   },
   {
@@ -177,6 +506,44 @@ export const mockResources = [
     customizable: true,
     white_labelable: true,
     version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-4a',
+    title: 'Website Rebuild ROI Calculator',
+    category_id: 'cat-2',
+    content_type: 'excel',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-4b',
+    title: 'E-commerce Platform ROI Calculator',
+    category_id: 'cat-2',
+    content_type: 'excel',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[1]
+  },
+  {
+    id: 'res-4c',
+    title: 'Maintenance Cost Comparison Calculator',
+    category_id: 'cat-2',
+    content_type: 'excel',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[1]
   }
 ]
