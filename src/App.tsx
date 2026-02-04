@@ -1,6 +1,6 @@
 
 import React, { Suspense, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate, Link } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import "./version"; // Import version for cache debugging
@@ -12,8 +12,15 @@ import RedirectHandler from "./components/RedirectHandler";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SocketProvider } from "./contexts/SocketContext";
 import { AuthProvider, useAuth } from "./contexts/SupabaseAuthContext";
+import { PartnerAuthProvider } from "./contexts/PartnerAuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PartnerProtectedRoute from "./components/PartnerProtectedRoute";
 import LoginForm from "./components/LoginForm";
+import PartnerLoginForm from "./components/PartnerLoginForm";
+import PartnerDashboard from "./components/PartnerDashboard";
+import PartnerLayout from "./components/PartnerLayout";
+import PartnerPricing from "./pages/PartnerPricing";
+import PartnerQuotes from "./pages/PartnerQuotes";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -105,6 +112,15 @@ function AdminRoute() {
     <Suspense fallback={<PageLoader />}>
       <Outlet />
     </Suspense>
+  );
+}
+
+// Partner route component for partner portal access
+function PartnerRoute() {
+  return (
+    <PartnerAuthProvider>
+      <Outlet />
+    </PartnerAuthProvider>
   );
 }
 
@@ -237,6 +253,46 @@ function App() {
                 <Route path="call-analyzer" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="call-analyzer" /></Suspense></ErrorBoundary>} />
                 <Route path="settings" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><AdminDashboard initialSection="settings" /></Suspense></ErrorBoundary>} />
                 <Route path="*" element={<Navigate to="/admin" replace />} />
+              </Route>
+
+              {/* Partner portal routes */}
+              <Route path="partners" element={<PartnerRoute />}>
+                <Route path="login" element={<PartnerLoginForm />} />
+                <Route path="portal" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <PartnerDashboard />
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="portal/pricing" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <PartnerPricing />
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="portal/quotes" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <PartnerQuotes />
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="portal/*" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <div className="text-center py-12">
+                        <h2 className="text-2xl font-bold mb-4">Coming Soon</h2>
+                        <p className="text-gray-600 mb-4">This feature is under development</p>
+                        <Link to="/partners/portal" className="text-blue-600 hover:text-blue-500">
+                          ← Back to Dashboard
+                        </Link>
+                      </div>
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="*" element={<Navigate to="/partners/portal" replace />} />
               </Route>
             </Routes>
             <Toaster position="top-right" />
