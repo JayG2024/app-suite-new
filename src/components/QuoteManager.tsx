@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { usePartnerAuth } from '@/contexts/PartnerAuthContext'
+import { usePartnerUrl } from '@/hooks/usePartnerUrl'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
@@ -99,6 +100,7 @@ const mockQuotes: Quote[] = [
 
 export default function QuoteManager() {
   const { partnerProfile } = usePartnerAuth()
+  const { getPortalUrl } = usePartnerUrl()
   const [quotes, setQuotes] = useState<Quote[]>(mockQuotes)
   const [filteredQuotes, setFilteredQuotes] = useState<Quote[]>(mockQuotes)
   const [searchTerm, setSearchTerm] = useState('')
@@ -190,7 +192,7 @@ export default function QuoteManager() {
           <p className="text-gray-600">Manage your client quotes and proposals</p>
         </div>
         <Button asChild>
-          <Link to="/partners/portal/pricing">
+          <Link to={getPortalUrl('pricing')}>
             <Plus className="h-4 w-4 mr-2" />
             New Quote
           </Link>
@@ -314,7 +316,7 @@ export default function QuoteManager() {
               </p>
               {!searchTerm && statusFilter === 'all' && (
                 <Button asChild>
-                  <Link to="/partners/portal/pricing">
+                  <Link to={getPortalUrl('pricing')}>
                     <Plus className="h-4 w-4 mr-2" />
                     Create Quote
                   </Link>

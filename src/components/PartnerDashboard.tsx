@@ -1,5 +1,5 @@
-import React from 'react'
 import { usePartnerAuth } from '@/contexts/PartnerAuthContext'
+import { usePartnerUrl } from '@/hooks/usePartnerUrl'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { 
@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom'
 
 export default function PartnerDashboard() {
   const { partnerProfile } = usePartnerAuth()
+  const { getPortalUrl } = usePartnerUrl()
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -33,42 +34,42 @@ export default function PartnerDashboard() {
       title: 'Pricing Calculator',
       description: 'Calculate pricing with partner discounts',
       icon: Calculator,
-      href: '/partners/portal/pricing',
+      path: 'pricing',
       color: 'bg-blue-500'
     },
     {
       title: 'Resource Library',
       description: 'Access sales materials and documentation',
       icon: FileText,
-      href: '/partners/portal/resources',
+      path: 'resources',
       color: 'bg-green-500'
     },
     {
       title: 'Quote Management',
       description: 'View and manage your quotes',
       icon: BarChart3,
-      href: '/partners/portal/quotes',
+      path: 'quotes',
       color: 'bg-purple-500'
     },
     {
       title: 'Client Management',
       description: 'Manage your client relationships',
       icon: Users,
-      href: '/partners/portal/clients',
+      path: 'clients',
       color: 'bg-orange-500'
     },
     {
       title: 'Website Scanner',
       description: 'Analyze websites for rebuild pricing',
       icon: Globe,
-      href: '/partners/portal/scanner',
+      path: 'scanner',
       color: 'bg-indigo-500'
     },
     {
       title: 'Account Settings',
       description: 'Manage your partner profile',
       icon: Settings,
-      href: '/partners/portal/settings',
+      path: 'settings',
       color: 'bg-gray-500'
     }
   ]
@@ -140,7 +141,7 @@ export default function PartnerDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {quickActions.map((action) => (
               <Card key={action.title} className="hover:shadow-md transition-shadow cursor-pointer">
-                <Link to={action.href}>
+                <Link to={getPortalUrl(action.path)}>
                   <CardHeader>
                     <div className="flex items-center space-x-3">
                       <div className={`p-2 rounded-lg ${action.color}`}>

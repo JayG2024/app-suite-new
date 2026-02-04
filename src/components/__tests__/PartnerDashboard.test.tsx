@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { PartnerAuthProvider } from '@/contexts/PartnerAuthContext'
 import PartnerDashboard from '@/components/PartnerDashboard'
 import { USE_MOCK_DATA, mockPartnerProfiles } from '@/lib/mockPartnerData'
+import * as fc from 'fast-check'
 
 // Mock the environment to use mock data
 vi.mock('@/lib/mockPartnerData', () => ({
@@ -67,30 +68,28 @@ vi.mock('@/lib/mockPartnerData', () => ({
   ]
 }))
 
-// Test component wrapper
-function TestWrapper({ children, mockProfile }: { children: React.ReactNode, mockProfile?: any }) {
-  // Mock the usePartnerAuth hook
-  const mockUsePartnerAuth = () => ({
-    user: mockProfile ? { id: mockProfile.id, email: mockProfile.email } : null,
-    partnerProfile: mockProfile || null,
-    loading: false,
-    signIn: vi.fn(),
-    signOut: vi.fn(),
-    isPartner: !!mockProfile,
-    isActivePartner: mockProfile?.status === 'active'
+// Mock the partner auth context
+const mockUsePartnerAuth = vi.fn()
+
+vi.mock('@/contexts/PartnerAuthContext', () => ({
+  usePartnerAuth: () => mockUsePartnerAuth(),
+  PartnerAuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
+}))
+
+// Mock the partner URL hook
+vi.mock('@/hooks/usePartnerUrl', () => ({
+  usePartnerUrl: () => ({
+    getPortalUrl: (path: string) => `/partners/portal/${path}`,
+    isCustomDomain: false,
+    partnerDomain: null
   })
+}))
 
-  // Replace the context provider with our mock
-  vi.doMock('@/contexts/PartnerAuthContext', () => ({
-    usePartnerAuth: mockUsePartnerAuth,
-    PartnerAuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
-  }))
-
-  return (
+// Test component wrapper
+function renderWithRouter(component: React.ReactElement) {
+  return render(
     <BrowserRouter>
-      <PartnerAuthProvider>
-        {children}
-      </PartnerAuthProvider>
+      {component}
     </BrowserRouter>
   )
 }
@@ -113,6 +112,219 @@ describe('Partner Dashboard Content Personalization Property Tests', () => {
    * Validates: Requirements 1.5, 4.4, 5.1, 5.3, 5.5
    */
   describe('Property 2: Partner-Specific Content Personalization', () => {
+    // Arbitraries for property-based testing
+    const partnerStatusArbitrary = fc.constantFrom('active', 'pending', 'inactive', 'suspended')
+    const brandingLevelArbitrary = fc.constantFrom('co-branded', 'partner-primary', 'full-white-label')
+    const discountTierNameArbitrary = fc.constantFrom('Bronze', 'Silver', 'Gold', 'Platinum')
+    
+    const discountTierArbitrary = fc.record({
+      name: discountTierNameArbitrary,
+      website_discount: fc.integer({ min: 0, max: 30 }),
+      webapp_discount: fc.integer({ min: 0, max: 30 }),
+      mobile_app_discount: fc.integer({ min: 0, max: 30 }),
+      ai_website_base_discount: fc.integer({ min: 0, max: 40 }),
+      ecommerce_discount: fc.integer({ min: 0, max: 30 }),
+      maintenance_discount: fc.integer({ min: 0, max: 30 }),
+      per_page_discount: fc.integer({ min: 0, max: 100 })
+    })
+
+    const partnerProfileArbitrary = fc.record({
+      id: fc.uuid(),
+      email: fc.emailAddress(),
+      name: fc.string({ minLength: 3, maxLength: 50 }),
+      role: fc.constant('user'),
+      company_name: fc.string({ minLength: 3, maxLength: 100 }),
+      contact_email: fc.emailAddress(),
+      discount_tier_id: fc.uuid(),
+      status: partnerStatusArbitrary,
+      white_label_settings: fc.record({}),
+      markup_preferences: fc.record({
+        defaultMarkupPercentage: fc.integer({ min: 10, max: 50 })
+      }),
+      custom_domain: fc.option(fc.domain(), { nil: null }),
+      branding_level: brandingLevelArbitrary,
+      discount_tier: discountTierArbitrary
+    })
+
+    it('should display personalized content consistently for any partner profile (Property-Based Test)', () => {
+      fc.assert(
+        fc.property(partnerProfileArbitrary, (partnerProfile) => {
+          // Arrange: Mock the partner auth context with generated profile
+          mockUsePartnerAuth.mockReturnValue({
+            user: { id: partnerProfile.id, email: partnerProfile.email },
+            partnerProfile: partnerProfile,
+            loading: false,
+            signIn: vi.fn(),
+            signOut: vi.fn(),
+            isPartner: true,
+            isActivePartner: partnerProfile.status === 'active'
+          })
+
+          // Act: Render dashboard
+          const { unmount } = renderWithRouter(<PartnerDashboard />)
+
+          // Assert: Verify personalized content is displayed
+          // 1. Welcome message should include partner name (Requirement 1.5)
+          expect(screen.getByText(`Welcome back, ${partnerProfile.name}!`)).toBeInTheDocument()
+
+          // 2. Company information should be displayed (Requirement 5.1)
+          expect(screen.getByText(partnerProfile.company_name)).toBeInTheDocument()
+          expect(screen.getByText(partnerProfile.contact_email)).toBeInTheDocument()
+
+          // 3. Account status should be shown (Requirement 5.3)
+          const statusElements = screen.getAllByText(partnerProfile.status, { exact: false })
+          expect(statusElements.length).toBeGreaterThan(0)
+
+          // 4. Discount tier information should be displayed (Requirement 4.4, 5.5)
+          expect(screen.getByText(partnerProfile.discount_tier.name)).toBeInTheDocument()
+          expect(screen.getByText(`${partnerProfile.discount_tier.website_discount}% website discount`)).toBeInTheDocument()
+
+          // Property verification: All personalized content should be consistent
+          // The dashboard should show the same information in multiple places
+          const companyNameElements = screen.getAllByText(partnerProfile.company_name)
+          expect(companyNameElements.length).toBeGreaterThan(0)
+
+          // Cleanup
+          unmount()
+          vi.clearAllMocks()
+        }),
+        { numRuns: 100 } // Run 100 iterations as per design document requirement
+      )
+    })
+
+    it('should display correct status styling for any partner status (Property-Based Test)', () => {
+      fc.assert(
+        fc.property(partnerProfileArbitrary, (partnerProfile) => {
+          // Arrange
+          mockUsePartnerAuth.mockReturnValue({
+            user: { id: partnerProfile.id, email: partnerProfile.email },
+            partnerProfile: partnerProfile,
+            loading: false,
+            signIn: vi.fn(),
+            signOut: vi.fn(),
+            isPartner: true,
+            isActivePartner: partnerProfile.status === 'active'
+          })
+
+          // Act
+          const { unmount } = renderWithRouter(<PartnerDashboard />)
+
+          // Assert: Status should be displayed with appropriate styling
+          const statusElements = screen.getAllByText(partnerProfile.status, { exact: false })
+          expect(statusElements.length).toBeGreaterThan(0)
+
+          // Verify status badge exists
+          const statusBadge = statusElements.find(el => 
+            el.classList.contains('bg-green-100') ||
+            el.classList.contains('bg-yellow-100') ||
+            el.classList.contains('bg-gray-100') ||
+            el.classList.contains('bg-red-100')
+          )
+          
+          // Property: Status should always have appropriate color coding
+          if (partnerProfile.status === 'active') {
+            expect(statusBadge?.classList.contains('bg-green-100')).toBeTruthy()
+          } else if (partnerProfile.status === 'pending') {
+            expect(statusBadge?.classList.contains('bg-yellow-100')).toBeTruthy()
+          } else if (partnerProfile.status === 'inactive') {
+            expect(statusBadge?.classList.contains('bg-gray-100')).toBeTruthy()
+          } else if (partnerProfile.status === 'suspended') {
+            expect(statusBadge?.classList.contains('bg-red-100')).toBeTruthy()
+          }
+
+          // Cleanup
+          unmount()
+          vi.clearAllMocks()
+        }),
+        { numRuns: 100 }
+      )
+    })
+
+    it('should display discount tier information consistently for any discount tier (Property-Based Test)', () => {
+      fc.assert(
+        fc.property(partnerProfileArbitrary, (partnerProfile) => {
+          // Arrange
+          mockUsePartnerAuth.mockReturnValue({
+            user: { id: partnerProfile.id, email: partnerProfile.email },
+            partnerProfile: partnerProfile,
+            loading: false,
+            signIn: vi.fn(),
+            signOut: vi.fn(),
+            isPartner: true,
+            isActivePartner: partnerProfile.status === 'active'
+          })
+
+          // Act
+          const { unmount } = renderWithRouter(<PartnerDashboard />)
+
+          // Assert: Discount tier should be displayed correctly
+          // 1. Tier name should be visible (Requirement 4.4)
+          expect(screen.getByText(partnerProfile.discount_tier.name)).toBeInTheDocument()
+
+          // 2. Website discount percentage should be shown (Requirement 5.5)
+          const discountText = `${partnerProfile.discount_tier.website_discount}% website discount`
+          expect(screen.getByText(discountText)).toBeInTheDocument()
+
+          // Property: Discount information should be accurate and consistent
+          const tierNameElements = screen.getAllByText(partnerProfile.discount_tier.name)
+          expect(tierNameElements.length).toBeGreaterThan(0)
+
+          // Cleanup
+          unmount()
+          vi.clearAllMocks()
+        }),
+        { numRuns: 100 }
+      )
+    })
+
+    it('should maintain consistent personalization across dashboard sections (Property-Based Test)', () => {
+      fc.assert(
+        fc.property(partnerProfileArbitrary, (partnerProfile) => {
+          // Arrange
+          mockUsePartnerAuth.mockReturnValue({
+            user: { id: partnerProfile.id, email: partnerProfile.email },
+            partnerProfile: partnerProfile,
+            loading: false,
+            signIn: vi.fn(),
+            signOut: vi.fn(),
+            isPartner: true,
+            isActivePartner: partnerProfile.status === 'active'
+          })
+
+          // Act
+          const { unmount } = renderWithRouter(<PartnerDashboard />)
+
+          // Assert: All sections should show consistent information
+          // 1. Partner info cards section
+          expect(screen.getByText(partnerProfile.company_name)).toBeInTheDocument()
+          expect(screen.getByText(partnerProfile.contact_email)).toBeInTheDocument()
+          
+          // 2. Status information
+          const statusElements = screen.getAllByText(partnerProfile.status, { exact: false })
+          expect(statusElements.length).toBeGreaterThan(0)
+          
+          // 3. Discount tier information
+          expect(screen.getByText(partnerProfile.discount_tier.name)).toBeInTheDocument()
+
+          // Property: Information should be consistent across all dashboard sections
+          // The same data should appear in multiple places without discrepancies
+          const allCompanyReferences = screen.getAllByText(partnerProfile.company_name)
+          expect(allCompanyReferences.length).toBeGreaterThan(0)
+          
+          // All references should show the same company name
+          allCompanyReferences.forEach(element => {
+            expect(element.textContent).toBe(partnerProfile.company_name)
+          })
+
+          // Cleanup
+          unmount()
+          vi.clearAllMocks()
+        }),
+        { numRuns: 100 }
+      )
+    })
+
+    // Unit test examples for specific scenarios
     it('should display personalized content for active Bronze tier partner', async () => {
       // Arrange: Bronze tier active partner
       const bronzePartner = {

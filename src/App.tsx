@@ -13,6 +13,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { SocketProvider } from "./contexts/SocketContext";
 import { AuthProvider, useAuth } from "./contexts/SupabaseAuthContext";
 import { PartnerAuthProvider } from "./contexts/PartnerAuthContext";
+import { DomainConfigProvider } from "./contexts/DomainConfigContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PartnerProtectedRoute from "./components/PartnerProtectedRoute";
 import LoginForm from "./components/LoginForm";
@@ -22,6 +23,7 @@ import PartnerLayout from "./components/PartnerLayout";
 import PartnerPricing from "./pages/PartnerPricing";
 import PartnerQuotes from "./pages/PartnerQuotes";
 import PartnerResources from "./pages/PartnerResources";
+import PartnerSettings from "./pages/PartnerSettings";
 import WebsiteAnalyzer from "./components/WebsiteAnalyzer";
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -120,9 +122,11 @@ function AdminRoute() {
 // Partner route component for partner portal access
 function PartnerRoute() {
   return (
-    <PartnerAuthProvider>
-      <Outlet />
-    </PartnerAuthProvider>
+    <DomainConfigProvider>
+      <PartnerAuthProvider>
+        <Outlet />
+      </PartnerAuthProvider>
+    </DomainConfigProvider>
   );
 }
 
@@ -292,6 +296,13 @@ function App() {
                   <PartnerProtectedRoute>
                     <PartnerLayout>
                       <WebsiteAnalyzer />
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="portal/settings" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <PartnerSettings />
                     </PartnerLayout>
                   </PartnerProtectedRoute>
                 } />

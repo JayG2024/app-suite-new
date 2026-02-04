@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link, useLocation, Outlet } from 'react-router-dom'
 import { usePartnerAuth } from '@/contexts/PartnerAuthContext'
+import { usePartnerUrl } from '@/hooks/usePartnerUrl'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
 import { 
@@ -20,7 +21,7 @@ import { useState } from 'react'
 
 interface NavItem {
   title: string
-  href: string
+  path: string // Changed from href to path (relative path without /partners/portal prefix)
   icon: React.ComponentType<{ className?: string }>
   description: string
 }
@@ -28,43 +29,43 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     title: 'Dashboard',
-    href: '/partners/portal',
+    path: '',
     icon: Home,
     description: 'Overview and quick actions'
   },
   {
     title: 'Pricing Calculator',
-    href: '/partners/portal/pricing',
+    path: 'pricing',
     icon: Calculator,
     description: 'Calculate pricing with partner discounts'
   },
   {
     title: 'Resource Library',
-    href: '/partners/portal/resources',
+    path: 'resources',
     icon: FileText,
     description: 'Sales materials and documentation'
   },
   {
     title: 'Quote Management',
-    href: '/partners/portal/quotes',
+    path: 'quotes',
     icon: BarChart3,
     description: 'View and manage your quotes'
   },
   {
     title: 'Client Management',
-    href: '/partners/portal/clients',
+    path: 'clients',
     icon: Users,
     description: 'Manage your client relationships'
   },
   {
     title: 'Website Scanner',
-    href: '/partners/portal/scanner',
+    path: 'scanner',
     icon: Globe,
     description: 'Analyze websites for rebuild pricing'
   },
   {
     title: 'Account Settings',
-    href: '/partners/portal/settings',
+    path: 'settings',
     icon: Settings,
     description: 'Manage your partner profile'
   }
@@ -72,6 +73,7 @@ const navItems: NavItem[] = [
 
 export default function PartnerLayout({ children }: { children?: React.ReactNode }) {
   const { partnerProfile, signOut } = usePartnerAuth()
+  const { getPortalUrl, isCurrentPath } = usePartnerUrl()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -145,11 +147,12 @@ export default function PartnerLayout({ children }: { children?: React.ReactNode
           <div className={`lg:w-64 ${mobileMenuOpen ? 'block' : 'hidden lg:block'}`}>
             <nav className="space-y-2">
               {navItems.map((item) => {
-                const isActive = location.pathname === item.href
+                const itemUrl = getPortalUrl(item.path)
+                const isActive = location.pathname === itemUrl
                 return (
                   <Link
-                    key={item.href}
-                    to={item.href}
+                    key={item.path}
+                    to={itemUrl}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
