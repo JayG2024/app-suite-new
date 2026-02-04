@@ -127,7 +127,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Include pricing justification materials
     - _Requirements: 3.2_
 
-  - [~] 8.3 Add client-ready materials
+  - [x] 8.3 Add client-ready materials
     - Create project proposal templates
     - Add statement of work templates
     - Include technical requirement gathering forms
@@ -135,7 +135,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Include maintenance agreement templates
     - _Requirements: 3.3_
 
-  - [~] 8.4 Add partner onboarding and training materials
+  - [-] 8.4 Add partner onboarding and training materials
     - Create partner training guides
     - Add best practices documentation
     - Include sales process workflows

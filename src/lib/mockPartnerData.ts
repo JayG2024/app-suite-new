@@ -545,6 +545,92 @@ export const mockResources = [
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-15T00:00:00Z',
     category: mockResourceCategories[1]
+  },
+  
+  // Client-Ready Materials (Task 8.3)
+  {
+    id: 'res-5a',
+    title: 'Website Development Proposal Template',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5b',
+    title: 'Web Application Proposal Template',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5c',
+    title: 'Website Development Statement of Work',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5d',
+    title: 'Website Maintenance Agreement',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5e',
+    title: 'Website Requirements Gathering Form',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5f',
+    title: 'Web Application Requirements Form',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
+  },
+  {
+    id: 'res-5g',
+    title: 'Website Development Project Timeline',
+    category_id: 'cat-3',
+    content_type: 'docx',
+    customizable: true,
+    white_labelable: true,
+    version: 1,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+    category: mockResourceCategories[2]
   }
 ]
 

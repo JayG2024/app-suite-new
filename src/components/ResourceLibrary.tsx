@@ -22,6 +22,7 @@ import { toast } from 'sonner';
 import { ResourceCustomizer } from './ResourceCustomizer';
 import TechnicalDocViewer from './TechnicalDocViewer';
 import SalesMarketingViewer from './SalesMarketingViewer';
+import ClientMaterialsViewer from './ClientMaterialsViewer';
 import { mockResources, mockResourceCategories, USE_MOCK_DATA } from '@/lib/mockPartnerData';
 
 interface ResourceCategory {
@@ -59,6 +60,7 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
   const [customizingResource, setCustomizingResource] = useState<Resource | null>(null);
   const [viewingTechnicalDocs, setViewingTechnicalDocs] = useState(false);
   const [viewingSalesMarketing, setViewingSalesMarketing] = useState(false);
+  const [viewingClientMaterials, setViewingClientMaterials] = useState(false);
 
   useEffect(() => {
     fetchResourcesAndCategories();
@@ -233,6 +235,16 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
     );
   }
 
+  // Show client-ready materials viewer
+  if (viewingClientMaterials) {
+    return (
+      <ClientMaterialsViewer
+        partnerId={partnerId}
+        onBack={() => setViewingClientMaterials(false)}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -259,6 +271,14 @@ const ResourceLibrary: React.FC<ResourceLibraryProps> = ({ partnerId }) => {
           >
             <Star className="h-4 w-4" />
             Sales Materials
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setViewingClientMaterials(true)}
+            className="flex items-center gap-2"
+          >
+            <FileText className="h-4 w-4" />
+            Client Materials
           </Button>
           <Badge variant="secondary" className="flex items-center gap-1">
             <FileText className="h-3 w-3" />
