@@ -21,6 +21,7 @@ import PartnerDashboard from "./components/PartnerDashboard";
 import PartnerLayout from "./components/PartnerLayout";
 import PartnerPricing from "./pages/PartnerPricing";
 import PartnerQuotes from "./pages/PartnerQuotes";
+import PartnerResources from "./pages/PartnerResources";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -276,6 +277,13 @@ function App() {
                   <PartnerProtectedRoute>
                     <PartnerLayout>
                       <PartnerQuotes />
+                    </PartnerLayout>
+                  </PartnerProtectedRoute>
+                } />
+                <Route path="portal/resources" element={
+                  <PartnerProtectedRoute>
+                    <PartnerLayout>
+                      <PartnerResources />
                     </PartnerLayout>
                   </PartnerProtectedRoute>
                 } />

@@ -237,6 +237,18 @@ const Header = () => {
                             <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Careers</h4>
                           </div>
                         </Link>
+                        
+                        <Link 
+                          to="/partners/login" 
+                          className="group flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-all duration-200"
+                        >
+                          <div className="p-1.5 rounded-md bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                            <Target className="h-3 w-3 text-primary" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">Partner Portal</h4>
+                          </div>
+                        </Link>
                       </div>
                     </div>
                     
@@ -435,6 +447,17 @@ const Header = () => {
                   <div>
                     <div className="font-medium">Careers</div>
                     <div className="text-xs text-muted-foreground">Join our team</div>
+                  </div>
+                </Link>
+                <Link 
+                  to="/partners/login"
+                  className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-accent transition-all duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Target className="h-4 w-4 text-primary" />
+                  <div>
+                    <div className="font-medium">Partner Portal</div>
+                    <div className="text-xs text-muted-foreground">Access partner tools</div>
                   </div>
                 </Link>
               </div>
