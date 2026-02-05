@@ -17,7 +17,7 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
-type ServiceType = 'website' | 'webapp' | 'mobile' | 'ai-website' | 'maintenance'
+type ServiceType = 'crm' | 'invoice' | 'ecommerce' | 'saas'
 
 interface ServiceOption {
   id: ServiceType
@@ -34,114 +34,82 @@ interface ServiceOption {
 
 const services: ServiceOption[] = [
   {
-    id: 'website',
-    name: 'Website',
-    icon: Globe,
-    description: 'Custom responsive websites',
-    tiers: [
-      {
-        id: 'simple',
-        name: 'Simple',
-        price: 3000,
-        features: ['Up to 5 pages', 'Mobile responsive', 'Contact form', 'Basic SEO']
-      },
-      {
-        id: 'business',
-        name: 'Business',
-        price: 6000,
-        features: ['Up to 15 pages', 'CMS included', 'Advanced SEO', 'Analytics', 'Blog']
-      },
-      {
-        id: 'complex',
-        name: 'Complex',
-        price: 12000,
-        features: ['Unlimited pages', 'Custom features', 'E-commerce ready', 'API integrations', 'Advanced CMS']
-      }
-    ]
-  },
-  {
-    id: 'webapp',
-    name: 'Web Application',
+    id: 'crm',
+    name: 'CRM System',
     icon: Settings,
-    description: 'Custom web applications',
+    description: 'Customer relationship management',
     tiers: [
       {
-        id: 'basic',
-        name: 'Basic',
-        price: 8000,
-        features: ['User authentication', 'Database', 'Basic dashboard', 'API integration']
+        id: 'internal',
+        name: 'Internal Use',
+        price: 5000,
+        features: ['User authentication', 'Database', 'Customer tracking', 'Contact management', 'Activity logging']
       },
       {
-        id: 'advanced',
-        name: 'Advanced',
-        price: 15000,
-        features: ['Complex workflows', 'Real-time features', 'Advanced security', 'Custom integrations', 'Admin panel']
-      }
-    ]
-  },
-  {
-    id: 'mobile',
-    name: 'Mobile App',
-    icon: Smartphone,
-    description: 'Native or cross-platform apps',
-    tiers: [
-      {
-        id: 'single',
-        name: 'Single Platform',
+        id: 'saas',
+        name: 'SaaS Product',
         price: 10000,
-        features: ['iOS or Android', 'App store deployment', 'Push notifications', 'Basic features']
-      },
-      {
-        id: 'cross',
-        name: 'Cross-Platform',
-        price: 15000,
-        features: ['iOS + Android', 'Shared codebase', 'App store deployment', 'Push notifications', 'Offline mode']
+        features: ['Multi-tenant architecture', 'Customer billing', 'Advanced security', 'API access', 'White-label ready']
       }
     ]
   },
   {
-    id: 'ai-website',
-    name: 'AI Website',
-    icon: Zap,
-    description: 'Fast AI-built websites',
-    tiers: [
-      {
-        id: 'standard',
-        name: 'Standard',
-        price: 2500,
-        features: ['Up to 5 pages', 'AI-generated content', 'Mobile responsive', '48-hour delivery']
-      },
-      {
-        id: 'premium',
-        name: 'Premium',
-        price: 4000,
-        features: ['Up to 10 pages', 'AI-generated content', 'Custom design', 'SEO optimized', '72-hour delivery']
-      }
-    ]
-  },
-  {
-    id: 'maintenance',
-    name: 'Maintenance',
+    id: 'invoice',
+    name: 'Invoice & Billing',
     icon: Settings,
-    description: 'Monthly maintenance packages',
+    description: 'Billing and payment processing',
     tiers: [
       {
-        id: 'basic',
-        name: 'Basic',
-        price: 200,
-        features: ['Security updates', 'Monthly backups', 'Email support', '2 hours/month']
+        id: 'internal',
+        name: 'Internal Use',
+        price: 5000,
+        features: ['Invoice generation', 'Payment tracking', 'Client management', 'Reporting', 'Email notifications']
       },
       {
-        id: 'professional',
-        name: 'Professional',
-        price: 400,
-        features: ['Everything in Basic', 'Weekly backups', 'Priority support', '5 hours/month', 'Performance monitoring']
+        id: 'saas',
+        name: 'SaaS Product',
+        price: 10000,
+        features: ['Multi-tenant billing', 'Payment gateway integration', 'Subscription management', 'Advanced reporting', 'API access']
+      }
+    ]
+  },
+  {
+    id: 'ecommerce',
+    name: 'E-commerce',
+    icon: Globe,
+    description: 'Online store platform',
+    tiers: [
+      {
+        id: 'internal',
+        name: 'Internal Use',
+        price: 7500,
+        features: ['Product catalog', 'Shopping cart', 'Payment processing', 'Order management', 'Inventory tracking']
       },
       {
-        id: 'enterprise',
-        name: 'Enterprise',
-        price: 800,
-        features: ['Everything in Professional', 'Daily backups', '24/7 support', '10 hours/month', 'Dedicated manager']
+        id: 'saas',
+        name: 'SaaS Product',
+        price: 12500,
+        features: ['Multi-store support', 'Advanced analytics', 'Marketing tools', 'API integrations', 'White-label ready']
+      }
+    ]
+  },
+  {
+    id: 'saas',
+    name: 'SaaS Product',
+    icon: Zap,
+    description: 'Multi-tenant application',
+    tiers: [
+      {
+        id: 'internal',
+        name: 'Internal Use',
+        price: 10000,
+        features: ['Custom workflows', 'User management', 'Data analytics', 'Integrations', 'Admin dashboard']
+      },
+      {
+        id: 'saas',
+        name: 'SaaS Product',
+        price: 15000,
+        features: ['Multi-tenant architecture', 'Subscription billing', 'Advanced security', 'API platform', 'Scalable infrastructure']
       }
     ]
   }
@@ -162,15 +130,8 @@ export default function PartnerPricingCalculatorSimplified() {
   const getDiscount = () => {
     if (!partnerProfile?.discount_tier) return 0
     
-    const discountMap: Record<ServiceType, number> = {
-      'website': partnerProfile.discount_tier.website_discount,
-      'webapp': partnerProfile.discount_tier.webapp_discount,
-      'mobile': partnerProfile.discount_tier.mobile_app_discount,
-      'ai-website': partnerProfile.discount_tier.ai_website_base_discount,
-      'maintenance': partnerProfile.discount_tier.maintenance_discount
-    }
-    
-    return selectedService ? discountMap[selectedService] : 0
+    // All web apps get the webapp_discount
+    return partnerProfile.discount_tier.webapp_discount
   }
 
   const calculatePricing = () => {
