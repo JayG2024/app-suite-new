@@ -136,6 +136,15 @@ export default function PartnerLoginForm() {
             </form>
 
             <div className="mt-6 text-center space-y-2">
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-xs font-semibold text-blue-900 mb-1">Demo Credentials</p>
+                <p className="text-xs text-blue-700">
+                  Email: <code className="bg-blue-100 px-1 rounded">test@partner.com</code> or <code className="bg-blue-100 px-1 rounded">premium@partner.com</code>
+                </p>
+                <p className="text-xs text-blue-700">
+                  Password: <code className="bg-blue-100 px-1 rounded">any password</code>
+                </p>
+              </div>
               <p className="text-sm text-gray-600">
                 Need a partner account?{' '}
                 <Link 

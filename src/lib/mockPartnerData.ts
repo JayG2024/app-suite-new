@@ -713,13 +713,22 @@ export const mockAuth = {
   currentUser: null as any,
   
   signIn: async (email: string, password: string) => {
-    // Simple mock authentication
+    // Simple mock authentication - accepts any password for mock users
     const user = mockUsers.find(u => u.email === email)
-    if (user && password === 'testpartner123') {
+    if (user && password.length > 0) {
       mockAuth.currentUser = user
       return { data: { user }, error: null }
     }
-    return { data: null, error: new Error('Invalid credentials') }
+    
+    // Provide helpful error message
+    if (!user) {
+      return { 
+        data: null, 
+        error: new Error('Email not found. Try: test@partner.com or premium@partner.com') 
+      }
+    }
+    
+    return { data: null, error: new Error('Password required') }
   },
   
   signOut: async () => {
