@@ -16,14 +16,14 @@ export const validateEnv = (): EnvConfig => {
     VITE_APP_VERSION: import.meta.env.VITE_APP_VERSION,
   };
 
-  // Required environment variables
+  // Check for required environment variables
   const required = ['VITE_SUPABASE_URL', 'VITE_SUPABASE_ANON_KEY'] as const;
-  
   const missing = required.filter(key => !env[key]);
   
   if (missing.length > 0) {
-    console.error('Missing required environment variables:', missing);
-    throw new Error(`Missing required environment variables: ${missing.join(', ')}`);
+    console.warn('Missing Supabase environment variables - using mock data:', missing);
+    console.warn('To use real Supabase, add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env.local');
+    // Don't throw - allow app to run with mock data
   }
 
   // Optional but recommended
@@ -31,7 +31,7 @@ export const validateEnv = (): EnvConfig => {
   const missingRecommended = recommended.filter(key => !env[key]);
   
   if (missingRecommended.length > 0) {
-    console.warn('Missing recommended environment variables:', missingRecommended);
+    console.info('Missing optional environment variables:', missingRecommended);
   }
 
   return env;

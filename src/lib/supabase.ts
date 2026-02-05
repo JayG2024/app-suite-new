@@ -3,8 +3,8 @@ import type { Database } from './database.types'
 import { getEnvConfig } from '@/utils/envValidation'
 
 const env = getEnvConfig();
-const supabaseUrl = env.VITE_SUPABASE_URL!;
-const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY!;
+const supabaseUrl = env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
+const supabaseAnonKey = env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
