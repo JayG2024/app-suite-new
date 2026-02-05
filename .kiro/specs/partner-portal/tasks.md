@@ -171,7 +171,7 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Allow quote generation from analysis results
     - _Requirements: 9.3, 9.4, 9.5_
 
-  - [-]* 9.3 Write property test for website analysis
+  - [-] 9.3 Write property test for website analysis
     - **Property 9: Website Analysis and Pricing Recommendations**
     - **Validates: Requirements 9.1, 9.2, 9.3, 9.4, 9.5**
 
