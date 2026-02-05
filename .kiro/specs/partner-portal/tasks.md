@@ -171,14 +171,14 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Allow quote generation from analysis results
     - _Requirements: 9.3, 9.4, 9.5_
 
-  - [x]* 9.3 Write property test for website analysis
+  - [-]* 9.3 Write property test for website analysis
     - **Property 9: Website Analysis and Pricing Recommendations**
     - **Validates: Requirements 9.1, 9.2, 9.3, 9.4, 9.5**
 
 - [x] 9.4 Checkpoint - Test website analysis functionality
   - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 10. Implement white-label branding system
+- [x] 10. Implement white-label branding system
   - [x] 10.1 Create URL structure and domain management
     - Implement dedicated partner path (/partners/portal) access
     - Add custom subdomain configuration (partner.domain.com)
@@ -186,251 +186,408 @@ This implementation plan creates a comprehensive partner portal that extends the
     - Maintain consistent functionality across all URL access methods
     - _Requirements: 10.1, 10.2, 10.3, 10.4_
 
-  - [ ] 10.2 Build comprehensive branding configuration
+  - [x] 10.2 Build comprehensive branding configuration interface
+    - Create branding settings page for partners
     - Allow partners to upload custom logos, colors, and company branding
-    - Implement white-label mode to hide original company branding
-    - Generate branded proposals and documentation
+    - Implement branding preview functionality
     - Support different white-label levels (co-branded, partner-primary, full white-label)
-    - _Requirements: 11.1, 11.2, 11.3, 11.5_
+    - _Requirements: 11.1, 11.5_
 
-  - [ ] 10.3 Implement client-facing branded experiences
+  - [x] 10.3 Implement white-label mode and branding application
+    - Hide original company branding when white-label mode is enabled
+    - Apply partner branding across all portal sections
+    - Generate branded proposals and documentation
+    - Implement branding asset caching and CDN delivery
+    - _Requirements: 11.2, 11.3_
+
+  - [ ] 10.4 Create client-facing branded experiences
     - Maintain partner branding throughout client portal links
     - Apply appropriate branding based on access method and configuration
+    - Generate branded email templates and notifications
     - _Requirements: 11.4, 10.5_
 
-  - [ ]* 10.4 Write property test for URL structure and domain management
+  - [x]* 10.5 Write property test for URL structure and domain management
     - **Property 10: URL Structure and White-Label Domain Management**
     - **Validates: Requirements 10.2, 10.3, 10.4, 10.5**
 
-  - [ ]* 10.5 Write property test for comprehensive white-label branding
+  - [ ]* 10.6 Write property test for comprehensive white-label branding
     - **Property 11: Comprehensive White-Label Branding System**
     - **Validates: Requirements 11.1, 11.2, 11.3, 11.4, 11.5**
 
+- [ ] 10.7 Checkpoint - Test white-label branding system
+  - Ensure all tests pass, ask the user if questions arise.
+
 - [ ] 11. Build lead generation and CRM-lite functionality
-  - [ ] 11.1 Create lead qualification forms
-    - Build customizable qualification form builder
+  - [ ] 11.1 Create lead qualification form builder
+    - Build customizable qualification form builder interface
     - Generate public URLs and embed codes for forms
     - Apply partner branding to forms
+    - Store form configurations in Supabase
     - _Requirements: 14.1_
 
   - [ ] 11.2 Implement automatic preliminary estimates
     - Process qualification form responses
     - Generate preliminary pricing estimates and project scopes
-    - Calculate lead scores and service recommendations
+    - Calculate lead scores based on responses
+    - Provide service recommendations
     - _Requirements: 14.2_
 
-  - [ ] 11.3 Add CRM-lite functionality
-    - Create client profile management
-    - Implement lead and proposal tracking
-    - Add communication logging
-    - Store project history securely
+  - [ ] 11.3 Build client profile management
+    - Create client profile creation and editing interface
+    - Store client information securely in Supabase
+    - Display client project history
     - _Requirements: 14.3, 14.4_
 
-  - [ ] 11.4 Create email templates and project status pages
-    - Build email templates for common client communications
-    - Generate client-facing project status pages with partner branding
-    - Implement referral tracking
-    - _Requirements: 14.5, 14.6, 14.7, 14.8_
+  - [ ] 11.4 Add lead and proposal tracking
+    - Implement lead pipeline visualization
+    - Track proposal status and follow-ups
+    - Add communication logging functionality
+    - _Requirements: 14.3, 14.4_
 
-  - [ ]* 11.5 Write property test for lead generation and client management
+  - [ ] 11.5 Create email templates and communication tools
+    - Build email templates for common client communications (initial contact, proposal follow-up, project updates)
+    - Implement email sending functionality
+    - Track email opens and engagement
+    - _Requirements: 14.5_
+
+  - [ ] 11.6 Generate client-facing project status pages
+    - Create project status page templates
+    - Apply partner branding to status pages
+    - Hide original company information
+    - Provide real-time project updates
+    - _Requirements: 14.6, 14.7_
+
+  - [ ] 11.7 Implement referral tracking
+    - Track lead sources and referral origins
+    - Provide referral analytics
+    - Identify most successful lead sources
+    - _Requirements: 14.8_
+
+  - [ ]* 11.8 Write property test for lead generation and client management
     - **Property 14: Lead Generation and Client Management**
     - **Validates: Requirements 14.1, 14.2, 14.3, 14.4, 14.6, 14.7, 14.8**
 
-- [ ] 12. Implement markup management and pricing strategy tools
-  - [ ] 12.1 Create markup calculation tools
-    - Show partner cost, suggested retail pricing, and profit margin examples
-    - Display markup scenarios with profitability analysis
-    - Provide competitive analysis at different markup levels
-    - _Requirements: 16.1, 16.3, 16.7_
+- [ ] 11.9 Checkpoint - Test lead generation and CRM functionality
+  - Ensure all tests pass, ask the user if questions arise.
 
-  - [ ] 12.2 Add markup best practices and guidance
-    - Include industry standard markup ranges
-    - Add competitive positioning strategies
+- [ ] 12. Implement markup management and pricing strategy tools
+  - [ ] 12.1 Create markup calculation interface
+    - Build markup calculator showing partner cost and suggested retail pricing
+    - Display profit margin calculations
+    - Show multiple markup scenarios side-by-side
+    - Provide profitability analysis for different markup levels
+    - _Requirements: 16.1, 16.3_
+
+  - [ ] 12.2 Add competitive analysis at different markup levels
+    - Show how partner pricing compares to market alternatives
+    - Display competitive positioning for each markup scenario
+    - Highlight competitive advantages and risks
+    - _Requirements: 16.7_
+
+  - [ ] 12.3 Implement markup best practices guidance
+    - Include industry standard markup ranges by service type
+    - Add competitive positioning strategies (budget, value, premium)
     - Provide value-based pricing guidance
     - _Requirements: 16.2_
 
-  - [ ] 12.3 Create pricing strategy resources
-    - Add pricing justification guides for clients
+  - [ ] 12.4 Create pricing strategy resources
+    - Add pricing justification guides for client presentations
     - Include guidance on when to use different markup levels
     - Provide price objection handling resources
-    - _Requirements: 16.4_
+    - Add market positioning advice
+    - _Requirements: 16.4, 16.5_
 
-  - [ ] 12.4 Add market positioning and competitive analysis
-    - Show how partner pricing compares to market alternatives
-    - Provide value proposition messaging
-    - Include differentiation strategies
-    - _Requirements: 16.5_
-
-  - [ ] 12.5 Create pricing templates and preferences
-    - Build standardized pricing presentations
+  - [ ] 12.5 Build pricing templates and preference management
+    - Create standardized pricing presentations
     - Add customizable quote formats and proposal structures
-    - Implement markup preference saving and consistent application
+    - Implement markup preference saving
+    - Apply saved preferences consistently across all pricing calculations
     - _Requirements: 16.6, 16.8_
 
-  - [ ] 12.6 Write property test for markup management
+  - [ ]* 12.6 Write property test for markup management
     - **Property 16: Markup Management and Pricing Strategy**
     - **Validates: Requirements 16.1, 16.3, 16.7, 16.8**
 
+- [ ] 12.7 Checkpoint - Test markup management functionality
+  - Ensure all tests pass, ask the user if questions arise.
+
 - [ ] 13. Add value proposition and competitive advantage showcase
-  - [ ] 13.1 Create competitive advantages section
-    - Highlight modern technology stack benefits
-    - Showcase enterprise-grade security and compliance
-    - Emphasize scalable cloud infrastructure
-    - Display rapid development timelines
+  - [x] 13.1 Create competitive advantages showcase section
+    - Highlight modern technology stack benefits (React, TypeScript, Supabase)
+    - Showcase enterprise-grade security and compliance features
+    - Emphasize scalable cloud infrastructure advantages
+    - Display rapid development timeline comparisons
     - _Requirements: 15.1_
 
-  - [ ] 13.2 Add cost advantages presentation
+  - [x] 13.2 Build cost advantages presentation
     - Show pricing comparisons with traditional agencies
     - Highlight transparent fixed pricing vs hourly billing
-    - Emphasize no hidden costs or scope creep
-    - Display faster time-to-market benefits
+    - Emphasize no hidden costs or scope creep guarantees
+    - Display faster time-to-market ROI benefits
     - _Requirements: 15.2_
 
-  - [ ] 13.3 Create quality differentiators section
-    - Showcase AI-assisted development consistency
-    - Highlight automated testing and quality assurance
+  - [ ] 13.3 Create quality differentiators showcase
+    - Showcase AI-assisted development consistency benefits
+    - Highlight automated testing and quality assurance processes
     - Display modern responsive design standards
-    - Emphasize built-in performance optimization
+    - Emphasize built-in performance optimization features
     - _Requirements: 15.3_
 
-  - [ ] 13.4 Add maintenance advantages presentation
-    - Show proactive security updates
-    - Display automated backups and monitoring
+  - [ ] 13.4 Build maintenance advantages presentation
+    - Show proactive security update processes
+    - Display automated backups and monitoring capabilities
     - Highlight 99.9% uptime guarantees
-    - Show predictable monthly maintenance costs
+    - Show predictable monthly maintenance cost comparisons
     - _Requirements: 15.4_
 
-  - [ ] 13.5 Implement ROI and comparison tools
-    - Create ROI calculators showing cost savings and revenue impact
-    - Build comparison tools for features, pricing, and timelines
-    - Add success metrics and case study results
-    - Provide talking points and objection handling guides
-    - _Requirements: 15.5, 15.6, 15.7, 15.8_
+  - [ ] 13.5 Implement interactive ROI calculators
+    - Create ROI calculator showing cost savings vs traditional development
+    - Add revenue impact calculator for faster launch times
+    - Build maintenance cost comparison tool
+    - Implement total cost of ownership analysis
+    - _Requirements: 15.5_
 
-  - [ ] 13.6 Write property test for ROI and competitive analysis
+  - [ ] 13.6 Build comprehensive comparison tools
+    - Create feature-by-feature comparison with competitors
+    - Add pricing comparison with market alternatives
+    - Build timeline comparison with traditional development
+    - Include success metrics and case study results
+    - _Requirements: 15.6, 15.7_
+
+  - [ ] 13.7 Create sales enablement resources
+    - Provide talking points for client presentations
+    - Add objection handling guides for common concerns
+    - Include value proposition messaging templates
+    - _Requirements: 15.8_
+
+  - [x]* 13.8 Write property test for ROI and competitive analysis
     - **Property 15: ROI and Competitive Analysis Tools**
     - **Validates: Requirements 15.5, 15.6**
 
+- [ ] 13.9 Checkpoint - Test value proposition features
+  - Ensure all tests pass, ask the user if questions arise.
+
 - [ ] 14. Build partner analytics and dashboard insights
-  - [ ] 14.1 Create analytics dashboard
-    - Display quote generation frequency
-    - Show client proposal views and resource downloads
-    - Track conversion rates and client engagement metrics
-    - Display trending services and pricing patterns
+  - [ ] 14.1 Create analytics data collection system
+    - Implement tracking for quote generation frequency
+    - Track client proposal views and interactions
+    - Monitor resource downloads by category
+    - Log partner portal usage patterns
+    - _Requirements: 12.1_
+
+  - [ ] 14.2 Build analytics dashboard interface
+    - Display quote generation metrics with trends
+    - Show client engagement metrics and conversion rates
+    - Display resource download statistics
+    - Show trending services and pricing patterns
     - _Requirements: 12.1, 12.2, 12.3_
 
-  - [ ] 14.2 Add exportable reports and insights
-    - Provide exportable reports for business analysis
-    - Track client interactions with partner-branded materials
-    - Show engagement insights
-    - _Requirements: 12.4, 12.5_
+  - [x] 14.3 Implement exportable reports
+    - Create report generation for business analysis
+    - Add date range filtering for reports
+    - Provide multiple export formats (PDF, CSV, Excel)
+    - Include visualizations and charts
+    - _Requirements: 12.4_
 
-  - [ ] 14.3 Write property test for analytics and business intelligence
+  - [ ] 14.4 Add client interaction tracking
+    - Track client interactions with partner-branded materials
+    - Monitor engagement with proposals and quotes
+    - Provide insights on client behavior patterns
+    - _Requirements: 12.5_
+
+  - [ ]* 14.5 Write property test for analytics and business intelligence
     - **Property 12: Analytics and Business Intelligence**
     - **Validates: Requirements 12.1, 12.2, 12.3, 12.4, 12.5**
 
-- [ ] 15. Enhance admin management system
-  - [ ] 15.1 Expand admin dashboard for comprehensive partner management
-    - Create partner account creation and management interface
-    - Add custom discount tier configuration for all service types
-    - Show partner activity, quote generation, and analytics
-    - _Requirements: 13.1, 13.2, 13.3_
+- [ ] 14.6 Checkpoint - Test analytics functionality
+  - Ensure all tests pass, ask the user if questions arise.
 
-  - [ ] 15.2 Add white-label settings management
+- [ ] 15. Enhance admin management system
+  - [ ] 15.1 Build partner account management interface
+    - Create partner account creation wizard
+    - Add partner profile editing capabilities
+    - Implement partner status management (active, inactive, pending, suspended)
+    - Display partner list with filtering and search
+    - _Requirements: 13.1_
+
+  - [ ] 15.2 Implement custom discount tier configuration
+    - Create discount tier management interface
+    - Allow configuration of discounts for all service types
+    - Support partner-specific custom pricing structures
+    - Enable bulk discount updates
+    - _Requirements: 13.2_
+
+  - [ ] 15.3 Add white-label settings management
     - Configure allowed branding levels per partner
     - Manage custom domain and SSL certificate settings
     - Set branding restrictions and permissions
+    - Control white-label feature access
     - _Requirements: 13.2_
 
-  - [ ] 15.3 Implement system-wide analytics
-    - Show total and active partner counts
-    - Display quotes generated and resource downloads
-    - Track top performing partners
-    - Show system usage metrics
+  - [ ] 15.4 Build partner activity monitoring
+    - Show partner activity dashboard with quote generation
+    - Display resource download tracking
+    - Monitor portal usage patterns
+    - Track client engagement through partner links
     - _Requirements: 13.3_
 
-  - [ ] 15.4 Add pricing structure update capabilities
+  - [ ] 15.5 Implement system-wide analytics
+    - Show total and active partner counts
+    - Display aggregate quotes generated and resource downloads
+    - Track top performing partners with rankings
+    - Show system usage metrics and trends
+    - _Requirements: 13.3_
+
+  - [ ] 15.6 Add pricing structure update capabilities
     - Allow updates to partner-specific pricing
-    - Manage discount tier changes
+    - Manage discount tier changes with history
     - Update service pricing across all service types
+    - Implement pricing change notifications to partners
     - _Requirements: 13.4_
 
-  - [ ]* 15.5 Write property test for administrative partner management
+  - [ ]* 15.7 Write property test for administrative partner management
     - **Property 13: Administrative Partner Management**
     - **Validates: Requirements 13.1, 13.2, 13.3, 13.4**
 
+- [ ] 15.8 Checkpoint - Test admin management enhancements
+  - Ensure all tests pass, ask the user if questions arise.
+
 - [ ] 16. Add partner profile management and onboarding
-  - [ ] 16.1 Create partner profile editing
+  - [ ] 16.1 Create partner profile editing interface
+    - Build profile editing form with validation
     - Allow partners to update company info and contact details
-    - Add profile picture/logo upload
-    - Show partner agreement and renewal information
+    - Add profile picture/logo upload functionality
+    - Display partner agreement and renewal information
     - _Requirements: 5.2, 5.4, 5.5_
 
   - [ ] 16.2 Implement comprehensive onboarding flow
-    - Create welcome tour for new partners
-    - Add help documentation and tutorials for each feature
-    - Include FAQ section with troubleshooting guides
-    - Track onboarding completion and progress
-    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5_
+    - Create welcome tour for new partners highlighting key features
+    - Build interactive feature walkthroughs
+    - Add progress tracking for onboarding steps
+    - Show completion status and next steps
+    - _Requirements: 8.1, 8.5_
 
-  - [ ]* 16.3 Write property test for profile management consistency
+  - [ ] 16.3 Add help documentation and tutorials
+    - Create help documentation for each major feature
+    - Add video tutorials and guides
+    - Build searchable help center
+    - _Requirements: 8.2_
+
+  - [ ] 16.4 Create FAQ and troubleshooting resources
+    - Build FAQ section with common questions
+    - Add troubleshooting guides for common issues
+    - Provide clear contact information and support resources
+    - _Requirements: 8.3, 8.4_
+
+  - [ ]* 16.5 Write property test for profile management consistency
     - **Property 7: Profile Management and Updates**
     - **Validates: Requirements 5.2**
 
-  - [ ]* 16.4 Write property test for onboarding progress tracking
+  - [ ]* 16.6 Write property test for onboarding progress tracking
     - **Property 8: Onboarding Progress Tracking**
     - **Validates: Requirements 8.5**
 
+- [ ] 16.7 Checkpoint - Test profile management and onboarding
+  - Ensure all tests pass, ask the user if questions arise.
+
 - [ ] 17. Implement navigation consistency and notification system
-  - [ ] 17.1 Ensure consistent navigation across all portal sections
-    - Maintain consistent navigation and branding throughout portal
+  - [ ] 17.1 Ensure consistent navigation across portal
+    - Audit all portal sections for navigation consistency
+    - Maintain consistent branding throughout portal
     - Ensure smooth transitions between sections
+    - Implement breadcrumb navigation where appropriate
     - _Requirements: 4.3_
 
-  - [ ] 17.2 Add notification system
+  - [ ] 17.2 Build notification system
     - Implement resource update notifications
-    - Show new feature announcements on dashboard
-    - Provide clear contact information and support resources
-    - _Requirements: 3.8, 4.5, 8.3_
+    - Add new feature announcements on dashboard
+    - Create notification preferences for partners
+    - Display notifications with appropriate priority levels
+    - _Requirements: 3.8, 4.5_
 
-  - [ ]* 17.3 Write property test for navigation and dashboard consistency
+  - [ ] 17.3 Add support and contact resources
+    - Provide clear contact information throughout portal
+    - Add support ticket system or contact form
+    - Display support hours and response time expectations
+    - _Requirements: 8.3_
+
+  - [ ]* 17.4 Write property test for navigation and dashboard consistency
     - **Property 6: Navigation and Dashboard Consistency**
     - **Validates: Requirements 4.3, 4.5**
 
-- [ ] 18. Checkpoint - Test expanded functionality
-  - Ensure all tests pass for new features, ask the user if questions arise.
+- [ ] 17.5 Checkpoint - Test navigation and notifications
+  - Ensure all tests pass, ask the user if questions arise.
 
-- [ ] 19. Final integration and comprehensive testing
-  - [ ] 19.1 Wire all components together
+- [ ] 18. Final integration and comprehensive testing
+  - [ ] 18.1 Wire all components together
     - Ensure smooth navigation between all portal sections
-    - Test complete partner workflows from login through all features
-    - Verify integration with existing app-suite.io website
-    - Test white-label domain configurations and branding
-    - Validate lead generation and CRM workflows
+    - Verify data flow between components
+    - Test integration with existing app-suite.io website
+    - Ensure consistent styling and branding across all sections
     - _Requirements: All requirements integration_
 
-  - [ ]* 19.2 Write comprehensive integration tests
+  - [ ] 18.2 Test complete partner workflows
+    - Test partner registration and onboarding flow
+    - Verify pricing calculator workflows across all service types
+    - Test quote generation, saving, and export functionality
+    - Verify resource library access and customization
+    - Test website analysis and rebuild pricing flow
+    - _Requirements: All requirements integration_
+
+  - [ ] 18.3 Test white-label and branding workflows
+    - Verify white-label domain configurations (path, subdomain, custom domain)
+    - Test branding application across all portal sections
+    - Verify branded document generation
+    - Test client-facing branded experiences
+    - _Requirements: 10.1-10.5, 11.1-11.5_
+
+  - [ ] 18.4 Test lead generation and CRM workflows
+    - Verify lead qualification form creation and sharing
+    - Test preliminary estimate generation
+    - Verify client profile management
+    - Test communication logging and project status pages
+    - _Requirements: 14.1-14.8_
+
+  - [ ] 18.5 Test admin workflows
+    - Verify partner account creation and management
+    - Test discount tier configuration
+    - Verify white-label settings management
+    - Test system analytics and reporting
+    - _Requirements: 13.1-13.4_
+
+  - [ ]* 18.6 Write comprehensive integration tests
     - Test end-to-end partner workflows across all features
     - Verify admin management flows for all partner operations
-    - Test external API integrations (Fire Crawl, DNS, SSL)
+    - Test external API integrations (Fire Crawl, Supabase)
     - Validate white-label branding and domain configurations
     - Test lead generation and client management workflows
+    - Verify analytics tracking and reporting
 
-- [ ] 20. Final checkpoint - Complete system validation
+- [ ] 19. Final checkpoint - Complete system validation
   - Ensure all tests pass, ask the user if questions arise.
+  - Verify all 16 correctness properties are tested
+  - Confirm all requirements are addressed
+  - Review error handling and edge cases
+  - Validate performance and security considerations
 
 ## Notes
 
 - Tasks marked with `*` are optional and can be skipped for faster MVP
-- Tasks 1-6 are complete and provide the foundation for expanded features
+- **Completed**: Tasks 1-9 provide foundation, dashboard, comprehensive pricing, quotes, resource library, and website analysis
+- **In Progress**: White-label branding system (task 10.1 complete, 10.2-10.6 remaining)
+- **Remaining**: Lead generation (task 11), markup management (task 12), value proposition (task 13), analytics (task 14), admin enhancements (task 15), profile management (task 16), navigation consistency (task 17), and final integration (tasks 18-19)
+- **Total Tasks**: 19 major tasks with 89 subtasks
+- **Checkpoints**: 10 checkpoints throughout for incremental validation
 - Implementation reuses existing app-suite.io components and styling for consistency
 - Each task builds incrementally on previous work
-- Supabase integration leverages existing database patterns
-- UI components follow existing design system for seamless integration
-- Property-based tests use fast-check library with minimum 100 iterations
+- Supabase integration leverages existing database patterns and migrations
+- UI components follow existing design system (shadcn/ui, Tailwind CSS, Radix UI) for seamless integration
+- Property-based tests use fast-check library with minimum 100 iterations per test
 - Each property test references its design document property number
-- Focus on comprehensive service coverage across all service types
-- White-label capabilities support multiple branding levels and custom domains
+- All 16 correctness properties from the design document are covered by property tests
+- Focus on comprehensive service coverage across all service types (custom websites, web apps, mobile apps, AI websites, e-commerce, maintenance)
+- White-label capabilities support multiple branding levels (co-branded, partner-primary, full white-label) and custom domains
 - Lead generation and CRM-lite features help partners grow their business
-- Markup management tools provide competitive pricing guidance
+- Markup management tools provide competitive pricing guidance and best practices
 - Analytics provide business intelligence for partner performance tracking
+- Admin system provides comprehensive partner management and system-wide analytics
